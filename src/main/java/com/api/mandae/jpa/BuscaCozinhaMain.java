@@ -1,7 +1,5 @@
 package com.api.mandae.jpa;
 
-import java.util.List;
-
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
