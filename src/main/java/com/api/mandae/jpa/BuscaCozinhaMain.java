@@ -6,6 +6,7 @@ import org.springframework.context.ApplicationContext;
 
 import com.api.mandae.MandaeApplication;
 import com.api.mandae.domain.model.Cozinha;
+import com.api.mandae.domain.repository.CozinhaRepository;
 
 public class BuscaCozinhaMain {
 
@@ -15,9 +16,9 @@ public class BuscaCozinhaMain {
 				.web(WebApplicationType.NONE)
 				.run(args);
 		
-		CadastroCozinha cadastroCozinha = applicationContext.getBean(CadastroCozinha.class);
+		CozinhaRepository cozinhaRepository = applicationContext.getBean(CozinhaRepository.class);
 		
-		Cozinha cozinha = cadastroCozinha.buscar(1L);
+		Cozinha cozinha = cozinhaRepository.buscar(1L);
 		
 		System.out.println(cozinha.getNome());
 	}
