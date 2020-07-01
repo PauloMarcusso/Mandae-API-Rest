@@ -30,8 +30,7 @@ public class RestauranteRepositoryImpl implements RestauranteRepository{
 	
 	@Override
 	public Restaurante buscar(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		return manager.find(Restaurante.class, id);
 	}
 
 
