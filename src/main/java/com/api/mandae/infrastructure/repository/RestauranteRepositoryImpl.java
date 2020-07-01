@@ -22,6 +22,7 @@ public class RestauranteRepositoryImpl implements RestauranteRepository{
 		return manager.createQuery("from Restaurante", Restaurante.class).getResultList();
 	}
 
+	//Tambem usado para fazer alterações
 	@Override
 	@Transactional
 	public Restaurante salvar(Restaurante restaurante) {
@@ -34,9 +35,11 @@ public class RestauranteRepositoryImpl implements RestauranteRepository{
 	}
 
 
+	@Transactional
 	@Override
 	public void remover(Restaurante restaurante) {
-		// TODO Auto-generated method stub
+		restaurante = buscar(restaurante.getId());
+		manager.remove(restaurante);
 		
 	}
 

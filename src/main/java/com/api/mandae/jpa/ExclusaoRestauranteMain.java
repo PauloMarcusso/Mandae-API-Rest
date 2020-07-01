@@ -8,17 +8,21 @@ import com.api.mandae.MandaeApplication;
 import com.api.mandae.domain.model.Restaurante;
 import com.api.mandae.domain.repository.RestauranteRepository;
 
-public class BuscaRestauranteMain {
+public class ExclusaoRestauranteMain {
 
 	public static void main(String[] args) {
 		
 		ApplicationContext applicationContext = new SpringApplicationBuilder(MandaeApplication.class)
-				.web(WebApplicationType.NONE).run(args);
+				.web(WebApplicationType.NONE)
+				.run(args);
 		
 		RestauranteRepository restauranteRepository = applicationContext.getBean(RestauranteRepository.class);
 		
-		Restaurante restaurante = restauranteRepository.buscar(1L);
+		Restaurante restaurante = new Restaurante();
 		
-		System.out.printf("O restaurante %s possui um frete de %f %n", restaurante.getNome(), restaurante.getTaxaFrete());
+		restaurante.setId(1L);
+		
+		restauranteRepository.remover(restaurante);
+		
 	}
 }
