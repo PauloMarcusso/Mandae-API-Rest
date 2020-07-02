@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.api.mandae.domain.model.Permissao;
 import com.api.mandae.domain.repository.PermissaoRepository;
@@ -21,6 +22,7 @@ public class PermissaoRepositoryImpl implements PermissaoRepository{
 		return manager.createQuery("from Permissao", Permissao.class).getResultList();
 	}
 
+	@Transactional
 	@Override
 	public Permissao salvar(Permissao permissao) {
 		return manager.merge(permissao);
@@ -31,6 +33,7 @@ public class PermissaoRepositoryImpl implements PermissaoRepository{
 		return manager.find(Permissao.class, id);
 	}
 
+	@Transactional
 	@Override
 	public void remover(Permissao permissao) {
 		permissao = this.buscar(permissao.getId());

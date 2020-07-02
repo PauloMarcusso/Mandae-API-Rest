@@ -8,3 +8,6 @@ insert into restaurante (nome, taxa_frete, cozinha_id ) values ('HEEELOO ITS ME'
 insert into forma_pagamento(descricao) values ('debito');
 insert into forma_pagamento(descricao) values ('credito');
 insert into forma_pagamento(descricao) values ('dinheiro');
+
+insert into permissao(nome, descricao) values ('administrador', 'pode tudo');
+insert into permissao(nome, descricao) values ('usuario', 'pode nada');

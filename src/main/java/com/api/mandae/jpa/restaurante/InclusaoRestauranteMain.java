@@ -1,4 +1,4 @@
-package com.api.mandae.jpa;
+package com.api.mandae.jpa.restaurante;
 
 
 import java.math.BigDecimal;
