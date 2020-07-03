@@ -11,3 +11,6 @@ insert into forma_pagamento(descricao) values ('dinheiro');
 
 insert into permissao(nome, descricao) values ('administrador', 'pode tudo');
 insert into permissao(nome, descricao) values ('usuario', 'pode nada');
+
+insert into estado(nome) values('Tocantins');
+insert into estado(nome) values('Recife');
