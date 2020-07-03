@@ -13,4 +13,7 @@ insert into permissao(nome, descricao) values ('administrador', 'pode tudo');
 insert into permissao(nome, descricao) values ('usuario', 'pode nada');
 
 insert into estado(nome) values('Tocantins');
-insert into estado(nome) values('Recife');
+insert into estado(nome) values('Pernambuco');
+
+insert into cidade(nome, estado_id) values('Goianorte', 1);
+insert into cidade(nome, estado_id) values('Recife', 2);
