@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.api.mandae.domain.model.Cozinha;
 import com.api.mandae.domain.repository.CozinhaRepository;
+import com.api.mandae.domain.service.CadastroCozinhaService;
 
 @RestController
 @RequestMapping("/cozinhas")
@@ -27,6 +28,9 @@ public class CozinhaController {
 
 	@Autowired
 	private CozinhaRepository cozinhaRepository;
+	
+	@Autowired
+	private CadastroCozinhaService cadastroCozinha;
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<Cozinha> listar() {
@@ -46,7 +50,7 @@ public class CozinhaController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public void adicionar(@RequestBody Cozinha cozinha) {
-		cozinhaRepository.salvar(cozinha);
+		cadastroCozinha.salvar(cozinha);
 	}
 
 	@PutMapping("/{id}")
