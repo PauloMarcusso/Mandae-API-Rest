@@ -34,7 +34,6 @@ public class RestauranteRepositoryImpl implements RestauranteRepository{
 		return manager.find(Restaurante.class, id);
 	}
 
-
 	@Transactional
 	@Override
 	public void remover(Restaurante restaurante) {

@@ -1,4 +1,4 @@
-package com.api.mandae.jpa.restaurante;
+package com.api.mandae.jpa.permissao;
 
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
