@@ -5,7 +5,6 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
 
 import com.api.mandae.MandaeApplication;
-import com.api.mandae.domain.model.Cidade;
 import com.api.mandae.domain.repository.CidadeRepository;
 
 public class ExclusaoCidadeMain {
@@ -18,8 +17,6 @@ public class ExclusaoCidadeMain {
 		
 		CidadeRepository cidadeRepository = applicationContext.getBean(CidadeRepository.class);
 		
-		Cidade cidade = new Cidade();
-		cidade.setId(1L);
-		cidadeRepository.remover(cidade);
+		cidadeRepository.remover(1L);
 	}
 }

@@ -5,7 +5,6 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
 
 import com.api.mandae.MandaeApplication;
-import com.api.mandae.domain.model.Estado;
 import com.api.mandae.domain.repository.EstadoRepository;
 
 public class ExclusaoEstadoMain {
@@ -18,8 +17,6 @@ public class ExclusaoEstadoMain {
 		
 		EstadoRepository estadoRepository = applicationContext.getBean(EstadoRepository.class);
 		
-		Estado estado = new Estado();
-		estado.setId(1L);
-		estadoRepository.remover(estado);
+		estadoRepository.remover(1L);
 	}
 }
