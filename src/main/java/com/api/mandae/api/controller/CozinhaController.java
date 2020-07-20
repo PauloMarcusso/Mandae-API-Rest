@@ -56,7 +56,6 @@ public class CozinhaController {
 	@PutMapping("/{id}")
 	public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody Cozinha cozinha) {
 		try {
-			
 			Cozinha cozinhaAtual = cozinhaRepository.buscar(id);
 			if (cozinhaAtual != null) {
 				
