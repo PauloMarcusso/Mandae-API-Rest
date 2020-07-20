@@ -1,6 +1,7 @@
 package com.api.mandae.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,15 +35,14 @@ public class CozinhaController {
 
 	@GetMapping
 	public List<Cozinha> listar() {
-		return cozinhaRepository.listar();
+		return cozinhaRepository.findAll();
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Cozinha> buscar(@PathVariable Long id) {
-		Cozinha cozinha = cozinhaRepository.buscar(id);
-		// caso o id não exista, devolve um status 404
-		if (cozinha != null) {
-			return ResponseEntity.ok(cozinha);
+		Optional<Cozinha> cozinha = cozinhaRepository.findById(id);
+		if (cozinha.isPresent()) {
+			return ResponseEntity.ok(cozinha.get());
 		}
 		return ResponseEntity.notFound().build();
 	}
@@ -56,12 +56,13 @@ public class CozinhaController {
 	@PutMapping("/{id}")
 	public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody Cozinha cozinha) {
 		try {
-			Cozinha cozinhaAtual = cozinhaRepository.buscar(id);
-			if (cozinhaAtual != null) {
+			Optional<Cozinha> cozinhaAtual = cozinhaRepository.findById(id);
+			
+			if (cozinhaAtual.isPresent()) {
 				
-				BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
-				cadastroCozinha.salvar(cozinhaAtual);
-				return ResponseEntity.ok(cozinhaAtual);
+				BeanUtils.copyProperties(cozinha, cozinhaAtual.get(), "id");
+				Cozinha cozinhaSalva = cadastroCozinha.salvar(cozinhaAtual.get());
+				return ResponseEntity.ok(cozinhaSalva);
 			}
 			return ResponseEntity.notFound().build();
 		}catch(EntidadeNaoEncontradaException e) {
@@ -70,12 +71,12 @@ public class CozinhaController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Cozinha> remover(@PathVariable Long id) {
+	public ResponseEntity<?> remover(@PathVariable Long id) {
 		try {
 			cadastroCozinha.excluir(id);
 			return ResponseEntity.noContent().build();
 		} catch (EntidadeEmUsoException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.notFound().build();
 		}
