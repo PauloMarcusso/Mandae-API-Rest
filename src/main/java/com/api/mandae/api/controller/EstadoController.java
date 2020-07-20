@@ -72,13 +72,8 @@ public class EstadoController {
 	public ResponseEntity<Estado> remover(@PathVariable Long id) {
 		
 		try {
-			Estado estado = estadoRepository.buscar(id);
-			
-			if(estado != null) {
 				cadastroEstado.excluir(id);
 				return ResponseEntity.noContent().build();
-			}
-			return ResponseEntity.notFound().build();
 		}catch(EntidadeNaoEncontradaException e) {
 			return ResponseEntity.notFound().build();
 		}catch(EntidadeEmUsoException e) {
