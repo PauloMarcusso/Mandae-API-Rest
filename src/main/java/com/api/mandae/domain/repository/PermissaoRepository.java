@@ -1,13 +1,11 @@
 package com.api.mandae.domain.repository;
 
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import com.api.mandae.domain.model.Permissao;
 
-public interface PermissaoRepository {
+@Repository
+public interface PermissaoRepository extends JpaRepository<Permissao, Long>{
 
-	List<Permissao> listar();
-	Permissao salvar(Permissao permissao);
-	Permissao buscar(Long id);
-	void remover(Permissao permissao);
 }
