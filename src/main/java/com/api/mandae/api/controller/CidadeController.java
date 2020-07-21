@@ -66,7 +66,7 @@ public class CidadeController {
 			
 			if (cidadeAtual.isPresent()) {
 				
-				BeanUtils.copyProperties(cidade, cidadeAtual, "id");
+				BeanUtils.copyProperties(cidade, cidadeAtual.get(), "id");
 				Cidade cidadeSalva = cadastroCidade.salvar(cidadeAtual.get());
 
 				return ResponseEntity.ok(cidadeSalva);
