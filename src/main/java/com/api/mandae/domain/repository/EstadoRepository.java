@@ -1,13 +1,11 @@
 package com.api.mandae.domain.repository;
 
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import com.api.mandae.domain.model.Estado;
 
-public interface EstadoRepository {
+@Repository
+public interface EstadoRepository extends JpaRepository<Estado, Long>{
 
-	List<Estado> listar();
-	Estado salvar(Estado estado);
-	Estado buscar(Long id);
-	void remover(Long id);
 }

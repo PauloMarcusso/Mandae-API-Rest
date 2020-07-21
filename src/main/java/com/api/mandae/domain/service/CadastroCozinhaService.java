@@ -24,8 +24,9 @@ public class CadastroCozinhaService {
 		try {
 			cozinhaRepository.deleteById(id);
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(String.format("Não existe um cadastro de cozinha com o código %d", id));
-		}catch (DataIntegrityViolationException e) {
+			throw new EntidadeNaoEncontradaException(
+					String.format("Não existe um cadastro de cozinha com o código %d", id));
+		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(
 					String.format("Cozinha de código %d não pode ser substuída pois está em uso", id));
 		}

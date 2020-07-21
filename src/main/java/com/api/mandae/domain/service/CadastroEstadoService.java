@@ -17,14 +17,15 @@ public class CadastroEstadoService {
 	EstadoRepository estadoRepository;
 
 	public Estado salvar(Estado estado) {
-		return estadoRepository.salvar(estado);
+		return estadoRepository.save(estado);
 	}
 
 	public void excluir(Long id) {
 		try {
-			estadoRepository.remover(id);
+			estadoRepository.deleteById(id);
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(String.format("Estado com o código %d não encontrado", id));
+			throw new EntidadeNaoEncontradaException(
+					String.format("Estado com o código %d não encontrado", id));
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(
 					String.format("A estado com códido %d não pode ser excluído pois está em uso", id));
