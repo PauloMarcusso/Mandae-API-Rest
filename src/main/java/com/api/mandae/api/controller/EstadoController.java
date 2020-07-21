@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.mandae.domain.exception.EntidadeEmUsoException;
@@ -47,6 +48,7 @@ public class EstadoController {
 	}
 
 	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
 	public Estado adicionar(@RequestBody Estado estado) {
 		return cadastroEstado.salvar(estado);
 	}
@@ -55,11 +57,11 @@ public class EstadoController {
 	public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody Estado estado) {
 
 		try {
-			Optional<Estado> estadoAtual = estadoRepository.findById(id);
-			if (estadoAtual.isPresent()) {
+			Estado estadoAtual = estadoRepository.findById(id).orElse(null);
+			if (estadoAtual != null) {
 
-				BeanUtils.copyProperties(estado, estadoAtual.get(), "id");
-				Estado estadoSalvo = cadastroEstado.salvar(estadoAtual.get());
+				BeanUtils.copyProperties(estado, estadoAtual, "id");
+				Estado estadoSalvo = cadastroEstado.salvar(estadoAtual);
 				return ResponseEntity.ok(estadoSalvo);
 			}
 			return ResponseEntity.notFound().build();
