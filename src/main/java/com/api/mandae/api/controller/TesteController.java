@@ -1,8 +1,5 @@
 package com.api.mandae.api.controller;
 
-import static com.api.mandae.infrastructure.repository.spec.RestauranteSpecs.comFreteGratis;
-import static com.api.mandae.infrastructure.repository.spec.RestauranteSpecs.comNomeSemelhante;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +32,11 @@ public class TesteController {
 	@GetMapping("/cozinhas/unica-por-nome")
 	public Optional<Cozinha> cozinhaPorNome(String nome){
 		return cozinhaRepository.findByNome(nome);
+	}
+
+	@GetMapping("/cozinhas/primeira")
+	public Optional<Cozinha> cozinhaPrimeira(){
+		return cozinhaRepository.buscarPrimeiro();
 	}
 	
 	@GetMapping("/cozinhas/exists")
@@ -76,4 +78,10 @@ public class TesteController {
 	public List<Restaurante> restaurantesComFreteGratis(String nome){
 		return restauranteRepository.findComFreteGratis(nome);
 	}
+	
+	@GetMapping("/restaurantes/primeiro")
+	public Optional<Restaurante> restaurantePrimeiro(){
+		return restauranteRepository.buscarPrimeiro();
+	}
+	
 }
