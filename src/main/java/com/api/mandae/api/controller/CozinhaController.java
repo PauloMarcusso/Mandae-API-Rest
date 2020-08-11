@@ -23,6 +23,8 @@ import com.api.mandae.domain.model.Cozinha;
 import com.api.mandae.domain.repository.CozinhaRepository;
 import com.api.mandae.domain.service.CadastroCozinhaService;
 
+import lombok.experimental.Helper;
+
 @RestController
 @RequestMapping("/cozinhas")
 public class CozinhaController {
@@ -70,16 +72,21 @@ public class CozinhaController {
 		}
 	}
 
+//	@DeleteMapping("/{id}")
+//	public ResponseEntity<?> remover(@PathVariable Long id) {
+//		try {
+//			cadastroCozinha.excluir(id);
+//			return ResponseEntity.noContent().build();
+//		} catch (EntidadeEmUsoException e) {
+//			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+//		} catch (EntidadeNaoEncontradaException e) {
+//			return ResponseEntity.notFound().build();
+//		}
+//
+//	}
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> remover(@PathVariable Long id) {
-		try {
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void remover(@PathVariable Long id) {
 			cadastroCozinha.excluir(id);
-			return ResponseEntity.noContent().build();
-		} catch (EntidadeEmUsoException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.notFound().build();
-		}
-
 	}
 }
