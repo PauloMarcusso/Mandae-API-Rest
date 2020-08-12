@@ -3,7 +3,9 @@ package com.api.mandae.domain.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.api.mandae.domain.exception.EntidadeEmUsoException;
 import com.api.mandae.domain.exception.EntidadeNaoEncontradaException;

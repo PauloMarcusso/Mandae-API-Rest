@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.api.mandae.domain.exception.EntidadeEmUsoException;
 import com.api.mandae.domain.exception.EntidadeNaoEncontradaException;
@@ -59,15 +60,15 @@ public class CozinhaController {
 	public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody Cozinha cozinha) {
 		try {
 			Optional<Cozinha> cozinhaAtual = cozinhaRepository.findById(id);
-			
+
 			if (cozinhaAtual.isPresent()) {
-				
+
 				BeanUtils.copyProperties(cozinha, cozinhaAtual.get(), "id");
 				Cozinha cozinhaSalva = cadastroCozinha.salvar(cozinhaAtual.get());
 				return ResponseEntity.ok(cozinhaSalva);
 			}
 			return ResponseEntity.notFound().build();
-		}catch(EntidadeNaoEncontradaException e) {
+		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
