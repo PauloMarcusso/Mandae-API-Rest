@@ -37,12 +37,8 @@ public class EstadoController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Estado> buscar(@PathVariable Long id) {
-		Optional<Estado> estado = estadoRepository.findById(id);
-		if (estado.isPresent()) {
-			return ResponseEntity.ok(estado.get());
-		}
-		return ResponseEntity.notFound().build();
+	public Estado buscar(@PathVariable Long id) {
+		return cadastroEstado.buscarOuFalhar(id);
 	}
 
 	@PostMapping
