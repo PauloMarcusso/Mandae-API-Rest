@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.api.mandae.domain.exception.EntidadeEmUsoException;
-import com.api.mandae.domain.exception.EntidadeNaoEncontradaException;
 import com.api.mandae.domain.model.Estado;
 import com.api.mandae.domain.repository.EstadoRepository;
 import com.api.mandae.domain.service.CadastroEstadoService;
