@@ -44,25 +44,20 @@ public class CidadeController {
 	}
 
 	@PostMapping
-	public ResponseEntity<?> adicionar(@RequestBody Cidade cidade) {
-		try {
-			cidade = cadastroCidade.salvar(cidade);
-			return ResponseEntity.ok(cidade);
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
+	public Cidade adicionar(@RequestBody Cidade cidade) {
+		return cadastroCidade.salvar(cidade);
 	}
 
 	@PutMapping("/{id}")
 	public Cidade atualizar(@PathVariable Long id, @RequestBody Cidade cidade) {
 
-			Cidade cidadeAtual = cadastroCidade.buscarOuFalhar(id);
+		Cidade cidadeAtual = cadastroCidade.buscarOuFalhar(id);
 
-				BeanUtils.copyProperties(cidade, cidadeAtual, "id");
-				
-				return cadastroCidade.salvar(cidadeAtual);
+		BeanUtils.copyProperties(cidade, cidadeAtual, "id");
 
-			}
+		return cadastroCidade.salvar(cidadeAtual);
+
+	}
 
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
