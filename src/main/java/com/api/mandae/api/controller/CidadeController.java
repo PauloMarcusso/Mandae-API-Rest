@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.api.mandae.domain.exception.EntidadeEmUsoException;
 import com.api.mandae.domain.exception.EntidadeNaoEncontradaException;
+import com.api.mandae.domain.exception.NegocioException;
 import com.api.mandae.domain.model.Cidade;
 import com.api.mandae.domain.repository.CidadeRepository;
 import com.api.mandae.domain.service.CadastroCidadeService;
@@ -45,7 +46,11 @@ public class CidadeController {
 
 	@PostMapping
 	public Cidade adicionar(@RequestBody Cidade cidade) {
-		return cadastroCidade.salvar(cidade);
+		try {
+			return cadastroCidade.salvar(cidade);
+		}catch(EntidadeNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage());
+		}
 	}
 
 	@PutMapping("/{id}")
@@ -55,7 +60,11 @@ public class CidadeController {
 
 		BeanUtils.copyProperties(cidade, cidadeAtual, "id");
 
-		return cadastroCidade.salvar(cidadeAtual);
+		try {
+			return cadastroCidade.salvar(cidadeAtual);
+		}catch(EntidadeNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage());
+		}
 
 	}
 
