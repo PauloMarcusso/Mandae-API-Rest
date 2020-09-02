@@ -20,11 +20,13 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.api.mandae.Groups;
+import com.api.mandae.Groups.CozinhaId;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
@@ -40,18 +42,19 @@ public class Restaurante {
 	@EqualsAndHashCode.Include
 	private Long id;
 
-	@NotBlank(groups = Groups.CadastroRestaurante.class)
+	@NotBlank
 	@Column( nullable = false)
 	private String nome;
 
-	@PositiveOrZero(groups = Groups.CadastroRestaurante.class)
+	@PositiveOrZero
 	@Column(name = "taxa_frete", nullable = false)
 	private BigDecimal taxaFrete;
 
 
 	@Valid
 	@ManyToOne //(fetch = FetchType.LAZY)
-	@NotNull(groups = Groups.CadastroRestaurante.class)
+	@NotNull
+	@ConvertGroup(from = Default.class, to = CozinhaId.class)
 	@JoinColumn(name = "cozinha_id", nullable = false)
 	private Cozinha cozinha;
 	

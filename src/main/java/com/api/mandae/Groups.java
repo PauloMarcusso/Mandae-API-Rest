@@ -2,5 +2,5 @@ package com.api.mandae;
 
 public interface Groups {
 
-	public interface CadastroRestaurante{}
+	public interface CozinhaId{}
 }
