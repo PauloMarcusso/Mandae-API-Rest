@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import com.api.mandae.Groups;
+import com.api.mandae.core.Groups;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

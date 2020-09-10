@@ -1,4 +1,4 @@
-package com.api.mandae;
+package com.api.mandae.core;
 
 public interface Groups {
 
