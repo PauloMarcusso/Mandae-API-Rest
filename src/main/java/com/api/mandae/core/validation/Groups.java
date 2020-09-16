@@ -1,4 +1,4 @@
-package com.api.mandae.core;
+package com.api.mandae.core.validation;
 
 public interface Groups {
 
