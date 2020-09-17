@@ -28,11 +28,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.api.mandae.core.validation.Groups.CozinhaId;
 import com.api.mandae.core.validation.Multiplo;
 import com.api.mandae.core.validation.TaxaFrete;
+import com.api.mandae.core.validation.ValorZeroIncluiDescricao;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+@ValorZeroIncluiDescricao(valorField = "taxaFrete", descricaoField = "nome", descricaoObrigatoria = "Frete Grátis")
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
@@ -49,7 +51,7 @@ public class Restaurante {
 
 	@NotNull
 	@TaxaFrete
-	@Multiplo(numero = 5)
+//	@Multiplo(numero = 5)
 	@Column(name = "taxa_frete", nullable = false)
 	private BigDecimal taxaFrete;
 
