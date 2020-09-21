@@ -13,15 +13,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.api.mandae.domain.exception.CozinhaNaoEncontradaException;
 import com.api.mandae.domain.exception.EntidadeEmUsoException;
 import com.api.mandae.domain.model.Cozinha;
-import com.api.mandae.domain.model.Restaurante;
 import com.api.mandae.domain.service.CadastroCozinhaService;
 
 @SpringBootTest
-class CadastroCozinhaIntegrationTests {
+class CadastroCozinhaIntegracaoTest {
 	
 	@Autowired
 	private CadastroCozinhaService cadastroCozinha;
 
+	/**
+	 * TESTE DE INTEGRAÇÃO
+	 */
 	@Test
 	public void testarCadastroCozinhaComSucesso() {
 		//cenário
