@@ -2,6 +2,8 @@ package com.api.mandae;
 
 import static io.restassured.RestAssured.given;
 
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -29,5 +31,21 @@ public class CadastroCozinhaIT {
 			.get()
 			.then()
 			.statusCode(200);
+	}
+	
+	@Test
+	public void deveConter4CozinhasQuandoConsultarCozinhas() {
+		
+		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+		
+		given()
+			.basePath("/cozinhas")
+			.port(port)
+			.accept(ContentType.JSON)
+		.when()
+			.get()
+		.then()
+			.body("", Matchers.hasSize(4))
+			.body("nome", Matchers.hasItems("Tailandesa", "Indiana"));
 	}
 }
