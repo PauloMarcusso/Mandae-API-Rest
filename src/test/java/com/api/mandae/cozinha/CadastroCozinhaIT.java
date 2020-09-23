@@ -1,4 +1,4 @@
-package com.api.mandae;
+package com.api.mandae.cozinha;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
