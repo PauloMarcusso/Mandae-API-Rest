@@ -44,6 +44,7 @@ public class CidadeController {
 	}
 
 	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
 	public Cidade adicionar(@RequestBody @Valid Cidade cidade) {
 		try {
 			return cadastroCidade.salvar(cidade);
