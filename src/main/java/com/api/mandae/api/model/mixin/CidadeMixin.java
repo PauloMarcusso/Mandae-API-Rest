@@ -1,4 +1,4 @@
-package com.api.mandae.domain.model.mixin;
+package com.api.mandae.api.model.mixin;
 
 import com.api.mandae.domain.model.Estado;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

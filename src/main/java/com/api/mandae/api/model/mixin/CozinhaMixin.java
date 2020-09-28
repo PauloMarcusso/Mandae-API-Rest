@@ -1,4 +1,4 @@
-package com.api.mandae.domain.model.mixin;
+package com.api.mandae.api.model.mixin;
 
 import java.util.ArrayList;
 import java.util.List;
