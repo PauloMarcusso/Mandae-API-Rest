@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum ProblemType {
 
 	MENSAGEM_INCOMPREENSIVEL("/mensagem-incompreensível", "Mensagem incompreensível"),
-	RECURSO_NAO_ENCONTRADO("/recurso-nao-encontrado", "Recurso não ncontrado"),
+	RECURSO_NAO_ENCONTRADO("/recurso-nao-encontrado", "Recurso não encontrado"),
 	ENTIDADE_EM_USO("/entidade-em-uso", "Entidade em uso"),
 	PARAMETRO_INVALIDO("/parametro-invalido", "Parâmetro inválido"),
 	ERRO_DE_SISTEMA("/erro-de-sistema", "Erro de sistema"),

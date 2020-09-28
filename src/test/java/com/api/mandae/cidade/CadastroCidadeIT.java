@@ -26,6 +26,8 @@ import io.restassured.http.ContentType;
 @TestPropertySource("/application-test.properties")
 public class CadastroCidadeIT {
 
+	private static final String DADOS_INVÁLIDOS = "Dados inválidos";
+
 	private static final int CIDADE_ID_INEXISTENTE = 200;
 
 	@LocalServerPort
@@ -43,7 +45,11 @@ public class CadastroCidadeIT {
 	private Cidade cidadeTest;
 	private Estado estadoTest;
 
-	private String jsonCidadeTestDadosCorretos; 
+	private String jsonCidadeTestDadosCorretos;
+	private String jsonCidadeSemEstado;
+	private String jsonCidadeTestSemNome; 
+
+
 	
 	@BeforeEach
 	public void setup() {
@@ -54,6 +60,8 @@ public class CadastroCidadeIT {
 		RestAssured.port = port;
 		
 		jsonCidadeTestDadosCorretos = ResourceUtils.getContentFromResource("/json/correto/cidade-test.json");
+		jsonCidadeSemEstado = ResourceUtils.getContentFromResource("/json/incorreto/cidade-test-sem-estado.json");
+		jsonCidadeTestSemNome = ResourceUtils.getContentFromResource("/json/incorreto/cidade-test-sem-nome.json");
 		
 		databaseCleaner.clearTables();
 		prepararDados();
@@ -92,7 +100,8 @@ public class CadastroCidadeIT {
 		.when()
 			.get("/{cidadeId}")
 		.then()
-			.statusCode(HttpStatus.NOT_FOUND.value());
+			.statusCode(HttpStatus.NOT_FOUND.value())
+			.body("title", equalTo("Recurso não encontrado"));
 	}
 	
 	@Test
@@ -105,8 +114,36 @@ public class CadastroCidadeIT {
 			.post()
 		.then()
 			.statusCode(HttpStatus.CREATED.value());
-		
 	}
+	
+	@Test
+	public void deveRetornarStatus404AoCadastrarCidadeSemNome() {
+		
+		given()
+			.accept(ContentType.JSON)
+			.contentType(ContentType.JSON)
+			.body(jsonCidadeTestSemNome)
+		.when()
+			.post()
+		.then()
+			.statusCode(HttpStatus.BAD_REQUEST.value())
+			.body("title", equalTo(DADOS_INVÁLIDOS));
+	}
+	
+	@Test
+	public void deveRetornarStatus404AoCadastrarCidadeSemEstado() {
+		
+		given()
+			.accept(ContentType.JSON)
+			.contentType(ContentType.JSON)
+			.body(jsonCidadeSemEstado)
+		.when()
+			.post()
+		.then()
+			.statusCode(HttpStatus.BAD_REQUEST.value())
+			.body("title", equalTo(DADOS_INVÁLIDOS));
+	}
+	
 	public void prepararDados() {
 		
 		estadoTest = new Estado();
