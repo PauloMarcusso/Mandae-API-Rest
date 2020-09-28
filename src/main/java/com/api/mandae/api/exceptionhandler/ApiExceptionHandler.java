@@ -1,6 +1,7 @@
 package com.api.mandae.api.exceptionhandler;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,7 +61,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		String detail = "O corpo da requisição está inválido. Verifique erro de sintaxe";
 
 		Problem problem = createProblemBuilder(status, problemType, detail).userMessage(MSG_ERRO_GENERICA_USUARIO_FINAL)
-				.timestamp(LocalDateTime.now()).build();
+				.timestamp(OffsetDateTime.now()).build();
 
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}
@@ -253,12 +254,12 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 			HttpStatus status, WebRequest request) {
 
 		if (body == null) {
-			body = Problem.builder().timestamp(LocalDateTime.now()).title(status.getReasonPhrase())
+			body = Problem.builder().timestamp(OffsetDateTime.now()).title(status.getReasonPhrase())
 					.status(status.value())
 					.userMessage(MSG_ERRO_GENERICA_USUARIO_FINAL)
 					.build();
 		} else if (body instanceof String) {
-			body = Problem.builder().timestamp(LocalDateTime.now()).title((String) body).userMessage(MSG_ERRO_GENERICA_USUARIO_FINAL).status(status.value()).build();
+			body = Problem.builder().timestamp(OffsetDateTime.now()).title((String) body).userMessage(MSG_ERRO_GENERICA_USUARIO_FINAL).status(status.value()).build();
 		}
 
 		return super.handleExceptionInternal(ex, body, headers, status, request);
@@ -266,7 +267,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
 	private Problem.ProblemBuilder createProblemBuilder(HttpStatus status, ProblemType problemType, String detail) {
 
-		return Problem.builder().timestamp(LocalDateTime.now()).status(status.value()).type(problemType.getUri())
+		return Problem.builder().timestamp(OffsetDateTime.now()).status(status.value()).type(problemType.getUri())
 				.title(problemType.getTitle()).detail(detail);
 	}
 
