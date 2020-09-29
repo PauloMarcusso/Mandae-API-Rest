@@ -29,9 +29,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.api.mandae.api.model.CozinhaDTO;
 import com.api.mandae.api.model.RestauranteDTO;
+import com.api.mandae.api.model.input.RestauranteInput;
 import com.api.mandae.domain.exception.CozinhaNaoEncontradaException;
 import com.api.mandae.domain.exception.NegocioException;
 import com.api.mandae.domain.exception.ValidacaoException;
+import com.api.mandae.domain.model.Cozinha;
 import com.api.mandae.domain.model.Restaurante;
 import com.api.mandae.domain.repository.RestauranteRepository;
 import com.api.mandae.domain.service.CadastroRestauranteService;
@@ -65,8 +67,11 @@ public class RestauranteController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public RestauranteDTO adicionar(@RequestBody @Valid Restaurante restaurante) {
+	public RestauranteDTO adicionar(@RequestBody @Valid RestauranteInput restauranteInput) {
 		try {
+			
+			Restaurante restaurante = toDomainObject(restauranteInput);
+			
 			return toDTO(cadastroRestaurante.salvar(restaurante));
 		} catch (CozinhaNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
@@ -74,8 +79,10 @@ public class RestauranteController {
 	}
 
 	@PutMapping("/{id}")
-	public RestauranteDTO atualizar(@PathVariable Long id, @RequestBody @Valid Restaurante restaurante) {
+	public RestauranteDTO atualizar(@PathVariable Long id, @RequestBody @Valid RestauranteInput restauranteInput) {
 
+		Restaurante restaurante = toDomainObject(restauranteInput);
+		
 		Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(id);
 
 		BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento", "endereco", "dataCadastro",
@@ -88,6 +95,11 @@ public class RestauranteController {
 		}
 	}
 
+	/**
+	 *
+	 *  Será abordada uma forma melhor de realizar o patch
+	 *
+	 */
 	@PatchMapping("/{id}")
 	public RestauranteDTO atualizaParcial(@PathVariable Long id, @RequestBody Map<String, Object> campos,
 			HttpServletRequest request) {
@@ -97,8 +109,9 @@ public class RestauranteController {
 		merge(campos, restauranteAtual, request);
 
 		validate(restauranteAtual, "restaurante");
-			
-		return atualizar(id, restauranteAtual);
+		
+//		return atualizar(id, restauranteAtual);
+		return null;
 	}
 
 	private void validate(Restaurante restaurante, String objectName) {
@@ -159,5 +172,18 @@ public class RestauranteController {
 		return restaurantes.stream()
 				.map(restaurante -> toDTO(restaurante))
 				.collect(Collectors.toList());
+	}
+	
+	private Restaurante toDomainObject(RestauranteInput restauranteInput) {
+		
+		Restaurante restaurante = new Restaurante();
+		restaurante.setNome(restauranteInput.getNome());
+		restaurante.setTaxaFrete(restauranteInput.getTaxaFrete());
+		
+		Cozinha cozinha = new Cozinha();
+		cozinha.setId(restauranteInput.getCozinha().getId());
+		restaurante.setCozinha(cozinha);
+		
+		return restaurante;
 	}
 }
