@@ -64,14 +64,14 @@ public class RestauranteController {
 	
 	@GetMapping
 	public List<RestauranteDTO> listar() {
-		return restauranteConverter.toCollectionDTO(restauranteRepository.findAll());
+		return restauranteDTOAssembler.toCollectionDTO(restauranteRepository.findAll());
 	}
 
 	@GetMapping("/{id}")
 	public RestauranteDTO buscar(@PathVariable Long id) {
 		Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(id);
 
-		return restauranteConverter.toDTO(restaurante);
+		return restauranteDTOAssembler.toDTO(restaurante);
 	}
 
 	@PostMapping
@@ -79,9 +79,9 @@ public class RestauranteController {
 	public RestauranteDTO adicionar(@RequestBody @Valid RestauranteInput restauranteInput) {
 		try {
 
-			Restaurante restaurante = restauranteConverter.toDomainObject(restauranteInput);
+			Restaurante restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
 
-			return restauranteConverter.toDTO(cadastroRestaurante.salvar(restaurante));
+			return restauranteDTOAssembler.toDTO(cadastroRestaurante.salvar(restaurante));
 		} catch (CozinhaNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
@@ -90,7 +90,7 @@ public class RestauranteController {
 	@PutMapping("/{id}")
 	public RestauranteDTO atualizar(@PathVariable Long id, @RequestBody @Valid RestauranteInput restauranteInput) {
 
-		Restaurante restaurante = restauranteConverter.toDomainObject(restauranteInput);
+		Restaurante restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
 
 		Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(id);
 
@@ -98,7 +98,7 @@ public class RestauranteController {
 				"produtos");
 
 		try {
-			return restauranteConverter.toDTO(cadastroRestaurante.salvar(restauranteAtual));
+			return restauranteDTOAssembler.toDTO(cadastroRestaurante.salvar(restauranteAtual));
 		} catch (CozinhaNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
