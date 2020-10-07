@@ -14,8 +14,8 @@ public class JacksonMixinModule extends SimpleModule{
 	private static final long serialVersionUID = 1L;
 	
 	public JacksonMixinModule() {
-		setMixInAnnotation(Cidade.class, CidadeMixin.class);
-		setMixInAnnotation(Cozinha.class, CozinhaMixin.class);
+//		setMixInAnnotation(Cidade.class, CidadeMixin.class);
+//		setMixInAnnotation(Cozinha.class, CozinhaMixin.class);
 	}
 
 }

@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.api.mandae.api.assembler.cozinha.CozinhaConverter;
+import com.api.mandae.api.model.CozinhaDTO;
+import com.api.mandae.api.model.input.CozinhaInput;
 import com.api.mandae.domain.model.Cozinha;
 import com.api.mandae.domain.repository.CozinhaRepository;
 import com.api.mandae.domain.service.CadastroCozinhaService;
@@ -30,31 +33,38 @@ public class CozinhaController {
 
 	@Autowired
 	private CadastroCozinhaService cadastroCozinha;
+	
+	@Autowired
+	private CozinhaConverter cozinhaConverter;
+	
 
 	@GetMapping
-	public List<Cozinha> listar() {
-		return cozinhaRepository.findAll();
+	public List<CozinhaDTO> listar() {
+		return cozinhaConverter.toCollectionDTO(cozinhaRepository.findAll());
 	}
 
 	@GetMapping("/{id}")
-	public Cozinha buscar(@PathVariable Long id) {
-		return cadastroCozinha.buscarOuFalhar(id);
+	public CozinhaDTO buscar(@PathVariable Long id) {
+		return cozinhaConverter.toDTO(cadastroCozinha.buscarOuFalhar(id));
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cozinha adicionar(@RequestBody @Valid Cozinha cozinha) {
-		return cadastroCozinha.salvar(cozinha);
+	public CozinhaDTO adicionar(@RequestBody @Valid CozinhaInput cozinhaInput) {
+		
+		Cozinha cozinha = cozinhaConverter.toDomainObject(cozinhaInput);
+		
+		return cozinhaConverter.toDTO(cadastroCozinha.salvar(cozinha));
 	}
 
 	@PutMapping("/{id}")
-	public Cozinha atualizar(@PathVariable Long id, @RequestBody @Valid Cozinha cozinha) {
+	public CozinhaDTO atualizar(@PathVariable Long id, @RequestBody @Valid CozinhaInput cozinhaInput) {
 		
 			Cozinha cozinhaAtual = cadastroCozinha.buscarOuFalhar(id);
-
-			BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
 			
-			return cadastroCozinha.salvar(cozinhaAtual);
+			cozinhaConverter.copyToDomainObject(cozinhaInput, cozinhaAtual);
+
+			return cozinhaConverter.toDTO(cadastroCozinha.salvar(cozinhaAtual));
 	}
 
 	@DeleteMapping("/{id}")

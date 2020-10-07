@@ -5,10 +5,11 @@ import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Getter
+@Setter
 public class CozinhaIdInput {
 
 	@NotNull
 	private Long id;
+	
 }

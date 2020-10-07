@@ -1,4 +1,4 @@
-package com.api.mandae.api.assembler;
+package com.api.mandae.api.assembler.restaurante;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
