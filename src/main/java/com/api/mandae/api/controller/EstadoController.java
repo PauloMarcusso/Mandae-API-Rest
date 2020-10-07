@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.api.mandae.api.assembler.estado.EstadoConverter;
+import com.api.mandae.api.model.EstadoDTO;
+import com.api.mandae.api.model.input.EstadoInput;
 import com.api.mandae.domain.model.Estado;
 import com.api.mandae.domain.repository.EstadoRepository;
 import com.api.mandae.domain.service.CadastroEstadoService;
@@ -30,31 +33,37 @@ public class EstadoController {
 
 	@Autowired
 	private CadastroEstadoService cadastroEstado;
+	
+	@Autowired
+	private EstadoConverter estadoConverter;
 
 	@GetMapping
-	public List<Estado> listar() {
-		return estadoRepository.findAll();
+	public List<EstadoDTO> listar() {
+		return estadoConverter.toCollectionDTO(estadoRepository.findAll());
 	}
 
 	@GetMapping("/{id}")
-	public Estado buscar(@PathVariable Long id) {
-		return cadastroEstado.buscarOuFalhar(id);
+	public EstadoDTO buscar(@PathVariable Long id) {
+		return estadoConverter.toDTO(cadastroEstado.buscarOuFalhar(id));
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Estado adicionar(@RequestBody @Valid Estado estado) {
-		return cadastroEstado.salvar(estado);
+	public EstadoDTO adicionar(@RequestBody @Valid EstadoInput estadoInput) {
+		
+		Estado estado = estadoConverter.toDomainObject(estadoInput);
+		
+		return estadoConverter.toDTO(cadastroEstado.salvar(estado));
 	}
 
 	@PutMapping("/{id}")
-	public Estado atualizar(@PathVariable Long id, @RequestBody @Valid Estado estado) {
+	public EstadoDTO atualizar(@PathVariable Long id, @RequestBody @Valid EstadoInput estadoInput) {
 
 		Estado estadoAtual = cadastroEstado.buscarOuFalhar(id);
-
-		BeanUtils.copyProperties(estado, estadoAtual, "id");
 		
-		return cadastroEstado.salvar(estadoAtual);
+		estadoConverter.copyToDomainObject(estadoInput, estadoAtual);
+
+		return estadoConverter.toDTO(cadastroEstado.salvar(estadoAtual));
 	}
 
 	@DeleteMapping("/{id}")
