@@ -7,7 +7,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.api.mandae.api.model.CozinhaDTO;
 import com.api.mandae.api.model.RestauranteDTO;
 import com.api.mandae.domain.model.Restaurante;
 

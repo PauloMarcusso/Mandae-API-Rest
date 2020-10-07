@@ -15,5 +15,7 @@ public interface Converter<T, S, U> {
 	public List<S> toCollectionDTO(List<T> list);
 	
 	public T toDomainObject(U inputDomain);
+	
+	public void copyToDomainObject(U inputDomain, T domain);
 
 }
