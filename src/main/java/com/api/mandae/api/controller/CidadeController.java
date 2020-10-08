@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.api.mandae.api.assembler.cidade.CidadeConverter;
+import com.api.mandae.api.model.CidadeDTO;
+import com.api.mandae.api.model.input.CidadeInput;
 import com.api.mandae.domain.exception.EstadoNaoEncontradoException;
 import com.api.mandae.domain.exception.NegocioException;
 import com.api.mandae.domain.model.Cidade;
@@ -32,36 +35,45 @@ public class CidadeController {
 
 	@Autowired
 	private CadastroCidadeService cadastroCidade;
+	
+	@Autowired
+	private CidadeConverter cidadeConverter;
 
 	@GetMapping
-	public List<Cidade> listar() {
-		return cidadeRepository.findAll();
+	public List<CidadeDTO> listar() {
+		return cidadeConverter.toCollectionDTO(cidadeRepository.findAll());
 	}
 
 	@GetMapping("/{id}")
-	public Cidade buscar(@PathVariable Long id) {
-		return cadastroCidade.buscarOuFalhar(id);
+	public CidadeDTO buscar(@PathVariable Long id) {
+		return cidadeConverter.toDTO(cadastroCidade.buscarOuFalhar(id));
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cidade adicionar(@RequestBody @Valid Cidade cidade) {
+	public CidadeDTO adicionar(@RequestBody @Valid CidadeInput cidadeInput) {
 		try {
-			return cadastroCidade.salvar(cidade);
+			Cidade cidade = cidadeConverter.toDomainObject(cidadeInput);
+			
+			return cidadeConverter.toDTO(cadastroCidade.salvar(cidade));
+			
 		} catch (EstadoNaoEncontradoException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}
 	}
 
 	@PutMapping("/{id}")
-	public Cidade atualizar(@PathVariable Long id, @RequestBody @Valid Cidade cidade) {
+	public CidadeDTO atualizar(@PathVariable Long id, @RequestBody @Valid CidadeInput cidadeInput) {
 
 		Cidade cidadeAtual = cadastroCidade.buscarOuFalhar(id);
-		BeanUtils.copyProperties(cidade, cidadeAtual, "id");
+		
+//		BeanUtils.copyProperties(cidade, cidadeAtual, "id");
+		
+		cidadeConverter.copyToDomainObject(cidadeInput, cidadeAtual);
 		
 		try {
 			
-			return cadastroCidade.salvar(cidadeAtual);
+			return cidadeConverter.toDTO(cadastroCidade.salvar(cidadeAtual));
 			
 		} catch (EstadoNaoEncontradoException e) {
 			throw new NegocioException(e.getMessage(), e);
