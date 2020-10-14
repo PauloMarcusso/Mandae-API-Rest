@@ -15,15 +15,7 @@ import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.SmartValidator;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.api.mandae.api.assembler.restaurante.RestauranteConverter;
 import com.api.mandae.api.assembler.restaurante.RestauranteDTOAssembler;
@@ -122,6 +114,18 @@ public class RestauranteController {
 
 //		return atualizar(id, restauranteAtual);
 		return null;
+	}
+
+	@DeleteMapping("/{id}/ativo")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void inativar(@PathVariable Long id){
+		cadastroRestaurante.inativar(id);
+	}
+
+	@PutMapping("/{id}/ativo")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void ativar(@PathVariable Long id){
+		cadastroRestaurante.ativar(id);
 	}
 
 	private void validate(Restaurante restaurante, String objectName) {
