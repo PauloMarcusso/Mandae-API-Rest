@@ -1,30 +1,30 @@
 package com.api.mandae.api.assembler.restaurante;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.api.mandae.api.assembler.Converter;
+import com.api.mandae.api.model.RestauranteDTO;
+import com.api.mandae.api.model.input.RestauranteInput;
+import com.api.mandae.domain.model.Cidade;
+import com.api.mandae.domain.model.Cozinha;
+import com.api.mandae.domain.model.Restaurante;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.api.mandae.api.assembler.Converter;
-import com.api.mandae.api.model.RestauranteDTO;
-import com.api.mandae.api.model.input.RestauranteInput;
-import com.api.mandae.domain.model.Cozinha;
-import com.api.mandae.domain.model.Restaurante;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
-public class RestauranteConverter implements Converter<Restaurante, RestauranteDTO, RestauranteInput>{
+public class RestauranteConverter implements Converter<Restaurante, RestauranteDTO, RestauranteInput> {
 
-	
-	@Autowired
-	private ModelMapper modelMapper;
-	
-	@Override
-	public RestauranteDTO toDTO(Restaurante restaurante) {
-		
-		return modelMapper.map(restaurante, RestauranteDTO.class);
-		
+
+    @Autowired
+    private ModelMapper modelMapper;
+
+    @Override
+    public RestauranteDTO toDTO(Restaurante restaurante) {
+
+        return modelMapper.map(restaurante, RestauranteDTO.class);
+
 //		CozinhaDTO cozinhaDTO = new CozinhaDTO();
 //		cozinhaDTO.setId(restaurante.getCozinha().getId());
 //		cozinhaDTO.setNome(restaurante.getCozinha().getNome());
@@ -35,18 +35,18 @@ public class RestauranteConverter implements Converter<Restaurante, RestauranteD
 //		restauranteDTO.setTaxaFrete(restaurante.getTaxaFrete());
 //		restauranteDTO.setCozinha(cozinhaDTO);
 //		return restauranteDTO;
-	}
+    }
 
-	@Override
-	public List<RestauranteDTO> toCollectionDTO(List<Restaurante> restaurantes) {
-		return restaurantes.stream().map(restaurante -> toDTO(restaurante)).collect(Collectors.toList());
-	}
+    @Override
+    public List<RestauranteDTO> toCollectionDTO(List<Restaurante> restaurantes) {
+        return restaurantes.stream().map(restaurante -> toDTO(restaurante)).collect(Collectors.toList());
+    }
 
-	@Override
-	public Restaurante toDomainObject(RestauranteInput restauranteInput) {
-		
-		return modelMapper.map(restauranteInput, Restaurante.class);
-		
+    @Override
+    public Restaurante toDomainObject(RestauranteInput restauranteInput) {
+
+        return modelMapper.map(restauranteInput, Restaurante.class);
+
 //		Restaurante restaurante = new Restaurante();
 //		restaurante.setNome(restauranteInput.getNome());
 //		restaurante.setTaxaFrete(restauranteInput.getTaxaFrete());
@@ -56,16 +56,17 @@ public class RestauranteConverter implements Converter<Restaurante, RestauranteD
 //		restaurante.setCozinha(cozinha);
 //
 //		return restaurante;
-	}
-	
-	@Override
-	public void copyToDomainObject(RestauranteInput restauranteInput, Restaurante restaurante) {
-		
-		restaurante.setCozinha(new Cozinha());
-		
-		modelMapper.map(restauranteInput, restaurante);
-	}
+    }
 
-	
+    @Override
+    public void copyToDomainObject(RestauranteInput restauranteInput, Restaurante restaurante) {
 
+        restaurante.setCozinha(new Cozinha());
+
+        if (restaurante.getEndereco() != null) {
+            restaurante.getEndereco().setCidade(new Cidade());
+        }
+
+        modelMapper.map(restauranteInput, restaurante);
+    }
 }
