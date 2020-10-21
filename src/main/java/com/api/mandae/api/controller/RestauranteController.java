@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.api.mandae.domain.exception.CidadeNaoEncontradaException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -73,7 +74,7 @@ public class RestauranteController {
 			Restaurante restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
 
 			return restauranteDTOAssembler.toDTO(cadastroRestaurante.salvar(restaurante));
-		} catch (CozinhaNaoEncontradaException e) {
+		} catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
 	}
@@ -85,14 +86,16 @@ public class RestauranteController {
 
 		Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(id);
 		
-		restauranteInputDisassembler.copyToDomainObject(restauranteInput, restauranteAtual);
+		restauranteConverter.copyToDomainObject(restauranteInput, restauranteAtual);
 
 //		BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento", "endereco", "dataCadastro",
 //				"produtos");
 
 		try {
+
 			return restauranteDTOAssembler.toDTO(cadastroRestaurante.salvar(restauranteAtual));
-		} catch (CozinhaNaoEncontradaException e) {
+
+		} catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
 	}
