@@ -19,20 +19,32 @@ public class UsuarioController {
     @Autowired
     private CadastroUsuarioService cadastroUsuario;
 
+
+
     @GetMapping
-    public List<Usuario> listar(){
+    public List<Usuario> listar() {
         return usuarioRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    public Usuario buscar(@PathVariable Long id){
+    public Usuario buscar(@PathVariable Long id) {
         return cadastroUsuario.buscarOuFalhar(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Usuario adicionar(@RequestBody Usuario usuario){
+    public Usuario adicionar(@RequestBody Usuario usuario) {
         return cadastroUsuario.salvar(usuario);
+    }
+
+    @PutMapping("/{id}")
+    public Usuario atualizar(@RequestBody Usuario usuario, @PathVariable Long id){
+        return null;
+    }
+
+    @DeleteMapping("{/id}")
+    public void excluir(@PathVariable Long id) {
+        cadastroUsuario.remover(id);
     }
 
 
