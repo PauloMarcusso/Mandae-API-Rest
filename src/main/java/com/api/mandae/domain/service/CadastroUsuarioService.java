@@ -1,6 +1,8 @@
 package com.api.mandae.domain.service;
 
+import com.api.mandae.api.model.input.UsuarioInput;
 import com.api.mandae.domain.exception.EntidadeEmUsoException;
+import com.api.mandae.domain.exception.NegocioException;
 import com.api.mandae.domain.exception.UsuarioNaoEncontradoException;
 import com.api.mandae.domain.model.Usuario;
 import com.api.mandae.domain.repository.UsuarioRepository;
@@ -24,6 +26,18 @@ public class CadastroUsuarioService {
     @Transactional
     public Usuario salvar(Usuario usuario) {
         return usuarioRepository.save(usuario);
+    }
+
+    @Transactional
+    public void alterarSenha(Long usuarioId, String senhaAtual, String novaSenha){
+
+        Usuario usuario = buscarOuFalhar(usuarioId);
+
+        if(usuario.senhaNaoCoincideCom(senhaAtual)){
+            throw new NegocioException("Senha atual informada não coincide com a senha do usuário");
+        }
+
+        usuario.setSenha(novaSenha);
     }
 
     @Transactional

@@ -44,7 +44,7 @@ public class GruposController {
     }
 
     @PutMapping("/{id}")
-    public GrupoDTO atualizar(@RequestBody GrupoInput grupoInput, @PathVariable Long id){
+    public GrupoDTO atualizar(@RequestBody @Valid GrupoInput grupoInput, @PathVariable Long id){
 
         Grupo grupoAtual = cadastroGrupo.buscarOuFalhar(id);
         grupoConverter.copyToDomainObject(grupoInput, grupoAtual);

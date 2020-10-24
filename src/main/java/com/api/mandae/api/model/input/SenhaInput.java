@@ -3,17 +3,15 @@ package com.api.mandae.api.model.input;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
-public class UsuarioInput {
+public class SenhaInput {
 
     @NotBlank
-    private String nome;
+    private String senhaAtual;
 
-    @Email
     @NotBlank
-    private String email;
+    private String novaSenha;
 }
