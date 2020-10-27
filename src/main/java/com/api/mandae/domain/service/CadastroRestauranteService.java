@@ -5,6 +5,7 @@ import com.api.mandae.domain.exception.NegocioException;
 import com.api.mandae.domain.exception.RestauranteNaoEncontradoException;
 import com.api.mandae.domain.model.Cidade;
 import com.api.mandae.domain.model.Cozinha;
+import com.api.mandae.domain.model.FormaPagamento;
 import com.api.mandae.domain.model.Restaurante;
 import com.api.mandae.domain.repository.RestauranteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class CadastroRestauranteService {
     @Autowired
     private CadastroCidadeService cadastroCidade;
 
+    @Autowired
+    private CadastroFormaPagamentoService cadastroFormaPagamento;
+
     @Transactional
     public Restaurante salvar(Restaurante restaurante) {
 
@@ -40,6 +44,22 @@ public class CadastroRestauranteService {
             throw new NegocioException(e.getMessage());
         }
         return restauranteRepository.save(restaurante);
+    }
+
+    @Transactional
+    public void desassociarFormaPagamento(Long restauranteId, Long formaPagamentoId){
+        FormaPagamento formaPagamento = cadastroFormaPagamento.buscarOuFalhar(formaPagamentoId);
+        Restaurante restaurante = buscarOuFalhar(restauranteId);
+
+        restaurante.removerFormaPagamento(formaPagamento);
+    }
+
+    @Transactional
+    public void associar(Long restauranteId, Long formaPagamentoId){
+        Restaurante restaurante = buscarOuFalhar(restauranteId);
+        FormaPagamento formaPagamento = cadastroFormaPagamento.buscarOuFalhar(formaPagamentoId);;
+
+        restaurante.adicionarFormaPagamento(formaPagamento);
     }
 
     @Transactional
