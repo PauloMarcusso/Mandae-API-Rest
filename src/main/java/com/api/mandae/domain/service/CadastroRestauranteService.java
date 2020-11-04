@@ -3,10 +3,7 @@ package com.api.mandae.domain.service;
 import com.api.mandae.domain.exception.CozinhaNaoEncontradaException;
 import com.api.mandae.domain.exception.NegocioException;
 import com.api.mandae.domain.exception.RestauranteNaoEncontradoException;
-import com.api.mandae.domain.model.Cidade;
-import com.api.mandae.domain.model.Cozinha;
-import com.api.mandae.domain.model.FormaPagamento;
-import com.api.mandae.domain.model.Restaurante;
+import com.api.mandae.domain.model.*;
 import com.api.mandae.domain.repository.RestauranteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +20,9 @@ public class CadastroRestauranteService {
 
     @Autowired
     private CadastroCidadeService cadastroCidade;
+
+    @Autowired
+    private CadastroUsuarioService cadastroUsuario;
 
     @Autowired
     private CadastroFormaPagamentoService cadastroFormaPagamento;
@@ -47,7 +47,7 @@ public class CadastroRestauranteService {
     }
 
     @Transactional
-    public void desassociarFormaPagamento(Long restauranteId, Long formaPagamentoId){
+    public void desassociarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
         FormaPagamento formaPagamento = cadastroFormaPagamento.buscarOuFalhar(formaPagamentoId);
         Restaurante restaurante = buscarOuFalhar(restauranteId);
 
@@ -55,11 +55,26 @@ public class CadastroRestauranteService {
     }
 
     @Transactional
-    public void associar(Long restauranteId, Long formaPagamentoId){
+    public void associarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
         Restaurante restaurante = buscarOuFalhar(restauranteId);
-        FormaPagamento formaPagamento = cadastroFormaPagamento.buscarOuFalhar(formaPagamentoId);;
+        FormaPagamento formaPagamento = cadastroFormaPagamento.buscarOuFalhar(formaPagamentoId);
+        ;
 
         restaurante.adicionarFormaPagamento(formaPagamento);
+    }
+
+    @Transactional
+    public void associarUsuarioResponsavel(Long restauranteId, Long usuarioId) {
+        Restaurante restaurante = buscarOuFalhar(restauranteId);
+        Usuario usuario = cadastroUsuario.buscarOuFalhar(usuarioId);
+        restaurante.adicionarUsuarioResponsavel(usuario);
+    }
+
+    @Transactional
+    public void desassociarUsuarioResponsavel(Long restauranteId, Long usuarioId) {
+        Restaurante restaurante = buscarOuFalhar(restauranteId);
+        Usuario usuario = cadastroUsuario.buscarOuFalhar(usuarioId);
+        restaurante.removerUsuarioResponsavel(usuario);
     }
 
     @Transactional
@@ -86,7 +101,7 @@ public class CadastroRestauranteService {
     }
 
     @Transactional
-    public void fecharRestaurante(Long restauranteId){
+    public void fecharRestaurante(Long restauranteId) {
         Restaurante restaurante = buscarOuFalhar(restauranteId);
         restaurante.fechar();
     }

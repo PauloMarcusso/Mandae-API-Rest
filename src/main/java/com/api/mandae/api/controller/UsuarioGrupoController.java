@@ -7,6 +7,7 @@ import com.api.mandae.domain.repository.GrupoRepository;
 import com.api.mandae.domain.service.CadastroGrupoService;
 import com.api.mandae.domain.service.CadastroUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,13 +37,15 @@ public class UsuarioGrupoController {
     }
 
     @PutMapping("/{grupoId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void associar(@PathVariable Long usuarioId, @PathVariable Long grupoId) {
         cadastroUsuario.associar(usuarioId, grupoId);
 
     }
 
     @DeleteMapping("/{grupoId}")
-    public void desassociar(@PathVariable Long usuarioId, @PathVariable Long grupoId){
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void desassociar(@PathVariable Long usuarioId, @PathVariable Long grupoId) {
         cadastroUsuario.desassociar(usuarioId, grupoId);
     }
 }

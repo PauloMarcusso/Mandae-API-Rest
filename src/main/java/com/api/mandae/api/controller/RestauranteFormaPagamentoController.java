@@ -31,7 +31,7 @@ public class RestauranteFormaPagamentoController {
     @PutMapping("/{formaPagamentoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
     public void associar(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {
-        cadastroRestaurante.associar(restauranteId, formaPagamentoId);
+        cadastroRestaurante.associarFormaPagamento(restauranteId, formaPagamentoId);
     }
 
     @DeleteMapping("/{formaPagamentoId}")

@@ -10,6 +10,7 @@ truncate table permissao;
 truncate table produto;
 truncate table restaurante;
 truncate table restaurante_forma_pagamento;
+truncate table restaurante_usuario_responsavel;
 truncate table usuario;
 truncate table usuario_grupo;
 
@@ -69,6 +70,10 @@ insert into usuario (id, nome, email, senha, data_cadastro) values
 (1, 'João da Silva', 'joao.ger@algafood.com', '123', utc_timestamp),
 (2, 'Maria Joaquina', 'maria.vnd@algafood.com', '123', utc_timestamp),
 (3, 'José Souza', 'jose.aux@algafood.com', '123', utc_timestamp),
-(4, 'Sebastião Martins', 'sebastiao.cad@algafood.com', '123', utc_timestamp);
+(4, 'Sebastião Martins', 'sebastiao.cad@algafood.com', '123', utc_timestamp),
+(5, 'Manoel Lima', 'manoel.loja@gmail.com', '123', utc_timestamp);
 
 insert into usuario_grupo (usuario_id, grupo_id) values (1, 1), (1, 2), (2, 1), (3, 3), (4, 4);
+
+insert into restaurante_usuario_responsavel (restaurante_id, usuario_id) values (1, 5),(2, 3), (3, 5);
+
