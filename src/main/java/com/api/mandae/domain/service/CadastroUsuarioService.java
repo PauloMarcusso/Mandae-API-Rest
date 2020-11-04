@@ -4,6 +4,7 @@ import com.api.mandae.api.model.input.UsuarioInput;
 import com.api.mandae.domain.exception.EntidadeEmUsoException;
 import com.api.mandae.domain.exception.NegocioException;
 import com.api.mandae.domain.exception.UsuarioNaoEncontradoException;
+import com.api.mandae.domain.model.Grupo;
 import com.api.mandae.domain.model.Usuario;
 import com.api.mandae.domain.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class CadastroUsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private CadastroGrupoService cadastroGrupo;
 
     public Usuario buscarOuFalhar(Long id) {
         return usuarioRepository.findById(id).orElseThrow(
@@ -63,5 +67,22 @@ public class CadastroUsuarioService {
             throw new EntidadeEmUsoException(String.format("Usuario de código %d não pode ser removido pois está em uso", id));
         }
 
+    }
+
+    @Transactional
+    public void associar(Long usuarioId, Long grupoId){
+
+        Usuario usuario = buscarOuFalhar(usuarioId);
+        Grupo grupo = cadastroGrupo.buscarOuFalhar(grupoId);
+
+        usuario.adicionarGrupo(grupo);
+    }
+
+    @Transactional
+    public void desassociar(Long usuarioId, Long grupoId){
+        Usuario usuario = buscarOuFalhar(usuarioId);
+        Grupo grupo = cadastroGrupo.buscarOuFalhar(grupoId);
+
+        usuario.removerGrupo(grupo);
     }
 }
