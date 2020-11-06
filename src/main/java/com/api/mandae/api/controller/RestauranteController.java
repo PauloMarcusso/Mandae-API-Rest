@@ -8,27 +8,17 @@ import com.api.mandae.api.model.input.RestauranteInput;
 import com.api.mandae.domain.exception.CidadeNaoEncontradaException;
 import com.api.mandae.domain.exception.CozinhaNaoEncontradaException;
 import com.api.mandae.domain.exception.NegocioException;
-import com.api.mandae.domain.exception.ValidacaoException;
+import com.api.mandae.domain.exception.RestauranteNaoEncontradoException;
 import com.api.mandae.domain.model.Restaurante;
 import com.api.mandae.domain.repository.RestauranteRepository;
 import com.api.mandae.domain.service.CadastroRestauranteService;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.http.server.ServletServerHttpRequest;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/restaurantes")
@@ -111,15 +101,34 @@ public class RestauranteController {
     }
 
     @PutMapping("/{restauranteId}/abertura")
-    public void abertura(@PathVariable Long restauranteId){
-    	cadastroRestaurante.abrirRestaurante(restauranteId);
-	}
+    public void abertura(@PathVariable Long restauranteId) {
+        cadastroRestaurante.abrirRestaurante(restauranteId);
+    }
 
-	@PutMapping("/{restauranteId}/fechamento")
-    public void fechamento(@PathVariable Long restauranteId){
+    @PutMapping("/{restauranteId}/fechamento")
+    public void fechamento(@PathVariable Long restauranteId) {
         cadastroRestaurante.fecharRestaurante(restauranteId);
     }
 
+    @PutMapping("/ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void ativarMultiplos(@RequestBody List<Long> restauranteIds) {
+        try {
+            cadastroRestaurante.ativar(restauranteIds);
+        } catch (RestauranteNaoEncontradoException e) {
+            throw new NegocioException(e.getMessage(), e);
+        }
+    }
+
+    @DeleteMapping("/ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void inativarMultiplos(@RequestBody List<Long> restauranteIds) {
+        try{
+        cadastroRestaurante.inativar(restauranteIds);
+        }catch (RestauranteNaoEncontradoException e){
+            throw new NegocioException(e.getMessage(), e);
+        }
+    }
 
 //    @PatchMapping("/{id}")
 //    public RestauranteDTO atualizaParcial(@PathVariable Long id, @RequestBody Map<String, Object> campos,
