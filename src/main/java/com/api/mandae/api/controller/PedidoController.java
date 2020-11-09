@@ -1,7 +1,9 @@
 package com.api.mandae.api.controller;
 
 import com.api.mandae.api.assembler.pedido.PedidoConverter;
+import com.api.mandae.api.assembler.pedido.PedidoResumoConverter;
 import com.api.mandae.api.model.PedidoDTO;
+import com.api.mandae.api.model.PedidoResumoDTO;
 import com.api.mandae.domain.model.Pedido;
 import com.api.mandae.domain.repository.PedidoRepository;
 import com.api.mandae.domain.service.EmissaoPedidoService;
@@ -24,11 +26,14 @@ public class PedidoController {
     private PedidoConverter pedidoConverter;
 
     @Autowired
+    private PedidoResumoConverter pedidoResumoConverter;
+
+    @Autowired
     private EmissaoPedidoService cadastroPedido;
 
     @GetMapping
-    public List<PedidoDTO> listar() {
-        return pedidoConverter.toCollectionDTO(pedidoRepository.findAll());
+    public List<PedidoResumoDTO> listar() {
+        return pedidoResumoConverter.toCollectionDTO(pedidoRepository.findAll());
     }
 
     @GetMapping("/{pedidoId}")
