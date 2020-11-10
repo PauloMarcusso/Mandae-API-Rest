@@ -12,7 +12,6 @@ import java.util.List;
 @Setter
 public class PedidoResumoDTO {
 
-
     private Long id;
     private BigDecimal subtotal;
     private BigDecimal taxaFrete;

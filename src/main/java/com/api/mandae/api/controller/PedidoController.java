@@ -4,15 +4,18 @@ import com.api.mandae.api.assembler.pedido.PedidoConverter;
 import com.api.mandae.api.assembler.pedido.PedidoResumoConverter;
 import com.api.mandae.api.model.PedidoDTO;
 import com.api.mandae.api.model.PedidoResumoDTO;
+import com.api.mandae.api.model.input.PedidoInput;
+import com.api.mandae.domain.exception.EntidadeNaoEncontradaException;
+import com.api.mandae.domain.exception.NegocioException;
 import com.api.mandae.domain.model.Pedido;
+import com.api.mandae.domain.model.Usuario;
 import com.api.mandae.domain.repository.PedidoRepository;
 import com.api.mandae.domain.service.EmissaoPedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -29,7 +32,7 @@ public class PedidoController {
     private PedidoResumoConverter pedidoResumoConverter;
 
     @Autowired
-    private EmissaoPedidoService cadastroPedido;
+    private EmissaoPedidoService emissaoPedido;
 
     @GetMapping
     public List<PedidoResumoDTO> listar() {
@@ -37,8 +40,27 @@ public class PedidoController {
     }
 
     @GetMapping("/{pedidoId}")
-    public PedidoDTO buscar(@PathVariable Long pedidoId){
-        Pedido pedido = cadastroPedido.buscarOuFalhar(pedidoId);
+    public PedidoDTO buscar(@PathVariable Long pedidoId) {
+        Pedido pedido = emissaoPedido.buscarOuFalhar(pedidoId);
         return pedidoConverter.toDTO(pedido);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public PedidoDTO adicionar(@RequestBody @Valid PedidoInput pedidoInput) {
+
+        try{
+        Pedido novoPedido = pedidoConverter.toDomainObject(pedidoInput);
+
+        novoPedido.setCliente(new Usuario());
+        novoPedido.getCliente().setId(1L);
+        novoPedido = emissaoPedido.emitir(novoPedido);
+
+        return pedidoConverter.toDTO(novoPedido);
+
+        }catch (EntidadeNaoEncontradaException e){
+            throw new NegocioException(e.getMessage(), e);
+        }
+
     }
 }
