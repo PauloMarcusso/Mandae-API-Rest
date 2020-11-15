@@ -39,9 +39,9 @@ public class PedidoController {
         return pedidoResumoConverter.toCollectionDTO(pedidoRepository.findAll());
     }
 
-    @GetMapping("/{pedidoId}")
-    public PedidoDTO buscar(@PathVariable Long pedidoId) {
-        Pedido pedido = emissaoPedido.buscarOuFalhar(pedidoId);
+    @GetMapping("/{codigoPedido}")
+    public PedidoDTO buscar(@PathVariable String codigoPedido) {
+        Pedido pedido = emissaoPedido.buscarOuFalhar(codigoPedido);
         return pedidoConverter.toDTO(pedido);
     }
 
