@@ -5,6 +5,7 @@ import com.api.mandae.api.assembler.restaurante.RestauranteDTOAssembler;
 import com.api.mandae.api.assembler.restaurante.RestauranteInputDisassembler;
 import com.api.mandae.api.model.RestauranteDTO;
 import com.api.mandae.api.model.input.RestauranteInput;
+import com.api.mandae.api.model.view.RestauranteView;
 import com.api.mandae.domain.exception.CidadeNaoEncontradaException;
 import com.api.mandae.domain.exception.CozinhaNaoEncontradaException;
 import com.api.mandae.domain.exception.NegocioException;
@@ -12,8 +13,10 @@ import com.api.mandae.domain.exception.RestauranteNaoEncontradoException;
 import com.api.mandae.domain.model.Restaurante;
 import com.api.mandae.domain.repository.RestauranteRepository;
 import com.api.mandae.domain.service.CadastroRestauranteService;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,10 +45,20 @@ public class RestauranteController {
     @Autowired
     private RestauranteConverter restauranteConverter;
 
+
+    @JsonView(RestauranteView.Resumo.class)
     @GetMapping
     public List<RestauranteDTO> listar() {
         return restauranteDTOAssembler.toCollectionDTO(restauranteRepository.findAll());
     }
+
+    @JsonView(RestauranteView.ApenasNome.class)
+    @GetMapping(params = "projecao=apenas-nome")
+    public List<RestauranteDTO> listarApenasNomes() {
+        return listar();
+    }
+
+
 
     @GetMapping("/{id}")
     public RestauranteDTO buscar(@PathVariable Long id) {
@@ -123,12 +136,33 @@ public class RestauranteController {
     @DeleteMapping("/ativacoes")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void inativarMultiplos(@RequestBody List<Long> restauranteIds) {
-        try{
-        cadastroRestaurante.inativar(restauranteIds);
-        }catch (RestauranteNaoEncontradoException e){
+        try {
+            cadastroRestaurante.inativar(restauranteIds);
+        } catch (RestauranteNaoEncontradoException e) {
             throw new NegocioException(e.getMessage(), e);
         }
     }
+
+
+//    @GetMapping
+//    public MappingJacksonValue listar(@RequestParam(required = false) String projecao) {
+//
+//        List<Restaurante> restaurantes = restauranteRepository.findAll();
+//        List<RestauranteDTO> restaurantesModel = restauranteConverter.toCollectionDTO(restaurantes);
+//
+//        MappingJacksonValue restaurantesWraper = new MappingJacksonValue(restaurantesModel);
+//
+//        restaurantesWraper.setSerializationView(RestauranteView.Resumo.class);
+//
+//        if ("apenas-nome".equals(projecao)) {
+//            restaurantesWraper.setSerializationView(RestauranteView.ApenasNome.class);
+//        } else if ("completo".equals(projecao)) {
+//            restaurantesWraper.setSerializationView(null);
+//
+//        }
+//
+//        return restaurantesWraper;
+//    }
 
 //    @PatchMapping("/{id}")
 //    public RestauranteDTO atualizaParcial(@PathVariable Long id, @RequestBody Map<String, Object> campos,
