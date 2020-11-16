@@ -1,5 +1,6 @@
 package com.api.mandae.api.model;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,6 +9,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonFilter("pedidoFilter")
 @Getter
 @Setter
 public class PedidoResumoDTO {
