@@ -10,7 +10,9 @@ import com.api.mandae.domain.exception.NegocioException;
 import com.api.mandae.domain.model.Pedido;
 import com.api.mandae.domain.model.Usuario;
 import com.api.mandae.domain.repository.PedidoRepository;
+import com.api.mandae.domain.repository.filter.PedidoFilter;
 import com.api.mandae.domain.service.EmissaoPedidoService;
+import com.api.mandae.infrastructure.repository.spec.PedidoSpecs;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.apache.commons.lang3.StringUtils;
@@ -39,30 +41,31 @@ public class PedidoController {
     private EmissaoPedidoService emissaoPedido;
 
     @GetMapping
-    public MappingJacksonValue listar(@RequestParam(required = false) String campos) {
-
-        List<Pedido> pedidos = pedidoRepository.findAll();
-
-        List<PedidoResumoDTO> pedidosModel = pedidoResumoConverter.toCollectionDTO(pedidos);
-
-        MappingJacksonValue pedidosWrapper = new MappingJacksonValue(pedidosModel);
-
-        SimpleFilterProvider filterProvider = new SimpleFilterProvider();
-        filterProvider.addFilter("pedidoFilter", SimpleBeanPropertyFilter.serializeAll());
-
-        if(StringUtils.isNotBlank(campos)){
-            filterProvider.addFilter("pedidoFilter", SimpleBeanPropertyFilter.filterOutAllExcept(campos.split(",")));
-        }
-
-        pedidosWrapper.setFilters(filterProvider);
-
-        return pedidosWrapper;
+    public List<PedidoResumoDTO> pesquisar(PedidoFilter filtro) {
+        return pedidoResumoConverter.toCollectionDTO(pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro)));
     }
 
 //    @GetMapping
-//    public List<PedidoResumoDTO> listar() {
-//        return pedidoResumoConverter.toCollectionDTO(pedidoRepository.findAll());
+//    public MappingJacksonValue listar(@RequestParam(required = false) String campos) {
+//
+//        List<Pedido> pedidos = pedidoRepository.findAll();
+//
+//        List<PedidoResumoDTO> pedidosModel = pedidoResumoConverter.toCollectionDTO(pedidos);
+//
+//        MappingJacksonValue pedidosWrapper = new MappingJacksonValue(pedidosModel);
+//
+//        SimpleFilterProvider filterProvider = new SimpleFilterProvider();
+//        filterProvider.addFilter("pedidoFilter", SimpleBeanPropertyFilter.serializeAll());
+//
+//        if(StringUtils.isNotBlank(campos)){
+//            filterProvider.addFilter("pedidoFilter", SimpleBeanPropertyFilter.filterOutAllExcept(campos.split(",")));
+//        }
+//
+//        pedidosWrapper.setFilters(filterProvider);
+//
+//        return pedidosWrapper;
 //    }
+
 
     @GetMapping("/{codigoPedido}")
     public PedidoDTO buscar(@PathVariable String codigoPedido) {

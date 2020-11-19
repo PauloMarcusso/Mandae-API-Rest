@@ -9,7 +9,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@JsonFilter("pedidoFilter")
+//@JsonFilter("pedidoFilter")
 @Getter
 @Setter
 public class PedidoResumoDTO {
