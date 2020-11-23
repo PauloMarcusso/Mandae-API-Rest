@@ -2,6 +2,7 @@ package com.api.mandae.api.controller;
 
 import com.api.mandae.api.assembler.pedido.PedidoConverter;
 import com.api.mandae.api.assembler.pedido.PedidoResumoConverter;
+import com.api.mandae.api.model.CozinhaDTO;
 import com.api.mandae.api.model.PedidoDTO;
 import com.api.mandae.api.model.PedidoResumoDTO;
 import com.api.mandae.api.model.input.PedidoInput;
@@ -17,6 +18,9 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
@@ -41,8 +45,16 @@ public class PedidoController {
     private EmissaoPedidoService emissaoPedido;
 
     @GetMapping
-    public List<PedidoResumoDTO> pesquisar(PedidoFilter filtro) {
-        return pedidoResumoConverter.toCollectionDTO(pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro)));
+    public Page<PedidoResumoDTO> pesquisar(PedidoFilter filtro, Pageable pageable) {
+
+        Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro), pageable);
+
+        List<PedidoResumoDTO> pedidosDTO = pedidoResumoConverter.toCollectionDTO(pedidosPage.getContent());
+
+        Page<PedidoResumoDTO> pedidosResumoDTOPage = new PageImpl<>(pedidosDTO, pageable,
+                pedidosPage.getTotalElements());
+
+        return pedidosResumoDTOPage;
     }
 
 //    @GetMapping
