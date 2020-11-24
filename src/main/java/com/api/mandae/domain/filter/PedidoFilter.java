@@ -1,4 +1,4 @@
-package com.api.mandae.domain.repository.filter;
+package com.api.mandae.domain.filter;
 
 import lombok.Getter;
 import lombok.Setter;

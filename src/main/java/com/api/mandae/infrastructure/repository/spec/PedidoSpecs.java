@@ -1,7 +1,7 @@
 package com.api.mandae.infrastructure.repository.spec;
 
 import com.api.mandae.domain.model.Pedido;
-import com.api.mandae.domain.repository.filter.PedidoFilter;
+import com.api.mandae.domain.filter.PedidoFilter;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;

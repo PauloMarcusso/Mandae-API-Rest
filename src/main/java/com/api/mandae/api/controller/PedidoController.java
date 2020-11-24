@@ -2,7 +2,6 @@ package com.api.mandae.api.controller;
 
 import com.api.mandae.api.assembler.pedido.PedidoConverter;
 import com.api.mandae.api.assembler.pedido.PedidoResumoConverter;
-import com.api.mandae.api.model.CozinhaDTO;
 import com.api.mandae.api.model.PedidoDTO;
 import com.api.mandae.api.model.PedidoResumoDTO;
 import com.api.mandae.api.model.input.PedidoInput;
@@ -12,19 +11,15 @@ import com.api.mandae.domain.exception.NegocioException;
 import com.api.mandae.domain.model.Pedido;
 import com.api.mandae.domain.model.Usuario;
 import com.api.mandae.domain.repository.PedidoRepository;
-import com.api.mandae.domain.repository.filter.PedidoFilter;
+import com.api.mandae.domain.filter.PedidoFilter;
 import com.api.mandae.domain.service.EmissaoPedidoService;
 import com.api.mandae.infrastructure.repository.spec.PedidoSpecs;
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.google.common.collect.ImmutableMap;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
