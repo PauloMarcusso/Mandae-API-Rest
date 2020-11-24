@@ -6,6 +6,7 @@ import com.api.mandae.api.model.CozinhaDTO;
 import com.api.mandae.api.model.PedidoDTO;
 import com.api.mandae.api.model.PedidoResumoDTO;
 import com.api.mandae.api.model.input.PedidoInput;
+import com.api.mandae.core.data.PageableTranslator;
 import com.api.mandae.domain.exception.EntidadeNaoEncontradaException;
 import com.api.mandae.domain.exception.NegocioException;
 import com.api.mandae.domain.model.Pedido;
@@ -16,6 +17,7 @@ import com.api.mandae.domain.service.EmissaoPedidoService;
 import com.api.mandae.infrastructure.repository.spec.PedidoSpecs;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -46,6 +48,8 @@ public class PedidoController {
 
     @GetMapping
     public Page<PedidoResumoDTO> pesquisar(PedidoFilter filtro, Pageable pageable) {
+
+        pageable = traduzirPageable(pageable);
 
         Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro), pageable);
 
@@ -103,4 +107,18 @@ public class PedidoController {
         }
 
     }
+
+    public Pageable traduzirPageable(Pageable apiPageable){
+
+        var mapeamento = ImmutableMap.of(
+          "codigo", "codigo",
+          "restaurante.nome", "restaurante.nome",
+          "cliente.nome", "cliente.nome",
+          "valorTotal", "valorTotal"
+        );
+
+        return PageableTranslator.translate(apiPageable, mapeamento);
+    }
+
+
 }
