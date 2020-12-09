@@ -1,4 +1,4 @@
-package com.api.mandae.infrastructure.service;
+package com.api.mandae.infrastructure.service.query;
 
 import com.api.mandae.domain.filter.VendaDiariaFilter;
 import com.api.mandae.domain.model.Pedido;
