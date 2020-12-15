@@ -16,14 +16,13 @@ public class LocalFotoStorageService implements FotoStorageService {
 
     @Override
     public void armazenar(NovaFoto novaFoto) {
-
         try {
 
             Path arquivoPath = getArquivoPath(novaFoto.getNomeArquivo());
             FileCopyUtils.copy(novaFoto.getInputStream(), Files.newOutputStream(arquivoPath));
 
         } catch (Exception e) {
-            throw new StorageException("Não ofi possível armazenar arquivo", e);
+            throw new StorageException("Não foi possível armazenar arquivo", e);
         }
     }
 
