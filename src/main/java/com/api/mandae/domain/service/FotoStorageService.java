@@ -9,6 +9,8 @@ import java.util.UUID;
 
 public interface FotoStorageService {
 
+    InputStream recuperar(String nomeArquivo);
+
     void armazenar(NovaFoto novaFoto);
 
     void remover(String nomeArquivo);
