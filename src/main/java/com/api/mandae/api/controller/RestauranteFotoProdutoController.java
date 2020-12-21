@@ -3,18 +3,22 @@ package com.api.mandae.api.controller;
 import com.api.mandae.api.assembler.fotoproduto.FotoProdutoConverter;
 import com.api.mandae.api.model.FotoProdutoDTO;
 import com.api.mandae.api.model.input.FotoProdutoInput;
+import com.api.mandae.domain.exception.EntidadeNaoEncontradaException;
 import com.api.mandae.domain.model.FotoProduto;
 import com.api.mandae.domain.model.Produto;
 import com.api.mandae.domain.service.CadastroProdutoService;
 import com.api.mandae.domain.service.CatalogoFotoProdutoService;
 import com.api.mandae.domain.service.FotoStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.io.InputStream;
 
 @RestController
 @RequestMapping("/restaurantes/{restauranteId}/produtos/{produtoId}/foto")
@@ -25,6 +29,9 @@ public class RestauranteFotoProdutoController {
 
     @Autowired
     private CadastroProdutoService cadastroProduto;
+
+    @Autowired
+    private FotoStorageService fotoStorage;
 
     @Autowired
     private CatalogoFotoProdutoService catalogoFotoProduto;
@@ -49,13 +56,28 @@ public class RestauranteFotoProdutoController {
 
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public FotoProdutoDTO buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId){
 
         FotoProduto fotoProduto = catalogoFotoProduto.buscarOuFalhar(restauranteId, produtoId);
         return fotoProdutoConverter.toDTO(fotoProduto);
+    }
 
 
+    @GetMapping(produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<InputStreamResource> servirFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId){
+
+        try{
+        FotoProduto fotoProduto = catalogoFotoProduto.buscarOuFalhar(restauranteId, produtoId);
+
+        InputStream inputStream = fotoStorage.recuperar(fotoProduto.getNomeArquivo());
+
+        return ResponseEntity.ok()
+                             .contentType(MediaType.IMAGE_JPEG)
+                             .body(new InputStreamResource(inputStream));
+        }catch (EntidadeNaoEncontradaException e){
+            return ResponseEntity.notFound().build();
+        }
     }
 
 //    @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
