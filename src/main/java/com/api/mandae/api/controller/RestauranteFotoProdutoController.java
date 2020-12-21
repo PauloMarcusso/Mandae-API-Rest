@@ -7,12 +7,10 @@ import com.api.mandae.domain.model.FotoProduto;
 import com.api.mandae.domain.model.Produto;
 import com.api.mandae.domain.service.CadastroProdutoService;
 import com.api.mandae.domain.service.CatalogoFotoProdutoService;
+import com.api.mandae.domain.service.FotoStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
@@ -48,6 +46,15 @@ public class RestauranteFotoProdutoController {
         FotoProduto fotoSalva = catalogoFotoProduto.salvar(foto, arquivo.getInputStream());
 
         return fotoProdutoConverter.toDTO(fotoSalva);
+
+    }
+
+    @GetMapping
+    public FotoProdutoDTO buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId){
+
+        FotoProduto fotoProduto = catalogoFotoProduto.buscarOuFalhar(restauranteId, produtoId);
+        return fotoProdutoConverter.toDTO(fotoProduto);
+
 
     }
 
