@@ -65,6 +65,10 @@ public class RestauranteFotoProdutoController {
         return fotoProdutoConverter.toDTO(fotoProduto);
     }
 
+    @DeleteMapping
+    public void remover(@PathVariable Long restauranteId, @PathVariable Long produtoId){
+        catalogoFotoProduto.remover(restauranteId, produtoId);
+    }
 
     @GetMapping
     public ResponseEntity<InputStreamResource> servirFoto(@PathVariable Long restauranteId,
