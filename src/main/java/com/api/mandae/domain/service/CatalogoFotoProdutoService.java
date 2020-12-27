@@ -2,7 +2,6 @@ package com.api.mandae.domain.service;
 
 import com.api.mandae.domain.exception.FotoProdutoNaoEncontradaException;
 import com.api.mandae.domain.model.FotoProduto;
-import com.api.mandae.domain.model.Restaurante;
 import com.api.mandae.domain.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +31,8 @@ public class CatalogoFotoProdutoService {
         Optional<FotoProduto> fotoExistente = produtoRepository.findFotoById(restauranteId, produtoId);
 
         if (fotoExistente.isPresent()) {
-            nomeArquivoExistente = fotoExistente.get().getNomeArquivo();
+            nomeArquivoExistente = fotoExistente.get()
+                                                .getNomeArquivo();
             produtoRepository.delete(fotoExistente.get());
         }
 
@@ -42,6 +42,7 @@ public class CatalogoFotoProdutoService {
 
         FotoStorageService.NovaFoto novaFoto = FotoStorageService.NovaFoto.builder()
                                                                           .nomeArquivo(foto.getNomeArquivo())
+                                                                          .contentType(foto.getContentType())
                                                                           .inputStream(dadosArquivo)
                                                                           .build();
 
@@ -50,13 +51,13 @@ public class CatalogoFotoProdutoService {
         return foto;
     }
 
-    public FotoProduto buscarOuFalhar(Long restauranteId, Long produtoId){
+    public FotoProduto buscarOuFalhar(Long restauranteId, Long produtoId) {
         return produtoRepository.findFotoById(restauranteId, produtoId)
-                .orElseThrow(() -> new FotoProdutoNaoEncontradaException(restauranteId, produtoId));
+                                .orElseThrow(() -> new FotoProdutoNaoEncontradaException(restauranteId, produtoId));
     }
 
     @Transactional
-    public void remover(Long restauranteId, Long produtoId){
+    public void remover(Long restauranteId, Long produtoId) {
         FotoProduto foto = buscarOuFalhar(restauranteId, produtoId);
 
         produtoRepository.delete(foto);
