@@ -2,6 +2,7 @@ package com.api.mandae.infrastructure.service.storage;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.api.mandae.core.storage.StorageProperties;
@@ -51,7 +52,13 @@ public class S3FotoStorageService implements FotoStorageService {
     }
 
     @Override public void remover(String nomeArquivo) {
+        String caminhoArquivo = getCaminhoArquivo(nomeArquivo);
 
+        var deleteObjectRequest = new DeleteObjectRequest(
+                storageProperties.getS3().getBucket(),
+                caminhoArquivo
+        );
+        amazonS3.deleteObject(deleteObjectRequest);
     }
 
 }
