@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface FotoStorageService {
 
-    InputStream recuperar(String nomeArquivo);
+    FotoRecuperada recuperar(String nomeArquivo);
 
     void armazenar(NovaFoto novaFoto);
 
@@ -27,12 +27,27 @@ public interface FotoStorageService {
     }
 
     @Getter
-    @Setter
     @Builder
     class NovaFoto{
 
         private String nomeArquivo;
         private String contentType;
         private InputStream inputStream;
+    }
+
+    @Getter
+    @Builder
+    class FotoRecuperada {
+
+        private InputStream inputStream;
+        private String url;
+
+        public boolean temUrl(){
+            return url != null;
+        }
+
+        public boolean temInputStream(){
+            return inputStream != null;
+        }
     }
 }
