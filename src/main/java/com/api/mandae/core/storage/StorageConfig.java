@@ -8,6 +8,7 @@ import com.api.mandae.domain.service.FotoStorageService;
 import com.api.mandae.infrastructure.service.storage.LocalFotoStorageService;
 import com.api.mandae.infrastructure.service.storage.S3FotoStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,6 +19,7 @@ public class StorageConfig {
     private StorageProperties storageProperties;
 
     @Bean
+    @ConditionalOnProperty(name = "mandae.storage.tipo", havingValue = "s3")
     public AmazonS3 amazonS3() {
 
         var credentials = new BasicAWSCredentials(
