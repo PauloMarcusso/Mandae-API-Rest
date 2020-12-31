@@ -1,13 +1,9 @@
 package com.api.mandae.domain.service;
 
-import com.api.mandae.domain.exception.NegocioException;
 import com.api.mandae.domain.model.Pedido;
-import com.api.mandae.domain.model.StatusPedido;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.OffsetDateTime;
 
 @Service
 public class FluxoPedidoService {
@@ -23,9 +19,11 @@ public class FluxoPedidoService {
         Pedido pedido = emissaoPedido.buscarOuFalhar(codigoPedido);
         pedido.confirmar();
 
-        var mensagem = EnvioEmailService.Mensagem.builder()
+        var mensagem = EnvioEmailService
+                .Mensagem.builder()
                 .assunto(pedido.getRestaurante().getNome() + " - Pedido Confirmado")
-                .corpo("O pedido de código <strong>" + pedido.getCodigo() + " </strong> foi confirmado!")
+                .corpo("pedido-confirmado.html")
+                .variavel("pedido", pedido)
                 .destinatario(pedido.getCliente().getEmail())
                 .build();
 
