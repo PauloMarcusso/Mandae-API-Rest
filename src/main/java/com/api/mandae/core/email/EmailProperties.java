@@ -20,8 +20,19 @@ public class EmailProperties {
     @NotNull
     private String remetente;
 
+    private String remetenteSandbox;
+
+    private Sandbox sandbox = new Sandbox();
+
     public enum Implementacao {
 
-        SMTP,FAKE
+        SMTP, FAKE, SANDBOX
+    }
+
+    @Getter
+    @Setter
+    public class Sandbox {
+
+        private String destinatario;
     }
 }
