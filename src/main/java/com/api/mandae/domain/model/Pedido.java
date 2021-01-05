@@ -1,5 +1,6 @@
 package com.api.mandae.domain.model;
 
+import com.api.mandae.domain.event.PedidoCanceladoEvent;
 import com.api.mandae.domain.event.PedidoConfirmadoEvent;
 import com.api.mandae.domain.exception.NegocioException;
 import lombok.Data;
@@ -84,6 +85,8 @@ public class Pedido extends AbstractAggregateRoot<Pedido> {
     public void cancelar() {
         setStatus(StatusPedido.CANCELADO);
         setDataCancelamento(OffsetDateTime.now());
+
+        registerEvent(new PedidoCanceladoEvent(this));
     }
 	private void setStatus(StatusPedido novoStatus){
     	if(getStatus().naoPodeAlterarPara(novoStatus)){
