@@ -13,31 +13,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class FormaPagamentoConverter implements Converter<FormaPagamento, FormaPagamentoDTO, FormaPagamentoInput>{
+public class FormaPagamentoConverter{
 
     @Autowired
     private ModelMapper modelMapper;
 
-    @Override
+
     public FormaPagamentoDTO toDTO(FormaPagamento formaPagamento) {
         return modelMapper.map(formaPagamento, FormaPagamentoDTO.class);
-    }
-
-    @Override
-    public List<FormaPagamentoDTO> toCollectionDTO(List<FormaPagamento> list) {
-        return null;
     }
 
     public List<FormaPagamentoDTO> toCollectionDTO(Collection<FormaPagamento> formasPagamento) {
         return formasPagamento.stream().map(formaPagamento -> toDTO(formaPagamento)).collect(Collectors.toList());
     }
 
-    @Override
+
     public FormaPagamento toDomainObject(FormaPagamentoInput formaPagamentoInput) {
         return modelMapper.map(formaPagamentoInput, FormaPagamento.class);
     }
 
-    @Override
+
     public void copyToDomainObject(FormaPagamentoInput formaPagamentoInput, FormaPagamento formaPagamento) {
         modelMapper.map(formaPagamentoInput, formaPagamento);
     }
