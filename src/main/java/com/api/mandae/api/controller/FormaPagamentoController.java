@@ -7,11 +7,14 @@ import com.api.mandae.domain.model.FormaPagamento;
 import com.api.mandae.domain.repository.FormaPagamentoRepository;
 import com.api.mandae.domain.service.CadastroFormaPagamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/formas-pagamento")
@@ -28,8 +31,12 @@ public class FormaPagamentoController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<FormaPagamentoDTO> listar() {
-        return formaPagamentoConverter.toCollectionDTO(formaPagamentoRepository.findAll());
+    public ResponseEntity<List<FormaPagamentoDTO>> listar() {
+                List<FormaPagamentoDTO> todasFormasPagamentos =
+                        formaPagamentoConverter.toCollectionDTO(formaPagamentoRepository.findAll());
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(todasFormasPagamentos);
     }
 
     @GetMapping("/{id}")
