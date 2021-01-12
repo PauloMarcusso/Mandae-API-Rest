@@ -9,6 +9,9 @@ import javax.validation.constraints.NotBlank;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.OffsetDateTime;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -23,4 +26,7 @@ public class FormaPagamento {
 	@NotBlank
 	@Column(nullable = false)
 	private String descricao;
+
+	@UpdateTimestamp
+	private OffsetDateTime dataAtualizacao;
 }
