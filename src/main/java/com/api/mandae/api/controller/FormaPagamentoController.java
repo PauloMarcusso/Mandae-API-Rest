@@ -41,9 +41,12 @@ public class FormaPagamentoController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public FormaPagamentoDTO buscar(@PathVariable Long id) {
+    public ResponseEntity<FormaPagamentoDTO> buscar(@PathVariable Long id) {
         FormaPagamento formaPagamento = cadastroFormaPagamento.buscarOuFalhar(id);
-        return formaPagamentoConverter.toDTO(formaPagamento);
+                FormaPagamentoDTO formaPagamentoDTO = formaPagamentoConverter.toDTO(formaPagamento);
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(formaPagamentoDTO);
     }
 
     @PostMapping
