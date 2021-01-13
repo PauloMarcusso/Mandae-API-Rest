@@ -8,10 +8,10 @@ import com.api.mandae.api.model.input.PedidoInput;
 import com.api.mandae.core.data.PageableTranslator;
 import com.api.mandae.domain.exception.EntidadeNaoEncontradaException;
 import com.api.mandae.domain.exception.NegocioException;
+import com.api.mandae.domain.filter.PedidoFilter;
 import com.api.mandae.domain.model.Pedido;
 import com.api.mandae.domain.model.Usuario;
 import com.api.mandae.domain.repository.PedidoRepository;
-import com.api.mandae.domain.filter.PedidoFilter;
 import com.api.mandae.domain.service.EmissaoPedidoService;
 import com.api.mandae.infrastructure.repository.spec.PedidoSpecs;
 import com.google.common.collect.ImmutableMap;
@@ -103,14 +103,14 @@ public class PedidoController {
 
     }
 
-    public Pageable traduzirPageable(Pageable apiPageable){
+    public Pageable traduzirPageable(Pageable apiPageable) {
 
         var mapeamento = ImmutableMap.of(
-          "codigo", "codigo",
-          "restaurante.nome", "restaurante.nome",
-          "cliente.nome", "cliente.nome",
-          "valorTotal", "valorTotal"
-        );
+                "codigo", "codigo",
+                "restaurante.nome", "restaurante.nome",
+                "cliente.nome", "cliente.nome",
+                "valorTotal", "valorTotal"
+                                        );
 
         return PageableTranslator.translate(apiPageable, mapeamento);
     }
