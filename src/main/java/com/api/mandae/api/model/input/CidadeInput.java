@@ -1,20 +1,21 @@
 package com.api.mandae.api.model.input;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import com.api.mandae.api.model.EstadoIdInput;
-
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
 public class CidadeInput {
 
-	@NotBlank
-	private String nome;
-	
-	@NotNull
-	private EstadoIdInput estado;
+    @ApiModelProperty(example = "Guarulhos")
+    @NotBlank
+    private String nome;
+
+    @NotNull
+    private EstadoIdInput estado;
 }
