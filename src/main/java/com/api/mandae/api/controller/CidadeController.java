@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,16 +42,19 @@ public class CidadeController {
 	@Autowired
 	private CidadeConverter cidadeConverter;
 
+	@ApiOperation("Lista todas as cidades")
 	@GetMapping
 	public List<CidadeDTO> listar() {
 		return cidadeConverter.toCollectionDTO(cidadeRepository.findAll());
 	}
 
+	@ApiOperation("Busca uma cidade por ID")
 	@GetMapping("/{id}")
 	public CidadeDTO buscar(@PathVariable Long id) {
 		return cidadeConverter.toDTO(cadastroCidade.buscarOuFalhar(id));
 	}
 
+	@ApiOperation("Cadastra uma cidade")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public CidadeDTO adicionar(@RequestBody @Valid CidadeInput cidadeInput) {
@@ -64,6 +68,7 @@ public class CidadeController {
 		}
 	}
 
+	@ApiOperation("Atualiza uma cidade por ID")
 	@PutMapping("/{id}")
 	public CidadeDTO atualizar(@PathVariable Long id, @RequestBody @Valid CidadeInput cidadeInput) {
 
@@ -83,6 +88,7 @@ public class CidadeController {
 
 	}
 
+	@ApiOperation("Deleta uma cidade por ID")
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void excluir(@PathVariable Long id) {
