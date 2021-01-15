@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class CidadeInput {
 
-    @ApiModelProperty(example = "Guarulhos")
+    @ApiModelProperty(example = "Guarulhos", required = true)
     @NotBlank
     private String nome;
 
