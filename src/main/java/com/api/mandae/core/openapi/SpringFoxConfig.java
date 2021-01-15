@@ -8,6 +8,7 @@ import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
+import springfox.documentation.service.Tag;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -22,7 +23,8 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.api.mandae.api"))
                 .build()
-                .apiInfo(apiInfo());
+                .apiInfo(apiInfo())
+                .tags(new Tag("Cidades", "Gerencia as Cidades"));
     }
 
     public ApiInfo apiInfo() {
