@@ -14,6 +14,7 @@ import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
+import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.service.ResponseMessage;
@@ -56,6 +57,7 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                 new ResponseMessageBuilder()
                         .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                         .message("Erro interno do servidor")
+                        .responseModel(new ModelRef("Problema"))
                         .build(),
                 new ResponseMessageBuilder()
                         .code(HttpStatus.NOT_ACCEPTABLE.value())
@@ -69,10 +71,12 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                 new ResponseMessageBuilder()
                         .code(HttpStatus.BAD_REQUEST.value())
                         .message("Requisição inválida (erro do cliente)")
+                        .responseModel(new ModelRef("Problema"))
                         .build(),
                 new ResponseMessageBuilder()
                         .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                         .message("Erro interno no servidor")
+                        .responseModel(new ModelRef("Problema"))
                         .build(),
                 new ResponseMessageBuilder()
                         .code(HttpStatus.NOT_ACCEPTABLE.value())
@@ -81,6 +85,7 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                 new ResponseMessageBuilder()
                         .code(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value())
                         .message("Requisição recusada porque o corpo está em um formato não suportado")
+                        .responseModel(new ModelRef("Problema"))
                         .build()
                             );
     }
@@ -90,10 +95,12 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                 new ResponseMessageBuilder()
                         .code(HttpStatus.BAD_REQUEST.value())
                         .message("Requisição inválida (erro do cliente)")
+                        .responseModel(new ModelRef("Problema"))
                         .build(),
                 new ResponseMessageBuilder()
                         .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                         .message("Erro interno no servidor")
+                        .responseModel(new ModelRef("Problema"))
                         .build()
                             );
     }
