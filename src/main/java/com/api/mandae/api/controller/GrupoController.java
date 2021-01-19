@@ -1,6 +1,7 @@
 package com.api.mandae.api.controller;
 
 import com.api.mandae.api.assembler.grupo.GrupoConverter;
+import com.api.mandae.api.controller.openapi.GrupoControllerOpenApi;
 import com.api.mandae.api.model.GrupoDTO;
 import com.api.mandae.api.model.input.GrupoInput;
 import com.api.mandae.domain.model.Grupo;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/grupos")
-public class GruposController {
+public class GrupoController implements GrupoControllerOpenApi {
 
     @Autowired
     private GrupoRepository grupoRepository;
