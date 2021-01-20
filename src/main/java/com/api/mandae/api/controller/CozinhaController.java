@@ -3,6 +3,7 @@ package com.api.mandae.api.controller;
 import com.api.mandae.api.assembler.cozinha.CozinhaConverter;
 import com.api.mandae.api.model.CozinhaDTO;
 import com.api.mandae.api.model.input.CozinhaInput;
+import com.api.mandae.api.openapi.controller.CozinhaControllerOpenApi;
 import com.api.mandae.domain.model.Cozinha;
 import com.api.mandae.domain.repository.CozinhaRepository;
 import com.api.mandae.domain.service.CadastroCozinhaService;
@@ -11,14 +12,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cozinhas")
-public class CozinhaController {
+@RequestMapping(value = "/cozinhas", produces = MediaType.APPLICATION_JSON_VALUE)
+public class CozinhaController implements CozinhaControllerOpenApi {
 
     @Autowired
     private CozinhaRepository cozinhaRepository;
