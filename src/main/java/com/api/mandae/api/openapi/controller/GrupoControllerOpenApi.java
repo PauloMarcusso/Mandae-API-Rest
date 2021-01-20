@@ -1,4 +1,4 @@
-package com.api.mandae.api.controller.openapi;
+package com.api.mandae.api.openapi.controller;
 
 import com.api.mandae.api.exceptionhandler.Problem;
 import com.api.mandae.api.model.GrupoDTO;

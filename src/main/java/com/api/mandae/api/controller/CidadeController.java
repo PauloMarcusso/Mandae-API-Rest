@@ -1,7 +1,7 @@
 package com.api.mandae.api.controller;
 
 import com.api.mandae.api.assembler.cidade.CidadeConverter;
-import com.api.mandae.api.controller.openapi.CidadeControllerOpenApi;
+import com.api.mandae.api.openapi.controller.CidadeControllerOpenApi;
 import com.api.mandae.api.model.CidadeDTO;
 import com.api.mandae.api.model.input.CidadeInput;
 import com.api.mandae.domain.exception.EstadoNaoEncontradoException;

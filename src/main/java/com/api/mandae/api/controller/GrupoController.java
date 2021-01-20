@@ -1,7 +1,7 @@
 package com.api.mandae.api.controller;
 
 import com.api.mandae.api.assembler.grupo.GrupoConverter;
-import com.api.mandae.api.controller.openapi.GrupoControllerOpenApi;
+import com.api.mandae.api.openapi.controller.GrupoControllerOpenApi;
 import com.api.mandae.api.model.GrupoDTO;
 import com.api.mandae.api.model.input.GrupoInput;
 import com.api.mandae.domain.model.Grupo;
