@@ -6,6 +6,7 @@ import com.api.mandae.api.assembler.restaurante.RestauranteInputDisassembler;
 import com.api.mandae.api.model.RestauranteDTO;
 import com.api.mandae.api.model.input.RestauranteInput;
 import com.api.mandae.api.model.view.RestauranteView;
+import com.api.mandae.api.openapi.controller.RestauranteControllerOpenApi;
 import com.api.mandae.domain.exception.CidadeNaoEncontradaException;
 import com.api.mandae.domain.exception.CozinhaNaoEncontradaException;
 import com.api.mandae.domain.exception.NegocioException;
@@ -14,9 +15,10 @@ import com.api.mandae.domain.model.Restaurante;
 import com.api.mandae.domain.repository.RestauranteRepository;
 import com.api.mandae.domain.service.CadastroRestauranteService;
 import com.fasterxml.jackson.annotation.JsonView;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.converter.json.MappingJacksonValue;
+import org.springframework.http.MediaType;
 import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,8 +26,8 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/restaurantes")
-public class RestauranteController {
+@RequestMapping(value = "/restaurantes", produces = MediaType.APPLICATION_JSON_VALUE)
+public class RestauranteController implements RestauranteControllerOpenApi {
 
     @Autowired
     private RestauranteRepository restauranteRepository;
@@ -46,18 +48,19 @@ public class RestauranteController {
     private RestauranteConverter restauranteConverter;
 
 
+    @ApiOperation(value = "Lista Restaurantes")
     @JsonView(RestauranteView.Resumo.class)
     @GetMapping
     public List<RestauranteDTO> listar() {
         return restauranteDTOAssembler.toCollectionDTO(restauranteRepository.findAll());
     }
 
+    @ApiOperation(value = "Lista Restaurantes", hidden = true)
     @JsonView(RestauranteView.ApenasNome.class)
     @GetMapping(params = "projecao=apenas-nome")
     public List<RestauranteDTO> listarApenasNomes() {
         return listar();
     }
-
 
 
     @GetMapping("/{id}")
