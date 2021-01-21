@@ -5,6 +5,7 @@ import com.api.mandae.api.assembler.pedido.PedidoResumoConverter;
 import com.api.mandae.api.model.PedidoDTO;
 import com.api.mandae.api.model.PedidoResumoDTO;
 import com.api.mandae.api.model.input.PedidoInput;
+import com.api.mandae.api.openapi.controller.PedidoControllerOpenApi;
 import com.api.mandae.core.data.PageableTranslator;
 import com.api.mandae.domain.exception.EntidadeNaoEncontradaException;
 import com.api.mandae.domain.exception.NegocioException;
@@ -27,7 +28,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/pedidos")
-public class PedidoController {
+public class PedidoController implements PedidoControllerOpenApi {
 
     @Autowired
     private PedidoRepository pedidoRepository;
