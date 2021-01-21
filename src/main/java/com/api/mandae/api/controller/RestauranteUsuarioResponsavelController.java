@@ -2,18 +2,20 @@ package com.api.mandae.api.controller;
 
 import com.api.mandae.api.assembler.usuario.UsuarioConverter;
 import com.api.mandae.api.model.UsuarioDTO;
+import com.api.mandae.api.openapi.controller.RestauranteUsuarioResponsavelControllerOpenApi;
 import com.api.mandae.domain.model.Restaurante;
 import com.api.mandae.domain.service.CadastroRestauranteService;
 import com.api.mandae.domain.service.CadastroUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/restaurantes/{restauranteId}/responsaveis")
-public class RestauranteUsuarioController {
+@RequestMapping(value = "/restaurantes/{restauranteId}/responsaveis", produces = MediaType.APPLICATION_JSON_VALUE)
+public class RestauranteUsuarioResponsavelController implements RestauranteUsuarioResponsavelControllerOpenApi {
 
     @Autowired
     private CadastroRestauranteService cadastroRestaurante;
@@ -41,7 +43,7 @@ public class RestauranteUsuarioController {
 
     @DeleteMapping("/{usuarioId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void desassociar(@PathVariable Long restauranteId, @PathVariable Long usuarioId){
+    public void desassociar(@PathVariable Long restauranteId, @PathVariable Long usuarioId) {
         cadastroRestaurante.desassociarUsuarioResponsavel(restauranteId, usuarioId);
     }
 }
