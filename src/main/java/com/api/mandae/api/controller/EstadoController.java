@@ -4,9 +4,11 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.api.mandae.api.openapi.controller.EstadoControllerOpenApi;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,8 +27,8 @@ import com.api.mandae.domain.repository.EstadoRepository;
 import com.api.mandae.domain.service.CadastroEstadoService;
 
 @RestController
-@RequestMapping("/estados")
-public class EstadoController {
+@RequestMapping(path = "/estados", produces = MediaType.APPLICATION_JSON_VALUE)
+public class EstadoController implements EstadoControllerOpenApi {
 
 	@Autowired
 	private EstadoRepository estadoRepository;
