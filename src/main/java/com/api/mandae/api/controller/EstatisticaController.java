@@ -1,5 +1,6 @@
 package com.api.mandae.api.controller;
 
+import com.api.mandae.api.openapi.controller.EstatisticasControllerOpenApi;
 import com.api.mandae.domain.filter.VendaDiariaFilter;
 import com.api.mandae.domain.model.dto.VendaDiaria;
 import com.api.mandae.domain.service.VendaQueryService;
@@ -17,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/estatisticas")
-public class EstatisticaController {
+public class EstatisticaController implements EstatisticasControllerOpenApi {
 
     @Autowired
     private VendaQueryService vendaQueryService;
@@ -42,8 +43,8 @@ public class EstatisticaController {
         headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=vendas-diarias.pdf");
 
         return ResponseEntity.ok()
-                             .contentType(MediaType.APPLICATION_PDF)
-                             .headers(headers)
-                             .body(bytesPdf);
+                .contentType(MediaType.APPLICATION_PDF)
+                .headers(headers)
+                .body(bytesPdf);
     }
 }
