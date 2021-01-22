@@ -10,7 +10,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 import java.util.List;
 
 @Api("Formas de Pagamento")
-interface FormaPagamentoControllerOpenApi {
+public interface FormaPagamentoControllerOpenApi {
 
     @ApiOperation("Lista as formas de pagamento")
     ResponseEntity<List<FormaPagamentoDTO>> listar(ServletWebRequest request);

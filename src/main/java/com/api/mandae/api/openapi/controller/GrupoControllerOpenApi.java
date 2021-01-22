@@ -8,7 +8,7 @@ import io.swagger.annotations.*;
 import java.util.List;
 
 @Api(tags = "Grupos")
-interface GrupoControllerOpenApi {
+public interface GrupoControllerOpenApi {
 
     @ApiOperation("Lista os grupos")
     List<GrupoDTO> listar();

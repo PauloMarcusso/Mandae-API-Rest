@@ -10,7 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 @Api(tags = "Pedidos")
-interface PedidoControllerOpenApi {
+public interface PedidoControllerOpenApi {
 
     @ApiImplicitParams({
             @ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula",

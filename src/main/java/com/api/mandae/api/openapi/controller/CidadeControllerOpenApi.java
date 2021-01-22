@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.util.List;
 
 @Api(tags = "Cidades")
-interface CidadeControllerOpenApi {
+public interface CidadeControllerOpenApi {
 
     @ApiOperation("Lista todas as cidades")
     List<CidadeDTO> listar();

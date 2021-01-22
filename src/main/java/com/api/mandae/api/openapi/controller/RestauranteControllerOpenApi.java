@@ -11,7 +11,7 @@ import io.swagger.annotations.*;
 import java.util.List;
 
 @Api(tags = "Restaurantes")
-interface RestauranteControllerOpenApi {
+public interface RestauranteControllerOpenApi {
 
     @ApiOperation(value = "Lista restaurantes", response = RestauranteBasicoModelOpenApi.class)
     @ApiImplicitParams({
