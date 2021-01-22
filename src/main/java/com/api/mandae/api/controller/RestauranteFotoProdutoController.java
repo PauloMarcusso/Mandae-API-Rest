@@ -3,6 +3,7 @@ package com.api.mandae.api.controller;
 import com.api.mandae.api.assembler.fotoproduto.FotoProdutoConverter;
 import com.api.mandae.api.model.FotoProdutoDTO;
 import com.api.mandae.api.model.input.FotoProdutoInput;
+import com.api.mandae.api.openapi.controller.RestauranteFotoProdutoControllerOpenApi;
 import com.api.mandae.domain.exception.EntidadeNaoEncontradaException;
 import com.api.mandae.domain.model.FotoProduto;
 import com.api.mandae.domain.model.Produto;
@@ -24,8 +25,9 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/restaurantes/{restauranteId}/produtos/{produtoId}/foto")
-public class RestauranteFotoProdutoController {
+@RequestMapping(value = "/restaurantes/{restauranteId}/produtos/{produtoId}/foto", produces =
+        MediaType.APPLICATION_JSON_VALUE)
+public class RestauranteFotoProdutoController implements RestauranteFotoProdutoControllerOpenApi {
 
     @Autowired
     private FotoProdutoConverter fotoProdutoConverter;
@@ -59,7 +61,7 @@ public class RestauranteFotoProdutoController {
 
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping
     public FotoProdutoDTO buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
 
         FotoProduto fotoProduto = catalogoFotoProduto.buscarOuFalhar(restauranteId, produtoId);
@@ -71,8 +73,8 @@ public class RestauranteFotoProdutoController {
         catalogoFotoProduto.remover(restauranteId, produtoId);
     }
 
-    @GetMapping
-    public ResponseEntity<?> servirFoto(@PathVariable Long restauranteId,
+    @GetMapping(produces = MediaType.ALL_VALUE)
+    public ResponseEntity<?> servir(@PathVariable Long restauranteId,
             @PathVariable Long produtoId, @RequestHeader(name = "accept") String acceptHeader) {
 
         try {
@@ -93,13 +95,13 @@ public class RestauranteFotoProdutoController {
 
             } else {
                 return ResponseEntity.ok()
-                                     .contentType(mediaTypeFoto)
-                                     .body(new InputStreamResource(fotoRecuperada.getInputStream()));
+                        .contentType(mediaTypeFoto)
+                        .body(new InputStreamResource(fotoRecuperada.getInputStream()));
 
             }
         } catch (EntidadeNaoEncontradaException | HttpMediaTypeNotAcceptableException e) {
             return ResponseEntity.notFound()
-                                 .build();
+                    .build();
         }
     }
 
@@ -107,7 +109,7 @@ public class RestauranteFotoProdutoController {
             List<MediaType> mediaTypesAceitas) throws HttpMediaTypeNotAcceptableException {
 
         boolean compativel = mediaTypesAceitas.stream()
-                                              .anyMatch(mediaTypeAceita -> mediaTypeAceita.isCompatibleWith(mediaTypeFoto));
+                .anyMatch(mediaTypeAceita -> mediaTypeAceita.isCompatibleWith(mediaTypeFoto));
 
         if (!compativel) {
             throw new HttpMediaTypeNotAcceptableException(mediaTypesAceitas);
