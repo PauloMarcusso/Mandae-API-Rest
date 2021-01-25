@@ -1,5 +1,6 @@
 package com.api.mandae.api.controller;
 
+import com.api.mandae.api.ResourceUriHelper;
 import com.api.mandae.api.assembler.cidade.CidadeConverter;
 import com.api.mandae.api.openapi.controller.CidadeControllerOpenApi;
 import com.api.mandae.api.model.CidadeDTO;
@@ -11,11 +12,17 @@ import com.api.mandae.domain.repository.CidadeRepository;
 import com.api.mandae.domain.service.CadastroCidadeService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 
 
@@ -48,9 +55,13 @@ public class CidadeController implements CidadeControllerOpenApi {
     public CidadeDTO adicionar(@RequestBody @Valid CidadeInput cidadeInput) {
         try {
             Cidade cidade = cidadeConverter.toDomainObject(cidadeInput);
+            cidade = cadastroCidade.salvar(cidade);
 
-            return cidadeConverter.toDTO(cadastroCidade.salvar(cidade));
+            CidadeDTO cidadeDTO = cidadeConverter.toDTO(cidade);
 
+            ResourceUriHelper.addUriInResponseHeader(cidadeDTO.getId());
+
+            return cidadeDTO;
         } catch (EstadoNaoEncontradoException e) {
             throw new NegocioException(e.getMessage(), e);
         }
