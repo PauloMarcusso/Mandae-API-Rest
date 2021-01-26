@@ -1,4 +1,4 @@
-package com.api.mandae.core.openapi;
+package com.api.mandae.core.springfox;
 
 import com.api.mandae.api.exceptionhandler.Problem;
 import com.api.mandae.api.model.CozinhaDTO;

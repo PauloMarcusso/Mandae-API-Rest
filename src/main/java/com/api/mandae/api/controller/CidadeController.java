@@ -12,6 +12,7 @@ import com.api.mandae.domain.repository.CidadeRepository;
 import com.api.mandae.domain.service.CadastroCidadeService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -46,7 +47,20 @@ public class CidadeController implements CidadeControllerOpenApi {
 
     @GetMapping("/{id}")
     public CidadeDTO buscar(@PathVariable Long id) {
-        return cidadeConverter.toDTO(cadastroCidade.buscarOuFalhar(id));
+        Cidade cidade = cadastroCidade.buscarOuFalhar(id);
+
+        CidadeDTO cidadeDTO = cidadeConverter.toDTO(cidade);
+
+        cidadeDTO.add(WebMvcLinkBuilder.linkTo(CidadeController.class)
+                     .slash(cidadeDTO.getId()).withSelfRel());
+
+        cidadeDTO.add(WebMvcLinkBuilder.linkTo(CidadeController.class)
+                     .withRel("cidades"));
+
+        cidadeDTO.add(WebMvcLinkBuilder.linkTo(EstadoController.class)
+                     .slash(cidadeDTO.getEstado().getId()).withSelfRel());
+
+        return cidadeDTO;
     }
 
     @ApiOperation("Cadastra uma cidade")
