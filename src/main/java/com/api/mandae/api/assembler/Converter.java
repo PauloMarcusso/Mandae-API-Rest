@@ -10,7 +10,7 @@ public interface Converter<T, S, U> {
 	 * S - RestauranteDTO
 	 * U - RestauranteInput
 	 */
-	public S toDTO(T domain);
+	public S toModel(T domain);
 	
 	public List<S> toCollectionDTO(List<T> list);
 	

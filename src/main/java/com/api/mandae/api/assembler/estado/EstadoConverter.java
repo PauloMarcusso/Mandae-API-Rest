@@ -19,13 +19,13 @@ public class EstadoConverter implements Converter<Estado, EstadoDTO, EstadoInput
 	private ModelMapper modelMapper;
 
 	@Override
-	public EstadoDTO toDTO(Estado estado) {
+	public EstadoDTO toModel(Estado estado) {
 		return modelMapper.map(estado, EstadoDTO.class);
 	}
 
 	@Override
 	public List<EstadoDTO> toCollectionDTO(List<Estado> estados) {
-		return estados.stream().map(estado -> toDTO(estado)).collect(Collectors.toList());
+		return estados.stream().map(estado -> toModel(estado)).collect(Collectors.toList());
 	}
 
 	@Override

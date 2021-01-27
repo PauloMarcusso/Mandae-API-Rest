@@ -55,7 +55,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 
         Produto produto = cadastroProduto.buscarOuFalhar(restauranteId, produtoId);
 
-        return produtoConverter.toDTO(produto);
+        return produtoConverter.toModel(produto);
 
     }
 
@@ -71,7 +71,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 
         produto = cadastroProduto.salvar(produto);
 
-        return produtoConverter.toDTO(produto);
+        return produtoConverter.toModel(produto);
     }
 
     @PutMapping("/{produtoId}")
@@ -84,6 +84,6 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 
         cadastroProduto.salvar(produtoAtual);
 
-        return produtoConverter.toDTO(produtoAtual);
+        return produtoConverter.toModel(produtoAtual);
     }
 }

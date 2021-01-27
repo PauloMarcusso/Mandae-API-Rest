@@ -20,17 +20,17 @@ public class UsuarioConverter implements Converter<Usuario, UsuarioDTO, UsuarioI
 
 
     @Override
-    public UsuarioDTO toDTO(Usuario usuario) {
+    public UsuarioDTO toModel(Usuario usuario) {
         return modelMapper.map(usuario, UsuarioDTO.class);
     }
 
     @Override
     public List<UsuarioDTO> toCollectionDTO(List<Usuario> usuarios) {
-        return usuarios.stream().map(usuario -> toDTO(usuario)).collect(Collectors.toList());
+        return usuarios.stream().map(usuario -> toModel(usuario)).collect(Collectors.toList());
     }
 
     public List<UsuarioDTO> toCollectionDTO(Collection<Usuario> usuarios) {
-        return usuarios.stream().map(usuario -> toDTO(usuario)).collect(Collectors.toList());
+        return usuarios.stream().map(usuario -> toModel(usuario)).collect(Collectors.toList());
     }
 
     @Override

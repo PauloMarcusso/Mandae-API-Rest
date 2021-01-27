@@ -18,13 +18,13 @@ public class GrupoConverter implements Converter<Grupo, GrupoDTO, GrupoInput>{
     private ModelMapper modelMapper;
 
     @Override
-    public GrupoDTO toDTO(Grupo grupo) {
+    public GrupoDTO toModel(Grupo grupo) {
         return modelMapper.map(grupo, GrupoDTO.class);
     }
 
     @Override
     public List<GrupoDTO> toCollectionDTO(List<Grupo> grupos) {
-        return grupos.stream().map( grupo -> toDTO(grupo)).collect(Collectors.toList());
+        return grupos.stream().map( grupo -> toModel(grupo)).collect(Collectors.toList());
     }
 
     @Override

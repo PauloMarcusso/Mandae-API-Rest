@@ -17,12 +17,12 @@ public class PedidoConverter implements Converter<Pedido, PedidoDTO, PedidoInput
     @Autowired
     private ModelMapper modelMapper;
 
-    public PedidoDTO toDTO(Pedido pedido) {
+    public PedidoDTO toModel(Pedido pedido) {
         return modelMapper.map(pedido, PedidoDTO.class);
     }
 
     public List<PedidoDTO> toCollectionDTO(List<Pedido> pedidos) {
-        return pedidos.stream().map(pedido -> toDTO(pedido)).collect(Collectors.toList());
+        return pedidos.stream().map(pedido -> toModel(pedido)).collect(Collectors.toList());
     }
 
     @Override

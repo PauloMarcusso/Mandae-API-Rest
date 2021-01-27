@@ -19,13 +19,13 @@ public class CozinhaConverter implements Converter<Cozinha, CozinhaDTO, CozinhaI
 	private ModelMapper modelMapper;
 
 	@Override
-	public CozinhaDTO toDTO(Cozinha cozinha) {
+	public CozinhaDTO toModel(Cozinha cozinha) {
 		return modelMapper.map(cozinha, CozinhaDTO.class);
 	}
 
 	@Override
 	public List<CozinhaDTO> toCollectionDTO(List<Cozinha> cozinhas) {
-		return cozinhas.stream().map(cozinha -> toDTO(cozinha)).collect(Collectors.toList());
+		return cozinhas.stream().map(cozinha -> toModel(cozinha)).collect(Collectors.toList());
 	}
 
 	@Override

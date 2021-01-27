@@ -18,13 +18,13 @@ public class ProdutoConverter implements Converter<Produto, ProdutoDTO, ProdutoI
     private ModelMapper modelMapper;
 
     @Override
-    public ProdutoDTO toDTO(Produto produto) {
+    public ProdutoDTO toModel(Produto produto) {
         return modelMapper.map(produto, ProdutoDTO.class);
     }
 
     @Override
     public List<ProdutoDTO> toCollectionDTO(List<Produto> produtos) {
-        return produtos.stream().map(produto -> toDTO(produto)).collect(Collectors.toList());
+        return produtos.stream().map(produto -> toModel(produto)).collect(Collectors.toList());
     }
 
     @Override

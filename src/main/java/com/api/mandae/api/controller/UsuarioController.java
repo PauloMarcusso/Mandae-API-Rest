@@ -38,14 +38,14 @@ public class UsuarioController implements UsuarioControllerOpenApi {
 
     @GetMapping("/{id}")
     public UsuarioDTO buscar(@PathVariable Long id) {
-        return usuarioConverter.toDTO(cadastroUsuario.buscarOuFalhar(id));
+        return usuarioConverter.toModel(cadastroUsuario.buscarOuFalhar(id));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UsuarioDTO adicionar(@RequestBody @Valid UsuarioComSenhaInput usuarioInput) {
         Usuario usuario = usuarioConverter.toDomainObject(usuarioInput);
-        return usuarioConverter.toDTO(cadastroUsuario.salvar(usuario));
+        return usuarioConverter.toModel(cadastroUsuario.salvar(usuario));
     }
 
 
@@ -56,7 +56,7 @@ public class UsuarioController implements UsuarioControllerOpenApi {
         usuarioConverter.copyToDomainObject(usuarioInput, usuarioAtual);
         usuarioAtual = cadastroUsuario.salvar(usuarioAtual);
 
-        return usuarioConverter.toDTO(usuarioAtual);
+        return usuarioConverter.toModel(usuarioAtual);
     }
 
     @PutMapping("/{id}/senha")

@@ -35,14 +35,14 @@ public class GrupoController implements GrupoControllerOpenApi {
 
     @GetMapping("/{id}")
     public GrupoDTO buscar(@PathVariable Long id){
-        return grupoConverter.toDTO(cadastroGrupo.buscarOuFalhar(id));
+        return grupoConverter.toModel(cadastroGrupo.buscarOuFalhar(id));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public GrupoDTO adicionar(@RequestBody @Valid GrupoInput grupoInput){
         Grupo grupo = grupoConverter.toDomainObject(grupoInput);
-        return grupoConverter.toDTO(cadastroGrupo.salvar(grupo));
+        return grupoConverter.toModel(cadastroGrupo.salvar(grupo));
     }
 
     @PutMapping("/{id}")
@@ -51,7 +51,7 @@ public class GrupoController implements GrupoControllerOpenApi {
         Grupo grupoAtual = cadastroGrupo.buscarOuFalhar(id);
         grupoConverter.copyToDomainObject(grupoInput, grupoAtual);
 
-        return grupoConverter.toDTO(cadastroGrupo.salvar(grupoAtual));
+        return grupoConverter.toModel(cadastroGrupo.salvar(grupoAtual));
     }
 
     @DeleteMapping("/{id}")

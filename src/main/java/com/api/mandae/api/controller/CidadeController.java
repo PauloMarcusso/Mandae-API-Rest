@@ -42,52 +42,14 @@ public class CidadeController implements CidadeControllerOpenApi {
 
         List<Cidade> todasCidades = cidadeRepository.findAll();
 
-        List<CidadeDTO> cidadesDTO = cidadeConverter.toCollectionDTO(todasCidades);
-
-        cidadesDTO.forEach(cidadeModel -> {
-            cidadeModel.add(linkTo(methodOn(CidadeController.class)
-                    .buscar(cidadeModel.getId())).withSelfRel());
-
-            cidadeModel.add(linkTo(methodOn(CidadeController.class)
-                    .listar()).withRel("cidades"));
-
-            cidadeModel.getEstado().add(linkTo(methodOn(EstadoController.class)
-                    .buscar(cidadeModel.getEstado().getId())).withSelfRel());
-        });
-
-        CollectionModel<CidadeDTO> cidadesCollectionModel = new CollectionModel<>(cidadesDTO);
-        cidadesCollectionModel.add(linkTo(CidadeController.class).withSelfRel());
-
-        return cidadesCollectionModel;
+        return cidadeConverter.toCollectionModel(todasCidades);
     }
 
     @GetMapping("/{id}")
     public CidadeDTO buscar(@PathVariable Long id) {
         Cidade cidade = cadastroCidade.buscarOuFalhar(id);
 
-        CidadeDTO cidadeDTO = cidadeConverter.toDTO(cidade);
-
-        //relacionando ao método
-        cidadeDTO.add(linkTo(methodOn(CidadeController.class)
-                .buscar(cidadeDTO.getId())).withSelfRel());
-
-        //relacionando ao endpoint
-//        cidadeDTO.add(WebMvcLinkBuilder.linkTo(CidadeController.class)
-//                     .slash(cidadeDTO.getId()).withSelfRel());
-
-        cidadeDTO.add(linkTo(methodOn(CidadeController.class).listar())
-                .withRel("cidades"));
-
-//        cidadeDTO.add(WebMvcLinkBuilder.linkTo(CidadeController.class)
-//                .withRel("cidades"));
-
-        cidadeDTO.add(linkTo(methodOn(EstadoController.class)
-                .buscar(cidadeDTO.getEstado().getId())).withSelfRel());
-
-//        cidadeDTO.add(WebMvcLinkBuilder.linkTo(EstadoController.class)
-//                .slash(cidadeDTO.getEstado().getId()).withSelfRel());
-
-        return cidadeDTO;
+        return cidadeConverter.toModel(cidade);
     }
 
     @ApiOperation("Cadastra uma cidade")
@@ -98,7 +60,7 @@ public class CidadeController implements CidadeControllerOpenApi {
             Cidade cidade = cidadeConverter.toDomainObject(cidadeInput);
             cidade = cadastroCidade.salvar(cidade);
 
-            CidadeDTO cidadeDTO = cidadeConverter.toDTO(cidade);
+            CidadeDTO cidadeDTO = cidadeConverter.toModel(cidade);
 
             ResourceUriHelper.addUriInResponseHeader(cidadeDTO.getId());
 
@@ -121,7 +83,7 @@ public class CidadeController implements CidadeControllerOpenApi {
 
         try {
 
-            return cidadeConverter.toDTO(cadastroCidade.salvar(cidadeAtual));
+            return cidadeConverter.toModel(cadastroCidade.salvar(cidadeAtual));
 
         } catch (EstadoNaoEncontradoException e) {
             throw new NegocioException(e.getMessage(), e);

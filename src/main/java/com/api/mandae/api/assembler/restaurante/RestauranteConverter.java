@@ -21,7 +21,7 @@ public class RestauranteConverter implements Converter<Restaurante, RestauranteD
     private ModelMapper modelMapper;
 
     @Override
-    public RestauranteDTO toDTO(Restaurante restaurante) {
+    public RestauranteDTO toModel(Restaurante restaurante) {
 
         return modelMapper.map(restaurante, RestauranteDTO.class);
 
@@ -39,7 +39,7 @@ public class RestauranteConverter implements Converter<Restaurante, RestauranteD
 
     @Override
     public List<RestauranteDTO> toCollectionDTO(List<Restaurante> restaurantes) {
-        return restaurantes.stream().map(restaurante -> toDTO(restaurante)).collect(Collectors.toList());
+        return restaurantes.stream().map(restaurante -> toModel(restaurante)).collect(Collectors.toList());
     }
 
     @Override

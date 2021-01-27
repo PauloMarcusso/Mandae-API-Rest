@@ -46,7 +46,7 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 
     @GetMapping("/{id}")
     public CozinhaDTO buscar(@PathVariable Long id) {
-        return cozinhaConverter.toDTO(cadastroCozinha.buscarOuFalhar(id));
+        return cozinhaConverter.toModel(cadastroCozinha.buscarOuFalhar(id));
     }
 
     @PostMapping
@@ -55,7 +55,7 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 
         Cozinha cozinha = cozinhaConverter.toDomainObject(cozinhaInput);
 
-        return cozinhaConverter.toDTO(cadastroCozinha.salvar(cozinha));
+        return cozinhaConverter.toModel(cadastroCozinha.salvar(cozinha));
     }
 
     @PutMapping("/{id}")
@@ -65,7 +65,7 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 
         cozinhaConverter.copyToDomainObject(cozinhaInput, cozinhaAtual);
 
-        return cozinhaConverter.toDTO(cadastroCozinha.salvar(cozinhaAtual));
+        return cozinhaConverter.toModel(cadastroCozinha.salvar(cozinhaAtual));
     }
 
     @DeleteMapping("/{id}")
