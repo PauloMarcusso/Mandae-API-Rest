@@ -12,13 +12,16 @@ import com.api.mandae.domain.repository.CidadeRepository;
 import com.api.mandae.domain.service.CadastroCidadeService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 
 @RestController
@@ -35,8 +38,27 @@ public class CidadeController implements CidadeControllerOpenApi {
     private CidadeConverter cidadeConverter;
 
     @GetMapping
-    public List<CidadeDTO> listar() {
-        return cidadeConverter.toCollectionDTO(cidadeRepository.findAll());
+    public CollectionModel<CidadeDTO> listar() {
+
+        List<Cidade> todasCidades = cidadeRepository.findAll();
+
+        List<CidadeDTO> cidadesDTO = cidadeConverter.toCollectionDTO(todasCidades);
+
+        cidadesDTO.forEach(cidadeModel -> {
+            cidadeModel.add(linkTo(methodOn(CidadeController.class)
+                    .buscar(cidadeModel.getId())).withSelfRel());
+
+            cidadeModel.add(linkTo(methodOn(CidadeController.class)
+                    .listar()).withRel("cidades"));
+
+            cidadeModel.getEstado().add(linkTo(methodOn(EstadoController.class)
+                    .buscar(cidadeModel.getEstado().getId())).withSelfRel());
+        });
+
+        CollectionModel<CidadeDTO> cidadesCollectionModel = new CollectionModel<>(cidadesDTO);
+        cidadesCollectionModel.add(linkTo(CidadeController.class).withSelfRel());
+
+        return cidadesCollectionModel;
     }
 
     @GetMapping("/{id}")
@@ -46,20 +68,20 @@ public class CidadeController implements CidadeControllerOpenApi {
         CidadeDTO cidadeDTO = cidadeConverter.toDTO(cidade);
 
         //relacionando ao método
-        cidadeDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CidadeController.class)
+        cidadeDTO.add(linkTo(methodOn(CidadeController.class)
                 .buscar(cidadeDTO.getId())).withSelfRel());
 
         //relacionando ao endpoint
 //        cidadeDTO.add(WebMvcLinkBuilder.linkTo(CidadeController.class)
 //                     .slash(cidadeDTO.getId()).withSelfRel());
 
-        cidadeDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CidadeController.class).listar())
+        cidadeDTO.add(linkTo(methodOn(CidadeController.class).listar())
                 .withRel("cidades"));
 
 //        cidadeDTO.add(WebMvcLinkBuilder.linkTo(CidadeController.class)
 //                .withRel("cidades"));
 
-        cidadeDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EstadoController.class)
+        cidadeDTO.add(linkTo(methodOn(EstadoController.class)
                 .buscar(cidadeDTO.getEstado().getId())).withSelfRel());
 
 //        cidadeDTO.add(WebMvcLinkBuilder.linkTo(EstadoController.class)
