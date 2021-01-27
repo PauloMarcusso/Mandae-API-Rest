@@ -2,9 +2,9 @@ package com.api.mandae.api.controller;
 
 import com.api.mandae.api.ResourceUriHelper;
 import com.api.mandae.api.assembler.cidade.CidadeConverter;
-import com.api.mandae.api.openapi.controller.CidadeControllerOpenApi;
 import com.api.mandae.api.model.CidadeDTO;
 import com.api.mandae.api.model.input.CidadeInput;
+import com.api.mandae.api.openapi.controller.CidadeControllerOpenApi;
 import com.api.mandae.domain.exception.EstadoNaoEncontradoException;
 import com.api.mandae.domain.exception.NegocioException;
 import com.api.mandae.domain.model.Cidade;
@@ -13,17 +13,11 @@ import com.api.mandae.domain.service.CadastroCidadeService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 
 
@@ -51,14 +45,25 @@ public class CidadeController implements CidadeControllerOpenApi {
 
         CidadeDTO cidadeDTO = cidadeConverter.toDTO(cidade);
 
-        cidadeDTO.add(WebMvcLinkBuilder.linkTo(CidadeController.class)
-                     .slash(cidadeDTO.getId()).withSelfRel());
+        //relacionando ao método
+        cidadeDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CidadeController.class)
+                .buscar(cidadeDTO.getId())).withSelfRel());
 
-        cidadeDTO.add(WebMvcLinkBuilder.linkTo(CidadeController.class)
-                     .withRel("cidades"));
+        //relacionando ao endpoint
+//        cidadeDTO.add(WebMvcLinkBuilder.linkTo(CidadeController.class)
+//                     .slash(cidadeDTO.getId()).withSelfRel());
 
-        cidadeDTO.add(WebMvcLinkBuilder.linkTo(EstadoController.class)
-                     .slash(cidadeDTO.getEstado().getId()).withSelfRel());
+        cidadeDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CidadeController.class).listar())
+                .withRel("cidades"));
+
+//        cidadeDTO.add(WebMvcLinkBuilder.linkTo(CidadeController.class)
+//                .withRel("cidades"));
+
+        cidadeDTO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EstadoController.class)
+                .buscar(cidadeDTO.getEstado().getId())).withSelfRel());
+
+//        cidadeDTO.add(WebMvcLinkBuilder.linkTo(EstadoController.class)
+//                .slash(cidadeDTO.getEstado().getId()).withSelfRel());
 
         return cidadeDTO;
     }
