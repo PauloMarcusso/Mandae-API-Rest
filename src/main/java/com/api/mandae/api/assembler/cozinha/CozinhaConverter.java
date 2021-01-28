@@ -1,41 +1,44 @@
 package com.api.mandae.api.assembler.cozinha;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.api.mandae.api.assembler.Converter;
+import com.api.mandae.api.controller.CozinhaController;
 import com.api.mandae.api.model.CozinhaDTO;
 import com.api.mandae.api.model.input.CozinhaInput;
 import com.api.mandae.domain.model.Cozinha;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
+import org.springframework.stereotype.Component;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @Component
-public class CozinhaConverter implements Converter<Cozinha, CozinhaDTO, CozinhaInput>{
-	
-	@Autowired
-	private ModelMapper modelMapper;
+public class CozinhaConverter extends RepresentationModelAssemblerSupport<Cozinha, CozinhaDTO> {
 
-	@Override
-	public CozinhaDTO toModel(Cozinha cozinha) {
-		return modelMapper.map(cozinha, CozinhaDTO.class);
-	}
+    @Autowired
+    private ModelMapper modelMapper;
 
-	@Override
-	public List<CozinhaDTO> toCollectionDTO(List<Cozinha> cozinhas) {
-		return cozinhas.stream().map(cozinha -> toModel(cozinha)).collect(Collectors.toList());
-	}
+    public CozinhaConverter() {
+        super(CozinhaController.class, CozinhaDTO.class);
+    }
 
-	@Override
-	public Cozinha toDomainObject(CozinhaInput cozinhaInput) {
-		return modelMapper.map(cozinhaInput, Cozinha.class);
-	}
+    @Override
+    public CozinhaDTO toModel(Cozinha cozinha) {
 
-	@Override
-	public void copyToDomainObject(CozinhaInput cozinhaInput, Cozinha cozinha) {
-		modelMapper.map(cozinhaInput, cozinha);
-	}
+        CozinhaDTO cozinhaDTO = createModelWithId(cozinha.getId(), cozinha);
+        modelMapper.map(cozinha, cozinhaDTO);
+
+        cozinhaDTO.add(linkTo(CozinhaController.class).withRel("cozinhas"));
+
+        return cozinhaDTO;
+    }
+
+    public Cozinha toDomainObject(CozinhaInput cozinhaInput) {
+        return modelMapper.map(cozinhaInput, Cozinha.class);
+    }
+
+
+    public void copyToDomainObject(CozinhaInput cozinhaInput, Cozinha cozinha) {
+        modelMapper.map(cozinhaInput, cozinha);
+    }
 
 }
