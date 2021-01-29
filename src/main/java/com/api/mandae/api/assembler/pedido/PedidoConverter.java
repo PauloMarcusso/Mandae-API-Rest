@@ -32,6 +32,10 @@ public class PedidoConverter extends RepresentationModelAssemblerSupport<Pedido,
 
         pedidoDTO.add(mandaeLinks.linkToPedidos());
 
+        pedidoDTO.add(mandaeLinks.linkToConfirmarPedido(pedido.getCodigo(), "confirmar"));
+        pedidoDTO.add(mandaeLinks.linkToEntregarPedido(pedido.getCodigo(), "entregar"));
+        pedidoDTO.add(mandaeLinks.linkToCancelarPedido(pedido.getCodigo(), "cancelar"));
+
         pedidoDTO.getRestaurante().add(
                 mandaeLinks.linkToRestaurante(pedido.getRestaurante().getId()));
 
@@ -44,10 +48,9 @@ public class PedidoConverter extends RepresentationModelAssemblerSupport<Pedido,
         pedidoDTO.getEnderecoEntrega().getCidade().add(
                 mandaeLinks.linkToCidade(pedido.getEnderecoEntrega().getCidade().getId()));
 
-        pedidoDTO.getItens().forEach(item -> {
+        pedidoDTO.getItens().forEach(item ->
             item.add(mandaeLinks.linkToProduto(
-                    pedidoDTO.getRestaurante().getId(), item.getProdutoId(), "produto"));
-        });
+                    pedidoDTO.getRestaurante().getId(), item.getProdutoId(), "produto")));
         return pedidoDTO;
     }
 

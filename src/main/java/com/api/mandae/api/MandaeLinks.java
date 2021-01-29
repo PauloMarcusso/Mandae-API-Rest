@@ -132,4 +132,14 @@ public class MandaeLinks {
     public Link linkToCozinhas() {
         return linkToCozinhas(IanaLinkRelations.SELF.value());
     }
+
+    public Link linkToConfirmarPedido(String codidoPedido, String rel){
+        return linkTo(methodOn(FluxoPedidoController.class).confirmar(codidoPedido)).withRel(rel);
+    }
+    public Link linkToCancelarPedido(String codidoPedido, String rel){
+        return linkTo(methodOn(FluxoPedidoController.class).cancelar(codidoPedido)).withRel(rel);
+    }
+    public Link linkToEntregarPedido(String codidoPedido, String rel){
+        return linkTo(methodOn(FluxoPedidoController.class).entregar(codidoPedido)).withRel(rel);
+    }
 }
