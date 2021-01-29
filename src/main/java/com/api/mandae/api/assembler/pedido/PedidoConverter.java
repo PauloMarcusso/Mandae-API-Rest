@@ -27,7 +27,7 @@ public class PedidoConverter extends RepresentationModelAssemblerSupport<Pedido,
     }
 
     public PedidoDTO toModel(Pedido pedido) {
-        PedidoDTO pedidoDTO = createModelWithId(pedido.getId(), pedido);
+        PedidoDTO pedidoDTO = createModelWithId(pedido.getCodigo(), pedido);
         modelMapper.map(pedido, pedidoDTO);
 
         TemplateVariables pageVariables = new TemplateVariables(
@@ -35,9 +35,15 @@ public class PedidoConverter extends RepresentationModelAssemblerSupport<Pedido,
                 new TemplateVariable("size", TemplateVariable.VariableType.REQUEST_PARAM),
                 new TemplateVariable("sort", TemplateVariable.VariableType.REQUEST_PARAM));
 
+        TemplateVariables filtroVariables = new TemplateVariables(
+                new TemplateVariable("clienteId", TemplateVariable.VariableType.REQUEST_PARAM),
+                new TemplateVariable("restauranteId", TemplateVariable.VariableType.REQUEST_PARAM),
+                new TemplateVariable("dataCriacaoInicio", TemplateVariable.VariableType.REQUEST_PARAM),
+                new TemplateVariable("dataCriacaoFim", TemplateVariable.VariableType.REQUEST_PARAM));
+
         String pedidosUrl = linkTo(PedidoController.class).toUri().toString();
 
-        pedidoDTO.add(new Link(UriTemplate.of(pedidosUrl, pageVariables), "pedidos"));
+        pedidoDTO.add(new Link(UriTemplate.of(pedidosUrl, pageVariables.concat(filtroVariables)), "pedidos"));
 
         pedidoDTO.add(linkTo(PedidoController.class).withRel("pedidos"));
 
