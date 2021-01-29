@@ -6,6 +6,7 @@ import com.api.mandae.api.model.PedidoDTO;
 import com.api.mandae.api.model.PedidoResumoDTO;
 import com.api.mandae.api.model.input.PedidoInput;
 import com.api.mandae.api.openapi.controller.PedidoControllerOpenApi;
+import com.api.mandae.core.data.PageWrapper;
 import com.api.mandae.core.data.PageableTranslator;
 import com.api.mandae.domain.exception.EntidadeNaoEncontradaException;
 import com.api.mandae.domain.exception.NegocioException;
@@ -48,9 +49,11 @@ public class PedidoController implements PedidoControllerOpenApi {
     @GetMapping
     public PagedModel<PedidoResumoDTO> pesquisar(PedidoFilter filtro, Pageable pageable) {
 
-        pageable = traduzirPageable(pageable);
+        Pageable pageableTraduzido = traduzirPageable(pageable);
 
-        Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro), pageable);
+        Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro), pageableTraduzido);
+
+        pedidosPage = new PageWrapper<>(pedidosPage, pageable);
 
 //        List<PedidoResumoDTO> pedidosDTO = pedidoResumoConverter.toCollectionDTO(pedidosPage.getContent());
 //        Page<PedidoResumoDTO> pedidosResumoDTOPage = new PageImpl<>(pedidosDTO, pageable,
