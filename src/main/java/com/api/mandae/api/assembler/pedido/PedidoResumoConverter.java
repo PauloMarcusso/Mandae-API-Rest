@@ -1,5 +1,6 @@
 package com.api.mandae.api.assembler.pedido;
 
+import com.api.mandae.api.MandaeLinks;
 import com.api.mandae.api.controller.PedidoController;
 import com.api.mandae.api.controller.RestauranteController;
 import com.api.mandae.api.controller.UsuarioController;
@@ -23,6 +24,9 @@ public class PedidoResumoConverter extends RepresentationModelAssemblerSupport<P
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private MandaeLinks mandaeLinks;
+
     public PedidoResumoConverter(){
         super(PedidoController.class, PedidoResumoDTO.class);
     }
@@ -31,13 +35,12 @@ public class PedidoResumoConverter extends RepresentationModelAssemblerSupport<P
         PedidoResumoDTO pedidoDTO = createModelWithId(pedido.getId(), pedido);
         modelMapper.map(pedido, pedidoDTO);
 
-        pedidoDTO.add(linkTo(PedidoController.class).withRel("pedidos"));
+        pedidoDTO.add(mandaeLinks.linkToPedidos());
 
-        pedidoDTO.getRestaurante().add(linkTo(methodOn(RestauranteController.class)
-                .buscar(pedidoDTO.getRestaurante().getId())).withSelfRel());
+        pedidoDTO.getRestaurante().add(
+                mandaeLinks.linkToRestaurante(pedido.getRestaurante().getId()));
 
-        pedidoDTO.getCliente().add(linkTo(methodOn(UsuarioController.class)
-                .buscar(pedidoDTO.getCliente().getId())).withSelfRel());
+        pedidoDTO.getCliente().add(mandaeLinks.linkToUsuario(pedido.getCliente().getId()));
 
         return pedidoDTO;
     }

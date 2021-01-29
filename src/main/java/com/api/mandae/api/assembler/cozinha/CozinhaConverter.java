@@ -1,5 +1,6 @@
 package com.api.mandae.api.assembler.cozinha;
 
+import com.api.mandae.api.MandaeLinks;
 import com.api.mandae.api.controller.CozinhaController;
 import com.api.mandae.api.model.CozinhaDTO;
 import com.api.mandae.api.model.input.CozinhaInput;
@@ -17,6 +18,9 @@ public class CozinhaConverter extends RepresentationModelAssemblerSupport<Cozinh
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private MandaeLinks mandaeLinks;
+
     public CozinhaConverter() {
         super(CozinhaController.class, CozinhaDTO.class);
     }
@@ -27,7 +31,7 @@ public class CozinhaConverter extends RepresentationModelAssemblerSupport<Cozinh
         CozinhaDTO cozinhaDTO = createModelWithId(cozinha.getId(), cozinha);
         modelMapper.map(cozinha, cozinhaDTO);
 
-        cozinhaDTO.add(linkTo(CozinhaController.class).withRel("cozinhas"));
+        cozinhaDTO.add(mandaeLinks.linkToCozinhas("cozinhas"));
 
         return cozinhaDTO;
     }

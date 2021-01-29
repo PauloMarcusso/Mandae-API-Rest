@@ -32,23 +32,21 @@ public class PedidoConverter extends RepresentationModelAssemblerSupport<Pedido,
 
         pedidoDTO.add(mandaeLinks.linkToPedidos());
 
-        pedidoDTO.getRestaurante().add(linkTo(methodOn(RestauranteController.class)
-                .buscar(pedidoDTO.getRestaurante().getId())).withSelfRel());
+        pedidoDTO.getRestaurante().add(
+                mandaeLinks.linkToRestaurante(pedido.getRestaurante().getId()));
 
-        pedidoDTO.getCliente().add(linkTo(methodOn(UsuarioController.class)
-                .buscar(pedidoDTO.getCliente().getId())).withSelfRel());
+        pedidoDTO.getCliente().add(
+                mandaeLinks.linkToUsuario(pedido.getCliente().getId()));
 
-        // Passamos null no segundo argumento, porque é indiferente para a
-        // construção da URL do recurso de forma de pagamento
-        pedidoDTO.getFormaPagamento().add(linkTo(methodOn(FormaPagamentoController.class)
-                .buscar(pedido.getFormaPagamento().getId(), null)).withSelfRel());
+        pedidoDTO.getFormaPagamento().add(
+                mandaeLinks.linkToFormaPagamento(pedido.getFormaPagamento().getId()));
 
-        pedidoDTO.getEnderecoEntrega().getCidade().add(linkTo(methodOn(CidadeController.class)
-                .buscar(pedido.getEnderecoEntrega().getCidade().getId())).withSelfRel());
+        pedidoDTO.getEnderecoEntrega().getCidade().add(
+                mandaeLinks.linkToCidade(pedido.getEnderecoEntrega().getCidade().getId()));
 
         pedidoDTO.getItens().forEach(item -> {
-            item.add(linkTo(methodOn(RestauranteProdutoController.class)
-                    .buscar(pedidoDTO.getRestaurante().getId(), item.getProdutoId())).withSelfRel());
+            item.add(mandaeLinks.linkToProduto(
+                    pedidoDTO.getRestaurante().getId(), item.getProdutoId(), "produto"));
         });
         return pedidoDTO;
     }

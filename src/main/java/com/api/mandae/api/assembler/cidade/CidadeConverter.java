@@ -1,5 +1,6 @@
 package com.api.mandae.api.assembler.cidade;
 
+import com.api.mandae.api.MandaeLinks;
 import com.api.mandae.api.controller.CidadeController;
 import com.api.mandae.api.controller.EstadoController;
 import com.api.mandae.api.model.CidadeDTO;
@@ -22,6 +23,9 @@ public class CidadeConverter extends RepresentationModelAssemblerSupport<Cidade,
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private MandaeLinks mandaeLinks;
+
     public CidadeConverter() {
         super(CidadeController.class, CidadeDTO.class);
     }
@@ -31,25 +35,9 @@ public class CidadeConverter extends RepresentationModelAssemblerSupport<Cidade,
 
         CidadeDTO cidadeDTO = modelMapper.map(cidade, CidadeDTO.class);
 
-        //relacionando ao método
-        cidadeDTO.add(linkTo(methodOn(CidadeController.class)
-                .buscar(cidadeDTO.getId())).withSelfRel());
+        cidadeDTO.add(mandaeLinks.linkToCidades("cidades"));
 
-        //relacionando ao endpoint
-//        cidadeDTO.add(WebMvcLinkBuilder.linkTo(CidadeController.class)
-//                     .slash(cidadeDTO.getId()).withSelfRel());
-
-        cidadeDTO.add(linkTo(methodOn(CidadeController.class).listar())
-                .withRel("cidades"));
-
-//        cidadeDTO.add(WebMvcLinkBuilder.linkTo(CidadeController.class)
-//                .withRel("cidades"));
-
-        cidadeDTO.add(linkTo(methodOn(EstadoController.class)
-                .buscar(cidadeDTO.getEstado().getId())).withSelfRel());
-
-//        cidadeDTO.add(WebMvcLinkBuilder.linkTo(EstadoController.class)
-//                .slash(cidadeDTO.getEstado().getId()).withSelfRel());
+        cidadeDTO.getEstado().add(mandaeLinks.linkToEstado(cidadeDTO.getEstado().getId()));
 
         return cidadeDTO;
     }

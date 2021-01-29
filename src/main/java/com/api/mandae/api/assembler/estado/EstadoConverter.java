@@ -1,5 +1,6 @@
 package com.api.mandae.api.assembler.estado;
 
+import com.api.mandae.api.MandaeLinks;
 import com.api.mandae.api.controller.EstadoController;
 import com.api.mandae.api.model.EstadoDTO;
 import com.api.mandae.api.model.input.EstadoInput;
@@ -19,6 +20,9 @@ public class EstadoConverter extends RepresentationModelAssemblerSupport<Estado,
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private MandaeLinks mandaeLinks;
+
     public EstadoConverter() {
         super(EstadoController.class, EstadoDTO.class);
     }
@@ -28,7 +32,7 @@ public class EstadoConverter extends RepresentationModelAssemblerSupport<Estado,
         EstadoDTO estadoDTO = createModelWithId(estado.getId(), estado);
         modelMapper.map(estado, estadoDTO);
 
-        estadoDTO.add(linkTo(EstadoController.class).withRel("estados"));
+        estadoDTO.add(mandaeLinks.linkToEstados("estados"));
 
         return estadoDTO;
     }
