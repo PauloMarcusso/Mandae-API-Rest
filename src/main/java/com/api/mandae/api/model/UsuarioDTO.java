@@ -26,7 +26,4 @@ public class UsuarioDTO extends RepresentationModel<UsuarioDTO> {
     private String email;
 
     private OffsetDateTime dataCadastro;
-
-    private List<GrupoDTO> grupos;
-
 }

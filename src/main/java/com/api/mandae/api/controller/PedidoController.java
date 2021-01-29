@@ -18,13 +18,13 @@ import com.api.mandae.infrastructure.repository.spec.PedidoSpecs;
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/pedidos")
@@ -42,19 +42,21 @@ public class PedidoController implements PedidoControllerOpenApi {
     @Autowired
     private EmissaoPedidoService emissaoPedido;
 
+    @Autowired
+    private PagedResourcesAssembler<Pedido> pedidoPagedResourcesAssembler;
+
     @GetMapping
-    public Page<PedidoResumoDTO> pesquisar(PedidoFilter filtro, Pageable pageable) {
+    public PagedModel<PedidoResumoDTO> pesquisar(PedidoFilter filtro, Pageable pageable) {
 
         pageable = traduzirPageable(pageable);
 
         Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro), pageable);
 
-        List<PedidoResumoDTO> pedidosDTO = pedidoResumoConverter.toCollectionDTO(pedidosPage.getContent());
+//        List<PedidoResumoDTO> pedidosDTO = pedidoResumoConverter.toCollectionDTO(pedidosPage.getContent());
+//        Page<PedidoResumoDTO> pedidosResumoDTOPage = new PageImpl<>(pedidosDTO, pageable,
+//                pedidosPage.getTotalElements());
 
-        Page<PedidoResumoDTO> pedidosResumoDTOPage = new PageImpl<>(pedidosDTO, pageable,
-                pedidosPage.getTotalElements());
-
-        return pedidosResumoDTOPage;
+        return pedidoPagedResourcesAssembler.toModel(pedidosPage, pedidoResumoConverter);
     }
 
 //    @GetMapping

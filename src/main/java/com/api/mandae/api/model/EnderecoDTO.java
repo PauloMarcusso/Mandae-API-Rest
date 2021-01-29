@@ -1,18 +1,15 @@
 package com.api.mandae.api.model;
 
-import com.api.mandae.domain.model.Cidade;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
+@Relation(collectionRelation = "enderecos")
 @Getter
 @Setter
-public class EnderecoDTO {
+public class EnderecoDTO extends RepresentationModel<EnderecoDTO> {
 
     @ApiModelProperty(example = "38400-000")
     private String cep;
