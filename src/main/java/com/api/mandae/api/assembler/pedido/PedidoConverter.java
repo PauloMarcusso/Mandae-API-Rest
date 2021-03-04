@@ -1,7 +1,7 @@
 package com.api.mandae.api.assembler.pedido;
 
 import com.api.mandae.api.MandaeLinks;
-import com.api.mandae.api.controller.*;
+import com.api.mandae.api.controller.PedidoController;
 import com.api.mandae.api.model.PedidoDTO;
 import com.api.mandae.api.model.input.PedidoInput;
 import com.api.mandae.domain.model.Pedido;
@@ -9,9 +9,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
 public class PedidoConverter extends RepresentationModelAssemblerSupport<Pedido, PedidoDTO> {
@@ -32,9 +29,17 @@ public class PedidoConverter extends RepresentationModelAssemblerSupport<Pedido,
 
         pedidoDTO.add(mandaeLinks.linkToPedidos());
 
-        pedidoDTO.add(mandaeLinks.linkToConfirmarPedido(pedido.getCodigo(), "confirmar"));
-        pedidoDTO.add(mandaeLinks.linkToEntregarPedido(pedido.getCodigo(), "entregar"));
-        pedidoDTO.add(mandaeLinks.linkToCancelarPedido(pedido.getCodigo(), "cancelar"));
+        if (pedido.podeSerConfirmado()) {
+            pedidoDTO.add(mandaeLinks.linkToConfirmarPedido(pedido.getCodigo(), "confirmar"));
+        }
+
+        if (pedido.podeSerEntregue()) {
+            pedidoDTO.add(mandaeLinks.linkToEntregarPedido(pedido.getCodigo(), "entregar"));
+        }
+
+        if (pedido.podeSerCancelado()) {
+            pedidoDTO.add(mandaeLinks.linkToCancelarPedido(pedido.getCodigo(), "cancelar"));
+        }
 
         pedidoDTO.getRestaurante().add(
                 mandaeLinks.linkToRestaurante(pedido.getRestaurante().getId()));
@@ -49,8 +54,8 @@ public class PedidoConverter extends RepresentationModelAssemblerSupport<Pedido,
                 mandaeLinks.linkToCidade(pedido.getEnderecoEntrega().getCidade().getId()));
 
         pedidoDTO.getItens().forEach(item ->
-            item.add(mandaeLinks.linkToProduto(
-                    pedidoDTO.getRestaurante().getId(), item.getProdutoId(), "produto")));
+                item.add(mandaeLinks.linkToProduto(
+                        pedidoDTO.getRestaurante().getId(), item.getProdutoId(), "produto")));
         return pedidoDTO;
     }
 
