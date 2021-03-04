@@ -38,7 +38,7 @@ public class EstadoConverter extends RepresentationModelAssemblerSupport<Estado,
     }
 
     @Override public CollectionModel<EstadoDTO> toCollectionModel(Iterable<? extends Estado> entities) {
-        return super.toCollectionModel(entities).add(linkTo(methodOn(EstadoController.class).listar()).withSelfRel());
+        return super.toCollectionModel(entities).add(mandaeLinks.linkToEstados());
     }
 
     public Estado toDomainObject(EstadoInput estadoInput) {

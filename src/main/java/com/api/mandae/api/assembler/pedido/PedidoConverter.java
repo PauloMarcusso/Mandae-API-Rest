@@ -53,9 +53,10 @@ public class PedidoConverter extends RepresentationModelAssemblerSupport<Pedido,
         pedidoDTO.getEnderecoEntrega().getCidade().add(
                 mandaeLinks.linkToCidade(pedido.getEnderecoEntrega().getCidade().getId()));
 
-        pedidoDTO.getItens().forEach(item ->
-                item.add(mandaeLinks.linkToProduto(
-                        pedidoDTO.getRestaurante().getId(), item.getProdutoId(), "produto")));
+        pedidoDTO.getItens().forEach(item -> {
+            item.add(mandaeLinks.linkToProduto(
+                    pedidoDTO.getRestaurante().getId(), item.getProdutoId(), "produto"));
+        });
         return pedidoDTO;
     }
 

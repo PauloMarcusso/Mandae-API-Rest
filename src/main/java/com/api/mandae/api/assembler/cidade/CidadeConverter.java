@@ -43,7 +43,7 @@ public class CidadeConverter extends RepresentationModelAssemblerSupport<Cidade,
     }
 
     @Override public CollectionModel<CidadeDTO> toCollectionModel(Iterable<? extends Cidade> entities) {
-        return super.toCollectionModel(entities).add(WebMvcLinkBuilder.linkTo(CidadeController.class).withSelfRel());
+        return super.toCollectionModel(entities).add(mandaeLinks.linkToCidades());
     }
 
     public Cidade toDomainObject(CidadeInput cidadeInput) {

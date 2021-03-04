@@ -38,7 +38,7 @@ public class UsuarioConverter extends RepresentationModelAssemblerSupport<Usuari
     }
 
     @Override public CollectionModel<UsuarioDTO> toCollectionModel(Iterable<? extends Usuario> entities) {
-        return super.toCollectionModel(entities).add(linkTo(UsuarioController.class).withSelfRel());
+        return super.toCollectionModel(entities).add(mandaeLinks.linkToUsuarios());
     }
 
     public Usuario toDomainObject(UsuarioInput usuarioInput) {

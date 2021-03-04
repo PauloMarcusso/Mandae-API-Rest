@@ -47,7 +47,7 @@ public class PedidoDTO extends RepresentationModel<PedidoDTO> {
 
     private FormaPagamentoDTO formaPagamento;
 
-    private RestauranteResumoDTO restaurante;
+    private RestauranteApenasNomeDTO restaurante;
 
     private UsuarioDTO cliente;
 
