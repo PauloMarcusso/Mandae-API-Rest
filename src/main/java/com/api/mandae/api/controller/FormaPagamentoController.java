@@ -8,6 +8,7 @@ import com.api.mandae.domain.model.FormaPagamento;
 import com.api.mandae.domain.repository.FormaPagamentoRepository;
 import com.api.mandae.domain.service.CadastroFormaPagamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,7 +19,6 @@ import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
 import javax.validation.Valid;
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -35,22 +35,24 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
     private CadastroFormaPagamentoService cadastroFormaPagamento;
 
     @GetMapping
-    public ResponseEntity<List<FormaPagamentoDTO>> listar(ServletWebRequest request) {
+    public ResponseEntity<CollectionModel<FormaPagamentoDTO>> listar(ServletWebRequest request) {
         ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
 
         String eTag = "0";
         OffsetDateTime dataUltimaAtualizacao = formaPagamentoRepository.getDataUltimaAtualizacao();
 
-        if (dataUltimaAtualizacao != null){
+        if (dataUltimaAtualizacao != null) {
             eTag = String.valueOf(dataUltimaAtualizacao.toEpochSecond());
         }
 
-        if(request.checkNotModified(eTag)){
+        if (request.checkNotModified(eTag)) {
             return null;
         }
 
-        List<FormaPagamentoDTO> todasFormasPagamentos = formaPagamentoConverter.toCollectionDTO(formaPagamentoRepository
-                .findAll());
+        CollectionModel<FormaPagamentoDTO> todasFormasPagamentos =
+                formaPagamentoConverter.toCollectionModel(formaPagamentoRepository
+                        .findAll());
+
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
                 .eTag(eTag)
@@ -66,16 +68,16 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
 
         OffsetDateTime dataAtualizacao = formaPagamentoRepository.getDataAtualizacaoById(id);
 
-        if(dataAtualizacao != null){
+        if (dataAtualizacao != null) {
             eTag = String.valueOf(dataAtualizacao.toEpochSecond());
         }
 
-        if(request.checkNotModified(eTag)){
+        if (request.checkNotModified(eTag)) {
             return null;
         }
 
         FormaPagamento formaPagamento = cadastroFormaPagamento.buscarOuFalhar(id);
-        FormaPagamentoDTO formaPagamentoDTO = formaPagamentoConverter.toDTO(formaPagamento);
+        FormaPagamentoDTO formaPagamentoDTO = formaPagamentoConverter.toModel(formaPagamento);
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
                 .body(formaPagamentoDTO);
@@ -87,7 +89,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
 
         FormaPagamento formaPagamento = formaPagamentoConverter.toDomainObject(formaPagamentoInput);
 
-        return formaPagamentoConverter.toDTO(cadastroFormaPagamento.salvar(formaPagamento));
+        return formaPagamentoConverter.toModel(cadastroFormaPagamento.salvar(formaPagamento));
 
     }
 
@@ -99,7 +101,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
 
         formaPagamentoConverter.copyToDomainObject(formaPagamentoInput, formaPagamentoAtual);
 
-        return formaPagamentoConverter.toDTO(cadastroFormaPagamento.salvar(formaPagamentoAtual));
+        return formaPagamentoConverter.toModel(cadastroFormaPagamento.salvar(formaPagamentoAtual));
 
     }
 
