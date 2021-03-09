@@ -45,6 +45,26 @@ public class RestauranteConverter extends RepresentationModelAssemblerSupport<Re
         restauranteModel.add(mandaeLinks.linkToResponsaveisRestaurante(restaurante.getId(),
                 "responsaveis"));
 
+        if (restaurante.ativacaoPermitida()) {
+            restauranteModel.add(
+                    mandaeLinks.linkToRestauranteAtivacao(restaurante.getId(), "ativar"));
+        }
+
+        if (restaurante.inativacaoPermitida()) {
+            restauranteModel.add(
+                    mandaeLinks.linkToRestauranteInativacao(restaurante.getId(), "inativar"));
+        }
+
+        if (restaurante.aberturaPermitida()) {
+            restauranteModel.add(
+                    mandaeLinks.linkToRestauranteAbertura(restaurante.getId(), "abrir"));
+        }
+
+        if (restaurante.fechamentoPertimido()) {
+            restauranteModel.add(
+                    mandaeLinks.linkToRestauranteFechamento(restaurante.getId(), "fechar"));
+        }
+
         return restauranteModel;
     }
 

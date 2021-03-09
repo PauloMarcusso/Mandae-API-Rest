@@ -73,7 +73,7 @@ public class RestauranteController implements RestauranteControllerOpenApi {
     public RestauranteDTO buscar(@PathVariable Long id) {
         Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(id);
 
-        return restauranteDTOAssembler.toDTO(restaurante);
+        return restauranteConverter.toModel(restaurante);
     }
 
     @PostMapping
@@ -81,9 +81,9 @@ public class RestauranteController implements RestauranteControllerOpenApi {
     public RestauranteDTO adicionar(@RequestBody @Valid RestauranteInput restauranteInput) {
         try {
 
-            Restaurante restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
+            Restaurante restaurante = restauranteConverter.toDomainObject(restauranteInput);
 
-            return restauranteDTOAssembler.toDTO(cadastroRestaurante.salvar(restaurante));
+            return restauranteConverter.toModel(cadastroRestaurante.salvar(restaurante));
         } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
@@ -103,7 +103,7 @@ public class RestauranteController implements RestauranteControllerOpenApi {
 
         try {
 
-            return restauranteDTOAssembler.toDTO(cadastroRestaurante.salvar(restauranteAtual));
+            return restauranteConverter.toModel(cadastroRestaurante.salvar(restauranteAtual));
 
         } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());

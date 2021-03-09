@@ -50,6 +50,26 @@ public class MandaeLinks {
                 .listar(restauranteId)).withRel(rel);
     }
 
+    public Link linkToRestauranteAbertura(Long restauranteId, String rel) {
+        return linkTo(methodOn(RestauranteController.class)
+                .abertura(restauranteId)).withRel(rel);
+    }
+
+    public Link linkToRestauranteFechamento(Long restauranteId, String rel) {
+        return linkTo(methodOn(RestauranteController.class)
+                .fechamento(restauranteId)).withRel(rel);
+    }
+
+    public Link linkToRestauranteInativacao(Long restauranteId, String rel) {
+        return linkTo(methodOn(RestauranteController.class)
+                .inativar(restauranteId)).withRel(rel);
+    }
+
+    public Link linkToRestauranteAtivacao(Long restauranteId, String rel) {
+        return linkTo(methodOn(RestauranteController.class)
+                .ativar(restauranteId)).withRel(rel);
+    }
+
     public Link linkToUsuario(Long usuarioId, String rel) {
         return linkTo(methodOn(UsuarioController.class)
                 .buscar(usuarioId)).withRel(rel);
