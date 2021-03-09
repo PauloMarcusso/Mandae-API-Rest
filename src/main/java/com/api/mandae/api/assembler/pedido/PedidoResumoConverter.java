@@ -35,7 +35,7 @@ public class PedidoResumoConverter extends RepresentationModelAssemblerSupport<P
         PedidoResumoDTO pedidoDTO = createModelWithId(pedido.getId(), pedido);
         modelMapper.map(pedido, pedidoDTO);
 
-        pedidoDTO.add(mandaeLinks.linkToPedidos());
+        pedidoDTO.add(mandaeLinks.linkToPedidos("pedidos"));
 
         pedidoDTO.getRestaurante().add(
                 mandaeLinks.linkToRestaurante(pedido.getRestaurante().getId()));

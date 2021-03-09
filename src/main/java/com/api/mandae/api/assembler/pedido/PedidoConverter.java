@@ -27,7 +27,7 @@ public class PedidoConverter extends RepresentationModelAssemblerSupport<Pedido,
         PedidoDTO pedidoDTO = createModelWithId(pedido.getCodigo(), pedido);
         modelMapper.map(pedido, pedidoDTO);
 
-        pedidoDTO.add(mandaeLinks.linkToPedidos());
+        pedidoDTO.add(mandaeLinks.linkToPedidos("pedidos"));
 
         if (pedido.podeSerConfirmado()) {
             pedidoDTO.add(mandaeLinks.linkToConfirmarPedido(pedido.getCodigo(), "confirmar"));
