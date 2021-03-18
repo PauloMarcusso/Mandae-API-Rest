@@ -4,8 +4,7 @@ import com.api.mandae.api.exceptionhandler.Problem;
 import com.api.mandae.api.model.FormaPagamentoDTO;
 import io.swagger.annotations.*;
 import org.springframework.hateoas.CollectionModel;
-
-import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 @Api(tags = "Restaurantes")
 public interface RestauranteFormaPagamentoControllerOpenApi {
@@ -24,7 +23,7 @@ public interface RestauranteFormaPagamentoControllerOpenApi {
             @ApiResponse(code = 404, message = "Restaurante ou forma de pagamento não encontrado",
                     response = Problem.class)
     })
-    void desassociar(
+    ResponseEntity<Void> desassociar(
             @ApiParam(value = "ID do restaurante", example = "1", required = true)
                     Long restauranteId,
 

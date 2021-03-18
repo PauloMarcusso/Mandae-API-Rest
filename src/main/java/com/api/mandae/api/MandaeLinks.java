@@ -54,6 +54,12 @@ public class MandaeLinks {
                 .listar(restauranteId)).withRel(rel);
     }
 
+    public Link linkToRestauranteFormaPagamentoDesassociacao(Long restauranteId, Long formaPagamentoId, String rel) {
+
+        return linkTo(methodOn(RestauranteFormaPagamentoController.class)
+                .desassociar(restauranteId, formaPagamentoId)).withRel(rel);
+    }
+
     public Link linkToRestauranteFormasPagamento(Long restauranteId) {
         return linkToRestauranteFormasPagamento(restauranteId, IanaLinkRelations.SELF.value());
     }
