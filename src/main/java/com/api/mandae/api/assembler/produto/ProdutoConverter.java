@@ -32,6 +32,9 @@ public class ProdutoConverter extends RepresentationModelAssemblerSupport<Produt
 
         produtoModel.add(mandaeLinks.linkToProdutos(produto.getRestaurante().getId(), "produtos"));
 
+        produtoModel.add(mandaeLinks.linkToFotoProduto(
+                produto.getRestaurante().getId(), produto.getId(), "foto"));
+
         return produtoModel;
     }
 
