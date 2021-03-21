@@ -133,6 +133,18 @@ public class MandaeLinks {
         return linkToResponsaveisRestaurante(restauranteId, IanaLinkRelations.SELF.value());
     }
 
+    public Link linkToRestauranteResponsavelDesassociacao(
+            Long restauranteId, Long usuarioId, String rel) {
+
+        return linkTo(methodOn(RestauranteUsuarioResponsavelController.class)
+                .desassociar(restauranteId, usuarioId)).withRel(rel);
+    }
+
+    public Link linkToRestauranteResponsavelAssociacao(Long restauranteId, String rel) {
+        return linkTo(methodOn(RestauranteUsuarioResponsavelController.class)
+                .associar(restauranteId, null)).withRel(rel);
+    }
+
     public Link linkToFormaPagamento(Long formaPagamentoId, String rel) {
         return linkTo(methodOn(FormaPagamentoController.class)
                 .buscar(formaPagamentoId, null)).withRel(rel);
