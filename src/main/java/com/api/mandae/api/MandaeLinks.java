@@ -136,6 +136,27 @@ public class MandaeLinks {
         return linkTo(methodOn(GrupoPermissaoController.class)
                 .listar(grupoId)).withRel(rel);
     }
+    public Link linkToPermissoes(String rel) {
+        return linkTo(PermissaoController.class).withRel(rel);
+    }
+
+    public Link linkToPermissoes() {
+        return linkToPermissoes(IanaLinkRelations.SELF.value());
+    }
+
+    public Link linkToGrupoPermissoes(Long grupoId) {
+        return linkToGrupoPermissoes(grupoId, IanaLinkRelations.SELF.value());
+    }
+
+    public Link linkToGrupoPermissaoAssociacao(Long grupoId, String rel) {
+        return linkTo(methodOn(GrupoPermissaoController.class)
+                .associar(grupoId, null)).withRel(rel);
+    }
+
+    public Link linkToGrupoPermissaoDesassociacao(Long grupoId, Long permissaoId, String rel) {
+        return linkTo(methodOn(GrupoPermissaoController.class)
+                .desassociar(grupoId, permissaoId)).withRel(rel);
+    }
 
     public Link linkToResponsaveisRestaurante(Long restauranteId, String rel) {
         return linkTo(methodOn(RestauranteUsuarioResponsavelController.class)
