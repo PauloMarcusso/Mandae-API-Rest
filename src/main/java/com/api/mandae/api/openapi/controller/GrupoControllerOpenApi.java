@@ -4,6 +4,7 @@ import com.api.mandae.api.exceptionhandler.Problem;
 import com.api.mandae.api.model.GrupoDTO;
 import com.api.mandae.api.model.input.GrupoInput;
 import io.swagger.annotations.*;
+import org.springframework.hateoas.CollectionModel;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
 public interface GrupoControllerOpenApi {
 
     @ApiOperation("Lista os grupos")
-    List<GrupoDTO> listar();
+    CollectionModel<GrupoDTO> listar();
 
     @ApiOperation("Busca um grupo por ID")
     @ApiResponses({

@@ -57,7 +57,7 @@ public class RestauranteFotoProdutoController implements RestauranteFotoProdutoC
 
         FotoProduto fotoSalva = catalogoFotoProduto.salvar(foto, arquivo.getInputStream());
 
-        return fotoProdutoConverter.toDTO(fotoSalva);
+        return fotoProdutoConverter.toModel(fotoSalva);
 
     }
 
@@ -65,7 +65,7 @@ public class RestauranteFotoProdutoController implements RestauranteFotoProdutoC
     public FotoProdutoDTO buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
 
         FotoProduto fotoProduto = catalogoFotoProduto.buscarOuFalhar(restauranteId, produtoId);
-        return fotoProdutoConverter.toDTO(fotoProduto);
+        return fotoProdutoConverter.toModel(fotoProduto);
     }
 
     @DeleteMapping

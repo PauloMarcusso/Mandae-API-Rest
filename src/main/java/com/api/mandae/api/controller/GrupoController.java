@@ -8,6 +8,7 @@ import com.api.mandae.domain.model.Grupo;
 import com.api.mandae.domain.repository.GrupoRepository;
 import com.api.mandae.domain.service.CadastroGrupoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +30,8 @@ public class GrupoController implements GrupoControllerOpenApi {
     private GrupoConverter grupoConverter;
 
     @GetMapping
-    public List<GrupoDTO> listar(){
-        return grupoConverter.toCollectionDTO(grupoRepository.findAll());
+    public CollectionModel<GrupoDTO> listar(){
+        return grupoConverter.toCollectionModel(grupoRepository.findAll());
     }
 
     @GetMapping("/{id}")
