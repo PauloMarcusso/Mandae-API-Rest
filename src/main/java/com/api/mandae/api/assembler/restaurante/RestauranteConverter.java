@@ -33,18 +33,6 @@ public class RestauranteConverter extends RepresentationModelAssemblerSupport<Re
 
         restauranteModel.add(mandaeLinks.linkToRestaurantes("restaurantes"));
 
-        restauranteModel.getCozinha().add(
-                mandaeLinks.linkToCozinha(restaurante.getCozinha().getId()));
-
-        restauranteModel.getEndereco().getCidade().add(
-                mandaeLinks.linkToCidade(restaurante.getEndereco().getCidade().getId()));
-
-        restauranteModel.add(mandaeLinks.linkToRestauranteFormasPagamento(restaurante.getId(),
-                "formas-pagamento"));
-
-        restauranteModel.add(mandaeLinks.linkToResponsaveisRestaurante(restaurante.getId(),
-                "responsaveis"));
-
         if (restaurante.ativacaoPermitida()) {
             restauranteModel.add(
                     mandaeLinks.linkToRestauranteAtivacao(restaurante.getId(), "ativar"));
@@ -64,6 +52,23 @@ public class RestauranteConverter extends RepresentationModelAssemblerSupport<Re
             restauranteModel.add(
                     mandaeLinks.linkToRestauranteFechamento(restaurante.getId(), "fechar"));
         }
+
+        restauranteModel.add(mandaeLinks.linkToProdutos(restaurante.getId(), "produtos"));
+
+        restauranteModel.getCozinha().add(
+                mandaeLinks.linkToCozinha(restaurante.getCozinha().getId()));
+
+        if (restauranteModel.getEndereco() != null
+                && restauranteModel.getEndereco().getCidade() != null) {
+            restauranteModel.getEndereco().getCidade().add(
+                    mandaeLinks.linkToCidade(restaurante.getEndereco().getCidade().getId()));
+        }
+
+        restauranteModel.add(mandaeLinks.linkToRestauranteFormasPagamento(restaurante.getId(),
+                "formas-pagamento"));
+
+        restauranteModel.add(mandaeLinks.linkToResponsaveisRestaurante(restaurante.getId(),
+                "responsaveis"));
 
         return restauranteModel;
     }
