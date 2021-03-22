@@ -1,5 +1,6 @@
 package com.api.mandae.api.openapi.controller;
 
+import com.api.mandae.api.controller.EstatisticaController;
 import com.api.mandae.domain.filter.VendaDiariaFilter;
 import com.api.mandae.domain.model.dto.VendaDiaria;
 import io.swagger.annotations.*;
@@ -29,4 +30,7 @@ public interface EstatisticasControllerOpenApi {
     ResponseEntity<byte[]> consultarVendasDiariasPdf(
             VendaDiariaFilter filtro,
             String timeOffset);
+
+    @ApiOperation(value = "Estatísticas", hidden = true)
+    EstatisticaController.EstatisticasModel estatisticas();
 }

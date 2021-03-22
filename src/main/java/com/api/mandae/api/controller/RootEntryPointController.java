@@ -28,6 +28,7 @@ public class RootEntryPointController {
         rootEntryPointModel.add(mandaeLinks.linkToFormasPagamento("formas-pagamento"));
         rootEntryPointModel.add(mandaeLinks.linkToEstados("estados"));
         rootEntryPointModel.add(mandaeLinks.linkToCidades("cidades"));
+        rootEntryPointModel.add(mandaeLinks.linkToEstatisticas("estatisticas"));
 
         return rootEntryPointModel;
     }
