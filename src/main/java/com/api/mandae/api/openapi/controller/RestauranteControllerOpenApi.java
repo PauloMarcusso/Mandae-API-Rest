@@ -9,6 +9,7 @@ import com.api.mandae.api.openapi.model.RestauranteBasicoModelOpenApi;
 import io.swagger.annotations.*;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ public interface RestauranteControllerOpenApi {
 //    @JsonView(RestauranteView.Resumo.class)
     CollectionModel<RestauranteBasicoDTO> listar();
 
+    @ApiIgnore
     @ApiOperation(value = "Lista restaurantes", hidden = true)
     CollectionModel<RestauranteApenasNomeDTO> listarApenasNomes();
 
