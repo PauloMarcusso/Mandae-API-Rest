@@ -1,10 +1,7 @@
 package com.api.mandae.core.springfox;
 
 import com.api.mandae.api.exceptionhandler.Problem;
-import com.api.mandae.api.model.CidadeDTO;
-import com.api.mandae.api.model.CozinhaDTO;
-import com.api.mandae.api.model.EstadoDTO;
-import com.api.mandae.api.model.PedidoResumoDTO;
+import com.api.mandae.api.model.*;
 import com.api.mandae.api.openapi.model.*;
 import com.fasterxml.classmate.TypeResolver;
 import org.springframework.context.annotation.Bean;
@@ -80,6 +77,9 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                 .alternateTypeRules(AlternateTypeRules.newRule(
                         typeResolver.resolve(CollectionModel.class, EstadoDTO.class),
                         EstadosModelOpenApi.class))
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                        typeResolver.resolve(CollectionModel.class, FormaPagamentoDTO.class),
+                        FormasPagamentoModelOpenApi.class))
                 .apiInfo(apiInfo())
                 .tags(new Tag("Cidades", "Gerencia as cidades"),
                         new Tag("Grupos", "Gerencia os grupos de usuários"),
