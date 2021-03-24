@@ -7,6 +7,9 @@ import com.api.mandae.api.openapi.controller.CozinhaControllerOpenApi;
 import com.api.mandae.domain.model.Cozinha;
 import com.api.mandae.domain.repository.CozinhaRepository;
 import com.api.mandae.domain.service.CadastroCozinhaService;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -18,9 +21,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping(value = "/cozinhas", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CozinhaController implements CozinhaControllerOpenApi {
+
+    private static final Logger logger = LoggerFactory.getLogger(CozinhaController.class);
 
     @Autowired
     private CozinhaRepository cozinhaRepository;
@@ -34,6 +40,8 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 
     @GetMapping
     public Page<CozinhaDTO> listar(Pageable pageable) {
+
+        logger.info("Consultando cozinhas com páginas de {} registros...", pageable.getPageSize());
 
         Page<Cozinha> cozinhasPage = cozinhaRepository.findAll(pageable);
 
