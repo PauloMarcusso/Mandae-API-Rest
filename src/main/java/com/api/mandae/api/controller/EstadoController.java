@@ -1,12 +1,10 @@
 package com.api.mandae.api.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import com.api.mandae.api.openapi.controller.EstadoControllerOpenApi;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,13 +38,13 @@ public class EstadoController implements EstadoControllerOpenApi {
 	private EstadoConverter estadoConverter;
 
 	@GetMapping
-	public List<EstadoDTO> listar() {
-		return estadoConverter.toCollectionDTO(estadoRepository.findAll());
+	public CollectionModel<EstadoDTO> listar() {
+		return estadoConverter.toCollectionModel(estadoRepository.findAll());
 	}
 
 	@GetMapping("/{id}")
 	public EstadoDTO buscar(@PathVariable Long id) {
-		return estadoConverter.toDTO(cadastroEstado.buscarOuFalhar(id));
+		return estadoConverter.toModel(cadastroEstado.buscarOuFalhar(id));
 	}
 
 	@PostMapping
@@ -55,7 +53,7 @@ public class EstadoController implements EstadoControllerOpenApi {
 		
 		Estado estado = estadoConverter.toDomainObject(estadoInput);
 		
-		return estadoConverter.toDTO(cadastroEstado.salvar(estado));
+		return estadoConverter.toModel(cadastroEstado.salvar(estado));
 	}
 
 	@PutMapping("/{id}")
@@ -65,7 +63,7 @@ public class EstadoController implements EstadoControllerOpenApi {
 		
 		estadoConverter.copyToDomainObject(estadoInput, estadoAtual);
 
-		return estadoConverter.toDTO(cadastroEstado.salvar(estadoAtual));
+		return estadoConverter.toModel(cadastroEstado.salvar(estadoAtual));
 	}
 
 	@DeleteMapping("/{id}")

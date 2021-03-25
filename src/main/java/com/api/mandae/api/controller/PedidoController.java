@@ -6,6 +6,7 @@ import com.api.mandae.api.model.PedidoDTO;
 import com.api.mandae.api.model.PedidoResumoDTO;
 import com.api.mandae.api.model.input.PedidoInput;
 import com.api.mandae.api.openapi.controller.PedidoControllerOpenApi;
+import com.api.mandae.core.data.PageWrapper;
 import com.api.mandae.core.data.PageableTranslator;
 import com.api.mandae.domain.exception.EntidadeNaoEncontradaException;
 import com.api.mandae.domain.exception.NegocioException;
@@ -18,13 +19,13 @@ import com.api.mandae.infrastructure.repository.spec.PedidoSpecs;
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/pedidos")
@@ -42,19 +43,23 @@ public class PedidoController implements PedidoControllerOpenApi {
     @Autowired
     private EmissaoPedidoService emissaoPedido;
 
+    @Autowired
+    private PagedResourcesAssembler<Pedido> pedidoPagedResourcesAssembler;
+
     @GetMapping
-    public Page<PedidoResumoDTO> pesquisar(PedidoFilter filtro, Pageable pageable) {
+    public PagedModel<PedidoResumoDTO> pesquisar(PedidoFilter filtro, Pageable pageable) {
 
-        pageable = traduzirPageable(pageable);
+        Pageable pageableTraduzido = traduzirPageable(pageable);
 
-        Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro), pageable);
+        Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro), pageableTraduzido);
 
-        List<PedidoResumoDTO> pedidosDTO = pedidoResumoConverter.toCollectionDTO(pedidosPage.getContent());
+        pedidosPage = new PageWrapper<>(pedidosPage, pageable);
 
-        Page<PedidoResumoDTO> pedidosResumoDTOPage = new PageImpl<>(pedidosDTO, pageable,
-                pedidosPage.getTotalElements());
+//        List<PedidoResumoDTO> pedidosDTO = pedidoResumoConverter.toCollectionDTO(pedidosPage.getContent());
+//        Page<PedidoResumoDTO> pedidosResumoDTOPage = new PageImpl<>(pedidosDTO, pageable,
+//                pedidosPage.getTotalElements());
 
-        return pedidosResumoDTOPage;
+        return pedidoPagedResourcesAssembler.toModel(pedidosPage, pedidoResumoConverter);
     }
 
 //    @GetMapping
@@ -82,7 +87,7 @@ public class PedidoController implements PedidoControllerOpenApi {
     @GetMapping("/{codigoPedido}")
     public PedidoDTO buscar(@PathVariable String codigoPedido) {
         Pedido pedido = emissaoPedido.buscarOuFalhar(codigoPedido);
-        return pedidoConverter.toDTO(pedido);
+        return pedidoConverter.toModel(pedido);
     }
 
     @PostMapping
@@ -96,7 +101,7 @@ public class PedidoController implements PedidoControllerOpenApi {
             novoPedido.getCliente().setId(1L);
             novoPedido = emissaoPedido.emitir(novoPedido);
 
-            return pedidoConverter.toDTO(novoPedido);
+            return pedidoConverter.toModel(novoPedido);
 
         } catch (EntidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage(), e);

@@ -10,12 +10,12 @@ import com.api.mandae.domain.model.Usuario;
 import com.api.mandae.domain.repository.UsuarioRepository;
 import com.api.mandae.domain.service.CadastroUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "/usuarios", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -32,20 +32,20 @@ public class UsuarioController implements UsuarioControllerOpenApi {
 
 
     @GetMapping
-    public List<UsuarioDTO> listar() {
-        return usuarioConverter.toCollectionDTO(usuarioRepository.findAll());
+    public CollectionModel<UsuarioDTO> listar() {
+        return usuarioConverter.toCollectionModel(usuarioRepository.findAll());
     }
 
     @GetMapping("/{id}")
     public UsuarioDTO buscar(@PathVariable Long id) {
-        return usuarioConverter.toDTO(cadastroUsuario.buscarOuFalhar(id));
+        return usuarioConverter.toModel(cadastroUsuario.buscarOuFalhar(id));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UsuarioDTO adicionar(@RequestBody @Valid UsuarioComSenhaInput usuarioInput) {
         Usuario usuario = usuarioConverter.toDomainObject(usuarioInput);
-        return usuarioConverter.toDTO(cadastroUsuario.salvar(usuario));
+        return usuarioConverter.toModel(cadastroUsuario.salvar(usuario));
     }
 
 
@@ -56,7 +56,7 @@ public class UsuarioController implements UsuarioControllerOpenApi {
         usuarioConverter.copyToDomainObject(usuarioInput, usuarioAtual);
         usuarioAtual = cadastroUsuario.salvar(usuarioAtual);
 
-        return usuarioConverter.toDTO(usuarioAtual);
+        return usuarioConverter.toModel(usuarioAtual);
     }
 
     @PutMapping("/{id}/senha")

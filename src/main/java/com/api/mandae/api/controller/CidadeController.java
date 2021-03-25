@@ -1,9 +1,10 @@
 package com.api.mandae.api.controller;
 
+import com.api.mandae.api.ResourceUriHelper;
 import com.api.mandae.api.assembler.cidade.CidadeConverter;
-import com.api.mandae.api.openapi.controller.CidadeControllerOpenApi;
 import com.api.mandae.api.model.CidadeDTO;
 import com.api.mandae.api.model.input.CidadeInput;
+import com.api.mandae.api.openapi.controller.CidadeControllerOpenApi;
 import com.api.mandae.domain.exception.EstadoNaoEncontradoException;
 import com.api.mandae.domain.exception.NegocioException;
 import com.api.mandae.domain.model.Cidade;
@@ -11,12 +12,16 @@ import com.api.mandae.domain.repository.CidadeRepository;
 import com.api.mandae.domain.service.CadastroCidadeService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 
 @RestController
@@ -33,13 +38,18 @@ public class CidadeController implements CidadeControllerOpenApi {
     private CidadeConverter cidadeConverter;
 
     @GetMapping
-    public List<CidadeDTO> listar() {
-        return cidadeConverter.toCollectionDTO(cidadeRepository.findAll());
+    public CollectionModel<CidadeDTO> listar() {
+
+        List<Cidade> todasCidades = cidadeRepository.findAll();
+
+        return cidadeConverter.toCollectionModel(todasCidades);
     }
 
     @GetMapping("/{id}")
     public CidadeDTO buscar(@PathVariable Long id) {
-        return cidadeConverter.toDTO(cadastroCidade.buscarOuFalhar(id));
+        Cidade cidade = cadastroCidade.buscarOuFalhar(id);
+
+        return cidadeConverter.toModel(cidade);
     }
 
     @ApiOperation("Cadastra uma cidade")
@@ -48,9 +58,13 @@ public class CidadeController implements CidadeControllerOpenApi {
     public CidadeDTO adicionar(@RequestBody @Valid CidadeInput cidadeInput) {
         try {
             Cidade cidade = cidadeConverter.toDomainObject(cidadeInput);
+            cidade = cadastroCidade.salvar(cidade);
 
-            return cidadeConverter.toDTO(cadastroCidade.salvar(cidade));
+            CidadeDTO cidadeDTO = cidadeConverter.toModel(cidade);
 
+            ResourceUriHelper.addUriInResponseHeader(cidadeDTO.getId());
+
+            return cidadeDTO;
         } catch (EstadoNaoEncontradoException e) {
             throw new NegocioException(e.getMessage(), e);
         }
@@ -69,7 +83,7 @@ public class CidadeController implements CidadeControllerOpenApi {
 
         try {
 
-            return cidadeConverter.toDTO(cadastroCidade.salvar(cidadeAtual));
+            return cidadeConverter.toModel(cadastroCidade.salvar(cidadeAtual));
 
         } catch (EstadoNaoEncontradoException e) {
             throw new NegocioException(e.getMessage(), e);

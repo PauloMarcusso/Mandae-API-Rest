@@ -1,11 +1,8 @@
-package com.api.mandae.core.openapi;
+package com.api.mandae.core.springfox;
 
 import com.api.mandae.api.exceptionhandler.Problem;
-import com.api.mandae.api.model.CozinhaDTO;
-import com.api.mandae.api.model.PedidoResumoDTO;
-import com.api.mandae.api.openapi.model.CozinhasModelOpenApi;
-import com.api.mandae.api.openapi.model.PageableModelOpenApi;
-import com.api.mandae.api.openapi.model.PedidosResumoModelOpenApi;
+import com.api.mandae.api.model.*;
+import com.api.mandae.api.openapi.model.*;
 import com.fasterxml.classmate.TypeResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +10,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Links;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -64,12 +64,37 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                         URL.class, URI.class, URLStreamHandler.class, Resource.class,
                         File.class, InputStream.class)
                 .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
+                .directModelSubstitute(Links.class, LinksModelOpenApi.class)
                 .alternateTypeRules(AlternateTypeRules.newRule(
-                        typeResolver.resolve(Page.class, CozinhaDTO.class),
+                        typeResolver.resolve(PagedModel.class, CozinhaDTO.class),
                         CozinhasModelOpenApi.class))
                 .alternateTypeRules(AlternateTypeRules.newRule(
-                        typeResolver.resolve(Page.class, PedidoResumoDTO.class),
+                        typeResolver.resolve(PagedModel.class, PedidoResumoDTO.class),
                         PedidosResumoModelOpenApi.class))
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                        typeResolver.resolve(CollectionModel.class, CidadeDTO.class),
+                        CidadesModelOpenApi.class))
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                        typeResolver.resolve(CollectionModel.class, EstadoDTO.class),
+                        EstadosModelOpenApi.class))
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                        typeResolver.resolve(CollectionModel.class, FormaPagamentoDTO.class),
+                        FormasPagamentoModelOpenApi.class))
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                        typeResolver.resolve(CollectionModel.class, GrupoDTO.class),
+                        GruposModelOpenApi.class))
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                        typeResolver.resolve(CollectionModel.class, PermissaoDTO.class),
+                        PermissoesModelOpenApi.class))
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                        typeResolver.resolve(CollectionModel.class, ProdutoDTO.class),
+                        ProdutosModelOpenApi.class))
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                        typeResolver.resolve(CollectionModel.class, RestauranteBasicoDTO.class),
+                        RestaurantesBasicoModelOpenApi.class))
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                        typeResolver.resolve(CollectionModel.class, UsuarioDTO.class),
+                        UsuariosModelOpenApi.class))
                 .apiInfo(apiInfo())
                 .tags(new Tag("Cidades", "Gerencia as cidades"),
                         new Tag("Grupos", "Gerencia os grupos de usuários"),
@@ -80,7 +105,8 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                         new Tag("Estados", "Gerencia os estados"),
                         new Tag("Produtos", "Gerencia os produtos de restaurantes"),
                         new Tag("Usuários", "Gerencia os usuários"),
-                        new Tag("Estatísticas", "Estatísticas da AlgaFood"));
+                        new Tag("Estatísticas", "Estatísticas da AlgaFood"),
+                        new Tag("Permissões", "Gerencia as permissões"));
     }
 
     private List<ResponseMessage> globalGetResponseMessages() {

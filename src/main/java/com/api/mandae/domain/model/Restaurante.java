@@ -79,6 +79,12 @@ public class Restaurante {
     @OneToMany(mappedBy = "restaurante")
     private List<Produto> produtos = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(name = "restaurante_usuario_responsavel",
+            joinColumns = @JoinColumn(name = "restaurante_id"),
+            inverseJoinColumns = @JoinColumn(name = "usuario_id"))
+    private Set<Usuario> responsaveis = new HashSet<>();
+
     public void ativar() {
         setAtivo(true);
     }
@@ -117,4 +123,38 @@ public class Restaurante {
     public boolean naoAceitaFormaPagamento(FormaPagamento formaPagamento){
         return !aceitaFormaPagamento(formaPagamento);
     }
+
+    public boolean isAberto(){
+        return this.aberto;
+    }
+
+    public boolean isFechado(){
+        return !isAberto();
+    }
+
+    public boolean isAtivo(){
+        return this.ativo;
+    }
+
+    public boolean isInativo(){
+        return !isAtivo();
+    }
+
+    public boolean aberturaPermitida(){
+        return isAtivo() && isFechado();
+    }
+
+    public boolean ativacaoPermitida(){
+        return isInativo();
+    }
+
+    public boolean inativacaoPermitida(){
+        return isAtivo();
+    }
+
+    public boolean fechamentoPertimido(){
+        return isAberto();
+    }
+
+
 }

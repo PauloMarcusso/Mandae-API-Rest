@@ -12,14 +12,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -37,24 +37,28 @@ public class CozinhaController implements CozinhaControllerOpenApi {
     @Autowired
     private CozinhaConverter cozinhaConverter;
 
+    @Autowired
+    private PagedResourcesAssembler<Cozinha> pagedResourcesAssembler;
+
 
     @GetMapping
-    public Page<CozinhaDTO> listar(Pageable pageable) {
+    public PagedModel<CozinhaDTO> listar(Pageable pageable) {
 
         logger.info("Consultando cozinhas com páginas de {} registros...", pageable.getPageSize());
 
         Page<Cozinha> cozinhasPage = cozinhaRepository.findAll(pageable);
 
-        List<CozinhaDTO> cozinhaDTO = cozinhaConverter.toCollectionDTO(cozinhasPage.getContent());
+        PagedModel<CozinhaDTO> cozinhaPagedModel = pagedResourcesAssembler.toModel(cozinhasPage, cozinhaConverter);
 
-        Page<CozinhaDTO> cozinhaDTOPage = new PageImpl<>(cozinhaDTO, pageable, cozinhasPage.getTotalElements());
+//        List<CozinhaDTO> cozinhaDTO = cozinhaConverter.toCollectionModel(cozinhasPage.getContent());
+//        Page<CozinhaDTO> cozinhaDTOPage = new PageImpl<>(cozinhaDTO, pageable, cozinhasPage.getTotalElements());
 
-        return cozinhaDTOPage;
+        return cozinhaPagedModel;
     }
 
     @GetMapping("/{id}")
     public CozinhaDTO buscar(@PathVariable Long id) {
-        return cozinhaConverter.toDTO(cadastroCozinha.buscarOuFalhar(id));
+        return cozinhaConverter.toModel(cadastroCozinha.buscarOuFalhar(id));
     }
 
     @PostMapping
@@ -63,7 +67,7 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 
         Cozinha cozinha = cozinhaConverter.toDomainObject(cozinhaInput);
 
-        return cozinhaConverter.toDTO(cadastroCozinha.salvar(cozinha));
+        return cozinhaConverter.toModel(cadastroCozinha.salvar(cozinha));
     }
 
     @PutMapping("/{id}")
@@ -73,7 +77,7 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 
         cozinhaConverter.copyToDomainObject(cozinhaInput, cozinhaAtual);
 
-        return cozinhaConverter.toDTO(cadastroCozinha.salvar(cozinhaAtual));
+        return cozinhaConverter.toModel(cadastroCozinha.salvar(cozinhaAtual));
     }
 
     @DeleteMapping("/{id}")

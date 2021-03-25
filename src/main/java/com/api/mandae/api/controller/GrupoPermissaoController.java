@@ -6,11 +6,11 @@ import com.api.mandae.api.openapi.controller.GrupoPermissaoControllerOpenApi;
 import com.api.mandae.domain.model.Grupo;
 import com.api.mandae.domain.service.CadastroGrupoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/grupos/{grupoId}/permissoes", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -23,22 +23,26 @@ public class GrupoPermissaoController implements GrupoPermissaoControllerOpenApi
     private CadastroGrupoService cadastroGrupo;
 
     @GetMapping
-    public List<PermissaoDTO> listar(@PathVariable Long grupoId) {
+    public CollectionModel<PermissaoDTO> listar(@PathVariable Long grupoId) {
 
         Grupo grupo = cadastroGrupo.buscarOuFalhar(grupoId);
 
-        return permissaoConverter.toCollectionDTO(grupo.getPermissoes());
+        return permissaoConverter.toCollectionModel(grupo.getPermissoes());
     }
 
     @PutMapping("/{permissaoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void associar(@PathVariable Long grupoId, @PathVariable Long permissaoId){
+    public ResponseEntity<Void> associar(@PathVariable Long grupoId, @PathVariable Long permissaoId) {
         cadastroGrupo.associarPermissao(grupoId, permissaoId);
+
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{permissaoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void desassociar(@PathVariable Long grupoId, @PathVariable Long permissaoId){
+    public ResponseEntity<Void> desassociar(@PathVariable Long grupoId, @PathVariable Long permissaoId) {
         cadastroGrupo.desassociarPermissao(grupoId, permissaoId);
+
+        return ResponseEntity.noContent().build();
     }
 }

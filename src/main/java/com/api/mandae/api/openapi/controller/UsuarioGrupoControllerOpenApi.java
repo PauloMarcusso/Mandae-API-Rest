@@ -3,6 +3,8 @@ package com.api.mandae.api.openapi.controller;
 import com.api.mandae.api.exceptionhandler.Problem;
 import com.api.mandae.api.model.GrupoDTO;
 import io.swagger.annotations.*;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -13,7 +15,7 @@ public interface UsuarioGrupoControllerOpenApi {
     @ApiResponses({
             @ApiResponse(code = 404, message = "Usuário não encontrado", response = Problem.class)
     })
-    List<GrupoDTO> listar(
+    CollectionModel<GrupoDTO> listar(
             @ApiParam(value = "ID do usuário", example = "1", required = true)
                     Long usuarioId);
 
@@ -23,7 +25,7 @@ public interface UsuarioGrupoControllerOpenApi {
             @ApiResponse(code = 404, message = "Usuário ou grupo não encontrado",
                     response = Problem.class)
     })
-    void desassociar(
+    ResponseEntity<Void> desassociar(
             @ApiParam(value = "ID do usuário", example = "1", required = true)
                     Long usuarioId,
 
@@ -36,7 +38,7 @@ public interface UsuarioGrupoControllerOpenApi {
             @ApiResponse(code = 404, message = "Usuário ou grupo não encontrado",
                     response = Problem.class)
     })
-    void associar(
+    ResponseEntity<Void>  associar(
             @ApiParam(value = "ID do usuário", example = "1", required = true)
                     Long usuarioId,
 

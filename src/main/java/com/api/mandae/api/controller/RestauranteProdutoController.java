@@ -10,6 +10,7 @@ import com.api.mandae.domain.repository.ProdutoRepository;
 import com.api.mandae.domain.service.CadastroProdutoService;
 import com.api.mandae.domain.service.CadastroRestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -34,8 +35,8 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
     private CadastroRestauranteService cadastroRestaurante;
 
     @GetMapping()
-    public List<ProdutoDTO> listar(@PathVariable Long restauranteId,
-            @RequestParam(required = false) boolean incluirInativos) {
+    public CollectionModel<ProdutoDTO> listar(@PathVariable Long restauranteId,
+            @RequestParam(required = false) Boolean incluirInativos) {
 
         Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
 
@@ -47,7 +48,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
             todosProdutos = produtoRepository.findAtivosByRestaurante(restaurante);
         }
 
-        return produtoConverter.toCollectionDTO(todosProdutos);
+        return produtoConverter.toCollectionModel(todosProdutos);
     }
 
     @GetMapping("/{produtoId}")
@@ -55,7 +56,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 
         Produto produto = cadastroProduto.buscarOuFalhar(restauranteId, produtoId);
 
-        return produtoConverter.toDTO(produto);
+        return produtoConverter.toModel(produto);
 
     }
 
@@ -71,7 +72,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 
         produto = cadastroProduto.salvar(produto);
 
-        return produtoConverter.toDTO(produto);
+        return produtoConverter.toModel(produto);
     }
 
     @PutMapping("/{produtoId}")
@@ -84,6 +85,6 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 
         cadastroProduto.salvar(produtoAtual);
 
-        return produtoConverter.toDTO(produtoAtual);
+        return produtoConverter.toModel(produtoAtual);
     }
 }

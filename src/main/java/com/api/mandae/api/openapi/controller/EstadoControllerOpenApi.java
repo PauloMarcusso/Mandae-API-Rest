@@ -4,14 +4,13 @@ import com.api.mandae.api.exceptionhandler.Problem;
 import com.api.mandae.api.model.EstadoDTO;
 import com.api.mandae.api.model.input.EstadoInput;
 import io.swagger.annotations.*;
-
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
 
 @Api(tags = "Estados")
 public interface EstadoControllerOpenApi {
 
     @ApiOperation("Lista os estados")
-    List<EstadoDTO> listar();
+    CollectionModel<EstadoDTO> listar();
 
     @ApiOperation("Busca um estado por ID")
     @ApiResponses({

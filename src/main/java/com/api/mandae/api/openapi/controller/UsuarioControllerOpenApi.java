@@ -6,14 +6,13 @@ import com.api.mandae.api.model.input.SenhaInput;
 import com.api.mandae.api.model.input.UsuarioComSenhaInput;
 import com.api.mandae.api.model.input.UsuarioInput;
 import io.swagger.annotations.*;
-
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
 
 @Api(tags = "Usuários")
 public interface UsuarioControllerOpenApi {
 
     @ApiOperation("Lista os usuários")
-    List<UsuarioDTO> listar();
+    CollectionModel<UsuarioDTO> listar();
 
     @ApiOperation("Busca um usuário por ID")
     @ApiResponses({
