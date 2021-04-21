@@ -64,7 +64,7 @@ public class CadastroUsuarioService {
 //            throw new NegocioException("Senha atual informada não coincide com a senha do usuário");
 //        }
 
-        usuario.setSenha(novaSenha);
+        usuario.setSenha(passwordEncoder.encode(novaSenha));
     }
 
     @Transactional
