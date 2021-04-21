@@ -83,11 +83,13 @@ insert into grupo (id, nome) values (1, 'Gerente'), (2, 'Vendedor'), (3, 'Secret
 insert into grupo_permissao (grupo_id, permissao_id) values (1, 1), (1, 2), (2, 1), (2, 2), (3, 1);
 
 insert into usuario (id, nome, email, senha, data_cadastro) values
-(1, 'Paulo Henrique', 'phmarcusso1@gmail.com', '123', utc_timestamp),
-(2, 'Maria Joaquina', 'maria.vnd@algafood.com', '123', utc_timestamp),
-(3, 'José Souza', 'jose.aux@algafood.com', '123', utc_timestamp),
-(4, 'Sebastião Martins', 'sebastiao.cad@algafood.com', '123', utc_timestamp),
-(5, 'Manoel Lima', 'manoel.loja@gmail.com', '123', utc_timestamp);
+(1, 'João da Silva', 'joao.ger@algafood.com.br', '$2y$12$n.hQAqC.HIhtus4D.V10iOKv/DhJl.MGKVovMyG67g0ny.6wV3EKK', utc_timestamp),
+(2, 'Maria Joaquina', 'maria.vnd@algafood.com.br', '$2y$12$n.hQAqC.HIhtus4D.V10iOKv/DhJl.MGKVovMyG67g0ny.6wV3EKK', utc_timestamp),
+(3, 'José Souza', 'jose.aux@algafood.com.br', '$2y$12$n.hQAqC.HIhtus4D.V10iOKv/DhJl.MGKVovMyG67g0ny.6wV3EKK', utc_timestamp),
+(4, 'Sebastião Martins', 'sebastiao.cad@algafood.com.br', '$2y$12$n.hQAqC.HIhtus4D.V10iOKv/DhJl.MGKVovMyG67g0ny.6wV3EKK', utc_timestamp),
+(5, 'Manoel Lima', 'manoel.loja@gmail.com', '$2y$12$n.hQAqC.HIhtus4D.V10iOKv/DhJl.MGKVovMyG67g0ny.6wV3EKK', utc_timestamp),
+(6, 'Débora Mendonça', 'email.teste.aw+debora@gmail.com', '$2y$12$n.hQAqC.HIhtus4D.V10iOKv/DhJl.MGKVovMyG67g0ny.6wV3EKK', utc_timestamp),
+(7, 'Carlos Lima', 'email.teste.aw+carlos@gmail.com', '$2y$12$n.hQAqC.HIhtus4D.V10iOKv/DhJl.MGKVovMyG67g0ny.6wV3EKK', utc_timestamp);
 
 insert into usuario_grupo (usuario_id, grupo_id) values (1, 1), (1, 2), (2, 2);
 
