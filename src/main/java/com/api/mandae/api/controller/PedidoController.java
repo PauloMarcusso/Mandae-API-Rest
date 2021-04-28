@@ -8,6 +8,7 @@ import com.api.mandae.api.model.input.PedidoInput;
 import com.api.mandae.api.openapi.controller.PedidoControllerOpenApi;
 import com.api.mandae.core.data.PageWrapper;
 import com.api.mandae.core.data.PageableTranslator;
+import com.api.mandae.core.security.MandaeSecurity;
 import com.api.mandae.domain.exception.EntidadeNaoEncontradaException;
 import com.api.mandae.domain.exception.NegocioException;
 import com.api.mandae.domain.filter.PedidoFilter;
@@ -17,18 +18,20 @@ import com.api.mandae.domain.repository.PedidoRepository;
 import com.api.mandae.domain.service.EmissaoPedidoService;
 import com.api.mandae.infrastructure.repository.spec.PedidoSpecs;
 import com.google.common.collect.ImmutableMap;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/pedidos")
+@RequestMapping(path = "/pedidos", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PedidoController implements PedidoControllerOpenApi {
 
     @Autowired
@@ -46,6 +49,12 @@ public class PedidoController implements PedidoControllerOpenApi {
     @Autowired
     private PagedResourcesAssembler<Pedido> pedidoPagedResourcesAssembler;
 
+    @Autowired
+    private MandaeSecurity mandaeSecurity;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
     @GetMapping
     public PagedModel<PedidoResumoDTO> pesquisar(PedidoFilter filtro, Pageable pageable) {
 
@@ -62,27 +71,6 @@ public class PedidoController implements PedidoControllerOpenApi {
         return pedidoPagedResourcesAssembler.toModel(pedidosPage, pedidoResumoConverter);
     }
 
-//    @GetMapping
-//    public MappingJacksonValue listar(@RequestParam(required = false) String campos) {
-//
-//        List<Pedido> pedidos = pedidoRepository.findAll();
-//
-//        List<PedidoResumoDTO> pedidosModel = pedidoResumoConverter.toCollectionDTO(pedidos);
-//
-//        MappingJacksonValue pedidosWrapper = new MappingJacksonValue(pedidosModel);
-//
-//        SimpleFilterProvider filterProvider = new SimpleFilterProvider();
-//        filterProvider.addFilter("pedidoFilter", SimpleBeanPropertyFilter.serializeAll());
-//
-//        if(StringUtils.isNotBlank(campos)){
-//            filterProvider.addFilter("pedidoFilter", SimpleBeanPropertyFilter.filterOutAllExcept(campos.split(",")));
-//        }
-//
-//        pedidosWrapper.setFilters(filterProvider);
-//
-//        return pedidosWrapper;
-//    }
-
 
     @GetMapping("/{codigoPedido}")
     public PedidoDTO buscar(@PathVariable String codigoPedido) {
@@ -90,15 +78,16 @@ public class PedidoController implements PedidoControllerOpenApi {
         return pedidoConverter.toModel(pedido);
     }
 
+    @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PedidoDTO adicionar(@RequestBody @Valid PedidoInput pedidoInput) {
+    public PedidoDTO adicionar(@Valid @RequestBody PedidoInput pedidoInput) {
 
         try {
-            Pedido novoPedido = pedidoConverter.toDomainObject(pedidoInput);
+            var novoPedido = pedidoConverter.toDomainObject(pedidoInput);
 
             novoPedido.setCliente(new Usuario());
-            novoPedido.getCliente().setId(1L);
+            novoPedido.getCliente().setId(mandaeSecurity.getUserId());
             novoPedido = emissaoPedido.emitir(novoPedido);
 
             return pedidoConverter.toModel(novoPedido);
@@ -120,6 +109,27 @@ public class PedidoController implements PedidoControllerOpenApi {
 
         return PageableTranslator.translate(apiPageable, mapeamento);
     }
+
+    //    @GetMapping
+//    public MappingJacksonValue listar(@RequestParam(required = false) String campos) {
+//
+//        List<Pedido> pedidos = pedidoRepository.findAll();
+//
+//        List<PedidoResumoDTO> pedidosModel = pedidoResumoConverter.toCollectionDTO(pedidos);
+//
+//        MappingJacksonValue pedidosWrapper = new MappingJacksonValue(pedidosModel);
+//
+//        SimpleFilterProvider filterProvider = new SimpleFilterProvider();
+//        filterProvider.addFilter("pedidoFilter", SimpleBeanPropertyFilter.serializeAll());
+//
+//        if(StringUtils.isNotBlank(campos)){
+//            filterProvider.addFilter("pedidoFilter", SimpleBeanPropertyFilter.filterOutAllExcept(campos.split(",")));
+//        }
+//
+//        pedidosWrapper.setFilters(filterProvider);
+//
+//        return pedidosWrapper;
+//    }
 
 
 }

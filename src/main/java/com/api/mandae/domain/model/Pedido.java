@@ -39,7 +39,7 @@ public class Pedido extends AbstractAggregateRoot<Pedido> {
     private OffsetDateTime dataCancelamento;
     private OffsetDateTime dataEntrega;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(nullable = false)
     private FormaPagamento formaPagamento;
 
