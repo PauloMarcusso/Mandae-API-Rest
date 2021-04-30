@@ -1,7 +1,7 @@
 package com.api.mandae.core.security;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -13,17 +13,13 @@ import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ResourceServerConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.
-                authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/cozinhas/**").hasAnyAuthority("EDITAR_COZINHAS")
-                .antMatchers(HttpMethod.PUT, "/cozinhas/**").hasAnyAuthority("EDITAR_COZINHAS")
-                .antMatchers(HttpMethod.GET, "/cozinhas/**").authenticated()
-                .anyRequest().denyAll()
-                .and()
+                csrf().disable()
                 .cors().and()
                 .oauth2ResourceServer()
                 .jwt()
@@ -37,7 +33,7 @@ public class ResourceServerConfig extends WebSecurityConfigurerAdapter {
                 jwt -> {
                     var authorities = jwt.getClaimAsStringList("authorities");
 
-                    if(authorities == null){
+                    if (authorities == null) {
                         authorities = Collections.emptyList();
                     }
 
