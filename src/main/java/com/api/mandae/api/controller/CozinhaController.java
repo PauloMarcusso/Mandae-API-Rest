@@ -4,6 +4,9 @@ import com.api.mandae.api.assembler.cozinha.CozinhaConverter;
 import com.api.mandae.api.model.CozinhaDTO;
 import com.api.mandae.api.model.input.CozinhaInput;
 import com.api.mandae.api.openapi.controller.CozinhaControllerOpenApi;
+import com.api.mandae.core.security.CheckSecurity;
+import com.api.mandae.core.security.PodeConsultarCozinhas;
+import com.api.mandae.core.security.PodeEditarCozinhas;
 import com.api.mandae.domain.model.Cozinha;
 import com.api.mandae.domain.repository.CozinhaRepository;
 import com.api.mandae.domain.service.CadastroCozinhaService;
@@ -42,7 +45,7 @@ public class CozinhaController implements CozinhaControllerOpenApi {
     private PagedResourcesAssembler<Cozinha> pagedResourcesAssembler;
 
 
-    @PreAuthorize("isAuthenticated()")
+    @CheckSecurity.Cozinhas.PodeConsultar
     @GetMapping
     public PagedModel<CozinhaDTO> listar(Pageable pageable) {
 
@@ -58,13 +61,13 @@ public class CozinhaController implements CozinhaControllerOpenApi {
         return cozinhaPagedModel;
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @CheckSecurity.Cozinhas.PodeConsultar
     @GetMapping("/{id}")
     public CozinhaDTO buscar(@PathVariable Long id) {
         return cozinhaConverter.toModel(cadastroCozinha.buscarOuFalhar(id));
     }
 
-    @PreAuthorize("hasAuthority('EDITAR_COZINHAS')")
+    @CheckSecurity.Cozinhas.PodeEditar
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CozinhaDTO adicionar(@RequestBody @Valid CozinhaInput cozinhaInput) {
@@ -74,7 +77,7 @@ public class CozinhaController implements CozinhaControllerOpenApi {
         return cozinhaConverter.toModel(cadastroCozinha.salvar(cozinha));
     }
 
-    @PreAuthorize("hasAuthority('EDITAR_COZINHAS')")
+    @CheckSecurity.Cozinhas.PodeEditar
     @PutMapping("/{id}")
     public CozinhaDTO atualizar(@PathVariable Long id, @RequestBody @Valid CozinhaInput cozinhaInput) {
 
@@ -85,7 +88,7 @@ public class CozinhaController implements CozinhaControllerOpenApi {
         return cozinhaConverter.toModel(cadastroCozinha.salvar(cozinhaAtual));
     }
 
-    @PreAuthorize("hasAuthority('EDITAR_COZINHAS')")
+    @CheckSecurity.Cozinhas.PodeEditar
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long id) {
