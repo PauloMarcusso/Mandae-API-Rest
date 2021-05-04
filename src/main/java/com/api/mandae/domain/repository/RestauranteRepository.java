@@ -24,13 +24,15 @@ public interface RestauranteRepository
 //	@Query("from Restaurante where nome like %:nome% and cozinha.id = :id")
 	List<Restaurante> consultarPorNome(String nome, @Param("id") Long cozinhaId);
 
-	// List<Restaurante> findByNomeContainingAndCozinhaNomeContaining(String nome,
-	// String cozinhaNome);
-
 	Optional<Restaurante> findFirstRestauranteByNomeContaining(String nome);
 
 	List<Restaurante> findTop2ByNomeContaining(String nome);
 
 	int countByCozinhaId(Long cozinhaId);
+
+	boolean existsResponsavel(Long restauranteId, Long usuarioId);
+
+	// List<Restaurante> findByNomeContainingAndCozinhaNomeContaining(String nome,
+	// String cozinhaNome);
 
 }

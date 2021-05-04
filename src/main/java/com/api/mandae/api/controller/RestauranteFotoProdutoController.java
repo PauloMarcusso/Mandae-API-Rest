@@ -42,7 +42,7 @@ public class RestauranteFotoProdutoController implements RestauranteFotoProdutoC
     @Autowired
     private CatalogoFotoProdutoService catalogoFotoProduto;
 
-    @CheckSecurity.Restaurantes.PodeEditar
+    @CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public FotoProdutoDTO atualizarFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId,
             @Valid FotoProdutoInput fotoProdutoInput, @RequestPart(required = true) MultipartFile arquivo) throws IOException {
@@ -71,7 +71,7 @@ public class RestauranteFotoProdutoController implements RestauranteFotoProdutoC
         return fotoProdutoConverter.toModel(fotoProduto);
     }
 
-    @CheckSecurity.Restaurantes.PodeEditar
+    @CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
     @DeleteMapping
     public void remover(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
         catalogoFotoProduto.remover(restauranteId, produtoId);
