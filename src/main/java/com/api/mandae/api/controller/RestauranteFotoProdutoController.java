@@ -4,6 +4,7 @@ import com.api.mandae.api.assembler.fotoproduto.FotoProdutoConverter;
 import com.api.mandae.api.model.FotoProdutoDTO;
 import com.api.mandae.api.model.input.FotoProdutoInput;
 import com.api.mandae.api.openapi.controller.RestauranteFotoProdutoControllerOpenApi;
+import com.api.mandae.core.security.CheckSecurity;
 import com.api.mandae.domain.exception.EntidadeNaoEncontradaException;
 import com.api.mandae.domain.model.FotoProduto;
 import com.api.mandae.domain.model.Produto;
@@ -41,6 +42,7 @@ public class RestauranteFotoProdutoController implements RestauranteFotoProdutoC
     @Autowired
     private CatalogoFotoProdutoService catalogoFotoProduto;
 
+    @CheckSecurity.Restaurantes.PodeEditar
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public FotoProdutoDTO atualizarFoto(@PathVariable Long restauranteId, @PathVariable Long produtoId,
             @Valid FotoProdutoInput fotoProdutoInput, @RequestPart(required = true) MultipartFile arquivo) throws IOException {
@@ -61,6 +63,7 @@ public class RestauranteFotoProdutoController implements RestauranteFotoProdutoC
 
     }
 
+    @CheckSecurity.Restaurantes.PodeConsultar
     @GetMapping
     public FotoProdutoDTO buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
 
@@ -68,6 +71,7 @@ public class RestauranteFotoProdutoController implements RestauranteFotoProdutoC
         return fotoProdutoConverter.toModel(fotoProduto);
     }
 
+    @CheckSecurity.Restaurantes.PodeEditar
     @DeleteMapping
     public void remover(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
         catalogoFotoProduto.remover(restauranteId, produtoId);

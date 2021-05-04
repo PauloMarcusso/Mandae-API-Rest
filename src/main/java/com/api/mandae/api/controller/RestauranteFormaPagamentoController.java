@@ -4,6 +4,7 @@ import com.api.mandae.api.MandaeLinks;
 import com.api.mandae.api.assembler.formapagamento.FormaPagamentoConverter;
 import com.api.mandae.api.model.FormaPagamentoDTO;
 import com.api.mandae.api.openapi.controller.RestauranteFormaPagamentoControllerOpenApi;
+import com.api.mandae.core.security.CheckSecurity;
 import com.api.mandae.domain.model.Restaurante;
 import com.api.mandae.domain.service.CadastroRestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
     @Autowired
     private MandaeLinks mandaeLinks;
 
+    @CheckSecurity.Restaurantes.PodeConsultar
     @GetMapping
     public CollectionModel<FormaPagamentoDTO> listar(@PathVariable Long restauranteId) {
 
@@ -44,6 +46,7 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
 
     }
 
+    @CheckSecurity.Restaurantes.PodeEditar
     @PutMapping("/{formaPagamentoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> associar(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {
@@ -52,6 +55,7 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Restaurantes.PodeEditar
     @DeleteMapping("/{formaPagamentoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> desassociar(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {

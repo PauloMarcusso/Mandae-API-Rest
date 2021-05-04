@@ -4,6 +4,7 @@ import com.api.mandae.api.assembler.produto.ProdutoConverter;
 import com.api.mandae.api.model.ProdutoDTO;
 import com.api.mandae.api.model.input.ProdutoInput;
 import com.api.mandae.api.openapi.controller.RestauranteProdutoControllerOpenApi;
+import com.api.mandae.core.security.CheckSecurity;
 import com.api.mandae.domain.model.Produto;
 import com.api.mandae.domain.model.Restaurante;
 import com.api.mandae.domain.repository.ProdutoRepository;
@@ -34,7 +35,8 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
     @Autowired
     private CadastroRestauranteService cadastroRestaurante;
 
-    @GetMapping()
+    @CheckSecurity.Restaurantes.PodeConsultar
+    @GetMapping
     public CollectionModel<ProdutoDTO> listar(@PathVariable Long restauranteId,
             @RequestParam(required = false) Boolean incluirInativos) {
 
@@ -51,6 +53,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
         return produtoConverter.toCollectionModel(todosProdutos);
     }
 
+    @CheckSecurity.Restaurantes.PodeConsultar
     @GetMapping("/{produtoId}")
     public ProdutoDTO buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
 
@@ -60,6 +63,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 
     }
 
+    @CheckSecurity.Restaurantes.PodeEditar
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ProdutoDTO adicionar(@PathVariable Long restauranteId, @RequestBody @Valid ProdutoInput produtoInput) {
@@ -75,6 +79,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
         return produtoConverter.toModel(produto);
     }
 
+    @CheckSecurity.Restaurantes.PodeEditar
     @PutMapping("/{produtoId}")
     public ProdutoDTO atualizar(@PathVariable Long restauranteId, @PathVariable Long produtoId,
             @RequestBody @Valid ProdutoInput produtoInput) {

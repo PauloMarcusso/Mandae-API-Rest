@@ -4,6 +4,7 @@ import com.api.mandae.api.MandaeLinks;
 import com.api.mandae.api.assembler.usuario.UsuarioConverter;
 import com.api.mandae.api.model.UsuarioDTO;
 import com.api.mandae.api.openapi.controller.RestauranteUsuarioResponsavelControllerOpenApi;
+import com.api.mandae.core.security.CheckSecurity;
 import com.api.mandae.domain.model.Restaurante;
 import com.api.mandae.domain.service.CadastroRestauranteService;
 import com.api.mandae.domain.service.CadastroUsuarioService;
@@ -32,6 +33,7 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
 
     @Override
     @GetMapping
+    @CheckSecurity.Restaurantes.PodeConsultar
     public CollectionModel<UsuarioDTO> listar(@PathVariable Long restauranteId) {
         Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
 
@@ -52,6 +54,7 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
     @Override
     @DeleteMapping("/{usuarioId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CheckSecurity.Restaurantes.PodeEditar
     public ResponseEntity<Void> desassociar(@PathVariable Long restauranteId, @PathVariable Long usuarioId) {
         cadastroRestaurante.desassociarUsuarioResponsavel(restauranteId, usuarioId);
 
@@ -61,6 +64,7 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
     @Override
     @PutMapping("/{usuarioId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CheckSecurity.Restaurantes.PodeEditar
     public ResponseEntity<Void> associar(@PathVariable Long restauranteId, @PathVariable Long usuarioId) {
         cadastroRestaurante.associarUsuarioResponsavel(restauranteId, usuarioId);
 
