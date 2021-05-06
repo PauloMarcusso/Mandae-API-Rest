@@ -4,6 +4,7 @@ import com.api.mandae.api.assembler.formapagamento.FormaPagamentoConverter;
 import com.api.mandae.api.model.FormaPagamentoDTO;
 import com.api.mandae.api.model.input.FormaPagamentoInput;
 import com.api.mandae.api.openapi.controller.FormaPagamentoControllerOpenApi;
+import com.api.mandae.core.security.CheckSecurity;
 import com.api.mandae.domain.model.FormaPagamento;
 import com.api.mandae.domain.repository.FormaPagamentoRepository;
 import com.api.mandae.domain.service.CadastroFormaPagamentoService;
@@ -34,6 +35,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
     @Autowired
     private CadastroFormaPagamentoService cadastroFormaPagamento;
 
+    @CheckSecurity.FormasPagamento.PodeConsultar
     @GetMapping
     public ResponseEntity<CollectionModel<FormaPagamentoDTO>> listar(ServletWebRequest request) {
         ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
@@ -59,6 +61,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
                 .body(todasFormasPagamentos);
     }
 
+    @CheckSecurity.FormasPagamento.PodeConsultar
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<FormaPagamentoDTO> buscar(@PathVariable Long id, ServletWebRequest request) {
@@ -83,6 +86,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
                 .body(formaPagamentoDTO);
     }
 
+    @CheckSecurity.FormasPagamento.PodeEditar
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public FormaPagamentoDTO adicionar(@RequestBody @Valid FormaPagamentoInput formaPagamentoInput) {
@@ -93,7 +97,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
 
     }
 
-
+    @CheckSecurity.FormasPagamento.PodeEditar
     @PutMapping("/{id}")
     public FormaPagamentoDTO atualizar(@PathVariable Long id, @RequestBody FormaPagamentoInput formaPagamentoInput) {
 
@@ -105,6 +109,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
 
     }
 
+    @CheckSecurity.FormasPagamento.PodeEditar
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void excluir(@PathVariable Long id) {
