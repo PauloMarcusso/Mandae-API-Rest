@@ -1,6 +1,7 @@
 package com.api.mandae.api.controller;
 
 import com.api.mandae.api.openapi.controller.FluxoPedidoControllerOpenApi;
+import com.api.mandae.core.security.CheckSecurity;
 import com.api.mandae.domain.service.FluxoPedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ public class FluxoPedidoController implements FluxoPedidoControllerOpenApi {
     @Autowired
     private FluxoPedidoService fluxoPedido;
 
+    @CheckSecurity.Pedidos.PodeGerenciarPedidos
     @PutMapping("/confirmacao")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> confirmar(@PathVariable String codigoPedido) {
@@ -22,6 +24,7 @@ public class FluxoPedidoController implements FluxoPedidoControllerOpenApi {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Pedidos.PodeGerenciarPedidos
     @PutMapping("/cancelamento")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> cancelar(@PathVariable String codigoPedido) {
@@ -29,6 +32,7 @@ public class FluxoPedidoController implements FluxoPedidoControllerOpenApi {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Pedidos.PodeGerenciarPedidos
     @PutMapping("/entrega")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> entregar(@PathVariable String codigoPedido) {

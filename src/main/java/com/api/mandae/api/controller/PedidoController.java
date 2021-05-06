@@ -81,6 +81,7 @@ public class PedidoController implements PedidoControllerOpenApi {
         return pedidoConverter.toModel(pedido);
     }
 
+    @CheckSecurity.Pedidos.PodeCriar
     @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

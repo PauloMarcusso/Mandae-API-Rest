@@ -1,5 +1,6 @@
 package com.api.mandae.core.security;
 
+import com.api.mandae.domain.repository.PedidoRepository;
 import com.api.mandae.domain.repository.RestauranteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -13,6 +14,9 @@ public class MandaeSecurity {
     @Autowired
     private RestauranteRepository restauranteRepository;
 
+    @Autowired
+    private PedidoRepository pedidoRepository;
+
     public Authentication getAuthentication() {
         return SecurityContextHolder.getContext().getAuthentication();
     }
@@ -25,12 +29,13 @@ public class MandaeSecurity {
     }
 
     public boolean gerenciaRestaurante(Long restauranteId) {
-
         if (restauranteId == null) {
             return false;
         }
-
         return restauranteRepository.existsResponsavel(restauranteId, getUserId());
     }
 
+    public boolean gerenciaRestauranteDoPedido(String codigoPedido) {
+        return pedidoRepository.isPedidoGerenciadoPor(codigoPedido, getUserId());
+    }
 }
