@@ -8,6 +8,7 @@ import com.api.mandae.api.model.input.PedidoInput;
 import com.api.mandae.api.openapi.controller.PedidoControllerOpenApi;
 import com.api.mandae.core.data.PageWrapper;
 import com.api.mandae.core.data.PageableTranslator;
+import com.api.mandae.core.security.CheckSecurity;
 import com.api.mandae.core.security.MandaeSecurity;
 import com.api.mandae.domain.exception.EntidadeNaoEncontradaException;
 import com.api.mandae.domain.exception.NegocioException;
@@ -72,6 +73,7 @@ public class PedidoController implements PedidoControllerOpenApi {
     }
 
 
+    @CheckSecurity.Pedidos.PodeBuscar
     @GetMapping("/{codigoPedido}")
     public PedidoDTO buscar(@PathVariable String codigoPedido) {
         Pedido pedido = emissaoPedido.buscarOuFalhar(codigoPedido);

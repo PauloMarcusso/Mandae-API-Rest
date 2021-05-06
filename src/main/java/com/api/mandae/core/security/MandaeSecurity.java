@@ -24,7 +24,4 @@ public class MandaeSecurity {
         return jwt.getClaim("usuario_id");
     }
 
-    public boolean gerenciaRestaurante(Long restauranteId) {
-        return restauranteRepository.existsResponsavel(restauranteId, getUserId());
-    }
 }

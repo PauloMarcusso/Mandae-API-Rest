@@ -1,5 +1,6 @@
 package com.api.mandae.core.security;
 
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.lang.annotation.ElementType;
@@ -44,5 +45,17 @@ public @interface CheckSecurity {
         @Target(ElementType.METHOD)
         public @interface PodeGerenciarFuncionamento {
         }
+    }
+
+    public @interface Pedidos {
+
+        @PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated()")
+        @PostAuthorize("hasAuthority('CONSULTAR_PEDIDO') or @mandaeSecurity.getUserId() == returnObject.cliente.id or" +
+                "@mandaeSecurity.gerenciaRestaurante(returnObject.restaurante.id)")
+        @Retention(RetentionPolicy.RUNTIME)
+        @Target(ElementType.METHOD)
+        public @interface PodeBuscar {
+        }
+
     }
 }
