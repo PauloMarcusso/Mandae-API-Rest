@@ -56,6 +56,7 @@ public class PedidoController implements PedidoControllerOpenApi {
     @Autowired
     private ModelMapper modelMapper;
 
+    @CheckSecurity.Pedidos.PodePesquisar
     @GetMapping
     public PagedModel<PedidoResumoDTO> pesquisar(PedidoFilter filtro, Pageable pageable) {
 
