@@ -5,6 +5,7 @@ import com.api.mandae.api.assembler.cidade.CidadeConverter;
 import com.api.mandae.api.model.CidadeDTO;
 import com.api.mandae.api.model.input.CidadeInput;
 import com.api.mandae.api.openapi.controller.CidadeControllerOpenApi;
+import com.api.mandae.core.security.CheckSecurity;
 import com.api.mandae.domain.exception.EstadoNaoEncontradoException;
 import com.api.mandae.domain.exception.NegocioException;
 import com.api.mandae.domain.model.Cidade;
@@ -37,6 +38,7 @@ public class CidadeController implements CidadeControllerOpenApi {
     @Autowired
     private CidadeConverter cidadeConverter;
 
+    @CheckSecurity.Cidades.PodeConsultar
     @GetMapping
     public CollectionModel<CidadeDTO> listar() {
 
@@ -45,6 +47,7 @@ public class CidadeController implements CidadeControllerOpenApi {
         return cidadeConverter.toCollectionModel(todasCidades);
     }
 
+    @CheckSecurity.Cidades.PodeConsultar
     @GetMapping("/{id}")
     public CidadeDTO buscar(@PathVariable Long id) {
         Cidade cidade = cadastroCidade.buscarOuFalhar(id);
@@ -52,6 +55,7 @@ public class CidadeController implements CidadeControllerOpenApi {
         return cidadeConverter.toModel(cidade);
     }
 
+    @CheckSecurity.Cidades.PodeEditar
     @ApiOperation("Cadastra uma cidade")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -70,6 +74,7 @@ public class CidadeController implements CidadeControllerOpenApi {
         }
     }
 
+    @CheckSecurity.Cidades.PodeEditar
     @PutMapping("/{id}")
     public CidadeDTO atualizar(
             @PathVariable Long id,
@@ -91,6 +96,7 @@ public class CidadeController implements CidadeControllerOpenApi {
 
     }
 
+    @CheckSecurity.Cidades.PodeEditar
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void excluir(@PathVariable Long id) {

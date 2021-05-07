@@ -3,6 +3,7 @@ package com.api.mandae.api.controller;
 import javax.validation.Valid;
 
 import com.api.mandae.api.openapi.controller.EstadoControllerOpenApi;
+import com.api.mandae.core.security.CheckSecurity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
@@ -37,16 +38,19 @@ public class EstadoController implements EstadoControllerOpenApi {
 	@Autowired
 	private EstadoConverter estadoConverter;
 
+	@CheckSecurity.Estados.PodeConsultar
 	@GetMapping
 	public CollectionModel<EstadoDTO> listar() {
 		return estadoConverter.toCollectionModel(estadoRepository.findAll());
 	}
 
+	@CheckSecurity.Estados.PodeConsultar
 	@GetMapping("/{id}")
 	public EstadoDTO buscar(@PathVariable Long id) {
 		return estadoConverter.toModel(cadastroEstado.buscarOuFalhar(id));
 	}
 
+	@CheckSecurity.Estados.PodeEditar
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public EstadoDTO adicionar(@RequestBody @Valid EstadoInput estadoInput) {
@@ -56,6 +60,7 @@ public class EstadoController implements EstadoControllerOpenApi {
 		return estadoConverter.toModel(cadastroEstado.salvar(estado));
 	}
 
+	@CheckSecurity.Estados.PodeEditar
 	@PutMapping("/{id}")
 	public EstadoDTO atualizar(@PathVariable Long id, @RequestBody @Valid EstadoInput estadoInput) {
 
@@ -66,6 +71,7 @@ public class EstadoController implements EstadoControllerOpenApi {
 		return estadoConverter.toModel(cadastroEstado.salvar(estadoAtual));
 	}
 
+	@CheckSecurity.Estados.PodeEditar
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long id) {
