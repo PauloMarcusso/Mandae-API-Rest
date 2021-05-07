@@ -2,6 +2,7 @@ package com.api.mandae.api.controller;
 
 import com.api.mandae.api.MandaeLinks;
 import com.api.mandae.api.openapi.controller.EstatisticasControllerOpenApi;
+import com.api.mandae.core.security.CheckSecurity;
 import com.api.mandae.domain.filter.VendaDiariaFilter;
 import com.api.mandae.domain.model.dto.VendaDiaria;
 import com.api.mandae.domain.service.VendaQueryService;
@@ -31,6 +32,7 @@ public class EstatisticaController implements EstatisticasControllerOpenApi {
     @Autowired
     private MandaeLinks mandaeLinks;
 
+    @CheckSecurity.Estatisticas.PodeConsultar
     @GetMapping(value = "/vendas-diarias", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<VendaDiaria> consultarVendasDiarias(VendaDiariaFilter filtro,
             @RequestParam(required = false, defaultValue = "+00:00")
@@ -38,6 +40,7 @@ public class EstatisticaController implements EstatisticasControllerOpenApi {
         return vendaQueryService.consultarVendasDiarias(filtro, timeOffset);
     }
 
+    @CheckSecurity.Estatisticas.PodeConsultar
     @GetMapping(value = "/vendas-diarias", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> consultarVendasDiariasPdf(VendaDiariaFilter filtro,
             @RequestParam(required = false, defaultValue = "+00:00") String timeOffset) {
@@ -53,6 +56,7 @@ public class EstatisticaController implements EstatisticasControllerOpenApi {
                 .body(bytesPdf);
     }
 
+    @CheckSecurity.Estatisticas.PodeConsultar
     @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public EstatisticasModel estatisticas() {
