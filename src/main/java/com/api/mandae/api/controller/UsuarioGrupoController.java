@@ -4,6 +4,7 @@ import com.api.mandae.api.MandaeLinks;
 import com.api.mandae.api.assembler.grupo.GrupoConverter;
 import com.api.mandae.api.model.GrupoDTO;
 import com.api.mandae.api.openapi.controller.UsuarioGrupoControllerOpenApi;
+import com.api.mandae.core.security.CheckSecurity;
 import com.api.mandae.domain.model.Usuario;
 import com.api.mandae.domain.repository.GrupoRepository;
 import com.api.mandae.domain.service.CadastroGrupoService;
@@ -34,6 +35,7 @@ public class UsuarioGrupoController implements UsuarioGrupoControllerOpenApi {
     @Autowired
     private MandaeLinks mandaeLinks;
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @GetMapping
     public CollectionModel<GrupoDTO> listar(@PathVariable Long usuarioId) {
         Usuario usuario = cadastroUsuario.buscarOuFalhar(usuarioId);
@@ -51,6 +53,7 @@ public class UsuarioGrupoController implements UsuarioGrupoControllerOpenApi {
 
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @PutMapping("/{grupoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> associar(@PathVariable Long usuarioId, @PathVariable Long grupoId) {
@@ -60,6 +63,7 @@ public class UsuarioGrupoController implements UsuarioGrupoControllerOpenApi {
 
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @DeleteMapping("/{grupoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> desassociar(@PathVariable Long usuarioId, @PathVariable Long grupoId) {

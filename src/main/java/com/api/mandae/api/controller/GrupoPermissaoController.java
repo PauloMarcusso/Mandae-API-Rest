@@ -3,6 +3,7 @@ package com.api.mandae.api.controller;
 import com.api.mandae.api.assembler.permissao.PermissaoConverter;
 import com.api.mandae.api.model.PermissaoDTO;
 import com.api.mandae.api.openapi.controller.GrupoPermissaoControllerOpenApi;
+import com.api.mandae.core.security.CheckSecurity;
 import com.api.mandae.domain.model.Grupo;
 import com.api.mandae.domain.service.CadastroGrupoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ public class GrupoPermissaoController implements GrupoPermissaoControllerOpenApi
     @Autowired
     private CadastroGrupoService cadastroGrupo;
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @GetMapping
     public CollectionModel<PermissaoDTO> listar(@PathVariable Long grupoId) {
 
@@ -30,6 +32,7 @@ public class GrupoPermissaoController implements GrupoPermissaoControllerOpenApi
         return permissaoConverter.toCollectionModel(grupo.getPermissoes());
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @PutMapping("/{permissaoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> associar(@PathVariable Long grupoId, @PathVariable Long permissaoId) {
@@ -38,6 +41,7 @@ public class GrupoPermissaoController implements GrupoPermissaoControllerOpenApi
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @DeleteMapping("/{permissaoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> desassociar(@PathVariable Long grupoId, @PathVariable Long permissaoId) {

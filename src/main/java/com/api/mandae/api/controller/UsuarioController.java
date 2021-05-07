@@ -6,6 +6,7 @@ import com.api.mandae.api.model.input.SenhaInput;
 import com.api.mandae.api.model.input.UsuarioComSenhaInput;
 import com.api.mandae.api.model.input.UsuarioInput;
 import com.api.mandae.api.openapi.controller.UsuarioControllerOpenApi;
+import com.api.mandae.core.security.CheckSecurity;
 import com.api.mandae.domain.model.Usuario;
 import com.api.mandae.domain.repository.UsuarioRepository;
 import com.api.mandae.domain.service.CadastroUsuarioService;
@@ -30,17 +31,19 @@ public class UsuarioController implements UsuarioControllerOpenApi {
     @Autowired
     private UsuarioConverter usuarioConverter;
 
-
+    @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @GetMapping
     public CollectionModel<UsuarioDTO> listar() {
         return usuarioConverter.toCollectionModel(usuarioRepository.findAll());
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @GetMapping("/{id}")
     public UsuarioDTO buscar(@PathVariable Long id) {
         return usuarioConverter.toModel(cadastroUsuario.buscarOuFalhar(id));
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UsuarioDTO adicionar(@RequestBody @Valid UsuarioComSenhaInput usuarioInput) {
@@ -48,7 +51,7 @@ public class UsuarioController implements UsuarioControllerOpenApi {
         return usuarioConverter.toModel(cadastroUsuario.salvar(usuario));
     }
 
-
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @PutMapping("/{id}")
     public UsuarioDTO atualizar(@PathVariable Long id, @RequestBody @Valid UsuarioInput usuarioInput) {
 
@@ -59,12 +62,14 @@ public class UsuarioController implements UsuarioControllerOpenApi {
         return usuarioConverter.toModel(usuarioAtual);
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @PutMapping("/{id}/senha")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void alterarSenha(@PathVariable Long id, @RequestBody @Valid SenhaInput senha) {
         cadastroUsuario.alterarSenha(id, senha.getSenhaAtual(), senha.getNovaSenha());
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @DeleteMapping("{/id}")
     public void excluir(@PathVariable Long id) {
         cadastroUsuario.remover(id);

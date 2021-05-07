@@ -2,6 +2,7 @@ package com.api.mandae.api.controller;
 
 import com.api.mandae.api.assembler.permissao.PermissaoConverter;
 import com.api.mandae.api.model.PermissaoDTO;
+import com.api.mandae.core.security.CheckSecurity;
 import com.api.mandae.domain.model.Permissao;
 import com.api.mandae.domain.repository.PermissaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ public class PermissaoController {
     @Autowired
     private PermissaoConverter permissaoConverter;
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @GetMapping
     public CollectionModel<PermissaoDTO> listar() {
         List<Permissao> todasPermissoes = permissaoRepository.findAll();
