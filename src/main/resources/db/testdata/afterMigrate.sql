@@ -16,6 +16,7 @@ delete from usuario_grupo;
 delete from pedido;
 delete from item_pedido;
 delete from foto_produto;
+delete from oauth_client_details;
 
 set foreign_key_checks = 1;
 
@@ -172,3 +173,36 @@ values (5, '8d774bcf-b238-42f3-aef1-5fb388754d63', 1, 3, 2, 1, '38400-200', 'Rua
 
 insert into item_pedido (id, pedido_id, produto_id, quantidade, preco_unitario, preco_total, observacao)
 values (6, 5, 3, 1, 87.2, 87.2, null);
+
+insert into oauth_client_details (
+  client_id, resource_ids, client_secret,
+  scope, authorized_grant_types, web_server_redirect_uri, authorities,
+  access_token_validity, refresh_token_validity, autoapprove
+)
+values (
+  'mandae-web', null, '$2y$12$4R7RJHQhBffgxJVQCd0jhOlJu2Y8/wEqlg3NH7QGeu1CCwTwPcLv2',
+  'READ,WRITE', 'password', null, null,
+  60 * 60 * 6, 60 * 24 * 60 * 60, null
+);
+
+insert into oauth_client_details (
+  client_id, resource_ids, client_secret,
+  scope, authorized_grant_types, web_server_redirect_uri, authorities,
+  access_token_validity, refresh_token_validity, autoapprove
+)
+values (
+  'analytics', null, '$2y$12$4R7RJHQhBffgxJVQCd0jhOlJu2Y8/wEqlg3NH7QGeu1CCwTwPcLv2',
+  'READ,WRITE', 'authorization_code', 'http://localhost:8082', null,
+  null, null, null
+);
+
+insert into oauth_client_details (
+  client_id, resource_ids, client_secret,
+  scope, authorized_grant_types, web_server_redirect_uri, authorities,
+  access_token_validity, refresh_token_validity, autoapprove
+)
+values (
+  'faturamento', null, '$2y$12$4R7RJHQhBffgxJVQCd0jhOlJu2Y8/wEqlg3NH7QGeu1CCwTwPcLv2',
+  'READ,WRITE', 'client_credentials', null, 'CONSULTAR_PEDIDOS,GERAR_RELATORIOS',
+  null, null, null
+);
