@@ -4,6 +4,7 @@ import com.api.mandae.api.MandaeLinks;
 import com.api.mandae.api.controller.PedidoController;
 import com.api.mandae.api.model.PedidoDTO;
 import com.api.mandae.api.model.input.PedidoInput;
+import com.api.mandae.core.security.MandaeSecurity;
 import com.api.mandae.domain.model.Pedido;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class PedidoConverter extends RepresentationModelAssemblerSupport<Pedido,
     @Autowired
     private MandaeLinks mandaeLinks;
 
+    @Autowired
+    private MandaeSecurity mandaeSecurity;
+
     public PedidoConverter() {
         super(PedidoController.class, PedidoDTO.class);
     }
@@ -29,17 +33,20 @@ public class PedidoConverter extends RepresentationModelAssemblerSupport<Pedido,
 
         pedidoDTO.add(mandaeLinks.linkToPedidos("pedidos"));
 
-        if (pedido.podeSerConfirmado()) {
-            pedidoDTO.add(mandaeLinks.linkToConfirmarPedido(pedido.getCodigo(), "confirmar"));
+        if(mandaeSecurity.podeGerenciarPedidos(pedido.getCodigo())){
+            if (pedido.podeSerConfirmado()) {
+                pedidoDTO.add(mandaeLinks.linkToConfirmarPedido(pedido.getCodigo(), "confirmar"));
+            }
+
+            if (pedido.podeSerEntregue()) {
+                pedidoDTO.add(mandaeLinks.linkToEntregarPedido(pedido.getCodigo(), "entregar"));
+            }
+
+            if (pedido.podeSerCancelado()) {
+                pedidoDTO.add(mandaeLinks.linkToCancelarPedido(pedido.getCodigo(), "cancelar"));
+            }
         }
 
-        if (pedido.podeSerEntregue()) {
-            pedidoDTO.add(mandaeLinks.linkToEntregarPedido(pedido.getCodigo(), "entregar"));
-        }
-
-        if (pedido.podeSerCancelado()) {
-            pedidoDTO.add(mandaeLinks.linkToCancelarPedido(pedido.getCodigo(), "cancelar"));
-        }
 
         pedidoDTO.getRestaurante().add(
                 mandaeLinks.linkToRestaurante(pedido.getRestaurante().getId()));
