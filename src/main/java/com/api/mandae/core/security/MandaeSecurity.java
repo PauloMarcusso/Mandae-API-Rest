@@ -38,4 +38,8 @@ public class MandaeSecurity {
     public boolean gerenciaRestauranteDoPedido(String codigoPedido) {
         return pedidoRepository.isPedidoGerenciadoPor(codigoPedido, getUserId());
     }
+
+    public boolean usuarioAutenticadoIgual(Long usuarioId){
+        return getUserId() != null && usuarioId != null && getUserId().equals(usuarioId);
+    }
 }
