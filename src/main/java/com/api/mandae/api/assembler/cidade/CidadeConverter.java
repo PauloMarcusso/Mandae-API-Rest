@@ -5,6 +5,7 @@ import com.api.mandae.api.controller.CidadeController;
 import com.api.mandae.api.controller.EstadoController;
 import com.api.mandae.api.model.CidadeDTO;
 import com.api.mandae.api.model.input.CidadeInput;
+import com.api.mandae.core.security.MandaeSecurity;
 import com.api.mandae.domain.model.Cidade;
 import com.api.mandae.domain.model.Estado;
 import org.modelmapper.ModelMapper;
@@ -26,6 +27,9 @@ public class CidadeConverter extends RepresentationModelAssemblerSupport<Cidade,
     @Autowired
     private MandaeLinks mandaeLinks;
 
+    @Autowired
+    private MandaeSecurity mandaeSecurity;
+
     public CidadeConverter() {
         super(CidadeController.class, CidadeDTO.class);
     }
@@ -35,15 +39,25 @@ public class CidadeConverter extends RepresentationModelAssemblerSupport<Cidade,
 
         CidadeDTO cidadeDTO = modelMapper.map(cidade, CidadeDTO.class);
 
-        cidadeDTO.add(mandaeLinks.linkToCidades("cidades"));
+        if (mandaeSecurity.podeConsultarCidades()){
+                    cidadeDTO.add(mandaeLinks.linkToCidades("cidades"));
+        }
 
+        if (mandaeSecurity.podeConsultarEstados()){
         cidadeDTO.getEstado().add(mandaeLinks.linkToEstado(cidadeDTO.getEstado().getId()));
+        }
 
         return cidadeDTO;
     }
 
     @Override public CollectionModel<CidadeDTO> toCollectionModel(Iterable<? extends Cidade> entities) {
-        return super.toCollectionModel(entities).add(mandaeLinks.linkToCidades());
+        CollectionModel<CidadeDTO> collectionModel = super.toCollectionModel(entities);
+
+        if (mandaeSecurity.podeConsultarCidades()) {
+            collectionModel.add(mandaeLinks.linkToCidades());
+        }
+
+        return collectionModel;
     }
 
     public Cidade toDomainObject(CidadeInput cidadeInput) {

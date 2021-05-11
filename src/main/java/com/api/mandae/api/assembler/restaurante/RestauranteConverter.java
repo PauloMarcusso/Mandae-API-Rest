@@ -4,6 +4,7 @@ import com.api.mandae.api.MandaeLinks;
 import com.api.mandae.api.controller.RestauranteController;
 import com.api.mandae.api.model.RestauranteDTO;
 import com.api.mandae.api.model.input.RestauranteInput;
+import com.api.mandae.core.security.MandaeSecurity;
 import com.api.mandae.domain.model.Cidade;
 import com.api.mandae.domain.model.Cozinha;
 import com.api.mandae.domain.model.Restaurante;
@@ -15,6 +16,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RestauranteConverter extends RepresentationModelAssemblerSupport<Restaurante, RestauranteDTO> {
+
+    @Autowired
+    private MandaeSecurity mandaeSecurity;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -31,44 +35,63 @@ public class RestauranteConverter extends RepresentationModelAssemblerSupport<Re
         RestauranteDTO restauranteModel = createModelWithId(restaurante.getId(), restaurante);
         modelMapper.map(restaurante, restauranteModel);
 
-        restauranteModel.add(mandaeLinks.linkToRestaurantes("restaurantes"));
-
-        if (restaurante.ativacaoPermitida()) {
-            restauranteModel.add(
-                    mandaeLinks.linkToRestauranteAtivacao(restaurante.getId(), "ativar"));
+        if (mandaeSecurity.podeConsultarRestaurantes()) {
+            restauranteModel.add(mandaeLinks.linkToRestaurantes("restaurantes"));
         }
 
-        if (restaurante.inativacaoPermitida()) {
-            restauranteModel.add(
-                    mandaeLinks.linkToRestauranteInativacao(restaurante.getId(), "inativar"));
+        if (mandaeSecurity.podeGerenciarCadastroRestaurantes()) {
+
+            if (restaurante.ativacaoPermitida()) {
+                restauranteModel.add(
+                        mandaeLinks.linkToRestauranteAtivacao(restaurante.getId(), "ativar"));
+            }
+
+            if (restaurante.inativacaoPermitida()) {
+                restauranteModel.add(
+                        mandaeLinks.linkToRestauranteInativacao(restaurante.getId(), "inativar"));
+            }
         }
 
-        if (restaurante.aberturaPermitida()) {
-            restauranteModel.add(
-                    mandaeLinks.linkToRestauranteAbertura(restaurante.getId(), "abrir"));
+        if (mandaeSecurity.podeGerenciarFuncionamentoRestaurantes(restaurante.getId())) {
+
+            if (restaurante.aberturaPermitida()) {
+                restauranteModel.add(
+                        mandaeLinks.linkToRestauranteAbertura(restaurante.getId(), "abrir"));
+            }
+
+            if (restaurante.fechamentoPertimido()) {
+                restauranteModel.add(
+                        mandaeLinks.linkToRestauranteFechamento(restaurante.getId(), "fechar"));
+            }
         }
 
-        if (restaurante.fechamentoPertimido()) {
-            restauranteModel.add(
-                    mandaeLinks.linkToRestauranteFechamento(restaurante.getId(), "fechar"));
+        if (mandaeSecurity.podeConsultarRestaurantes()) {
+
+            restauranteModel.add(mandaeLinks.linkToProdutos(restaurante.getId(), "produtos"));
         }
 
-        restauranteModel.add(mandaeLinks.linkToProdutos(restaurante.getId(), "produtos"));
-
-        restauranteModel.getCozinha().add(
-                mandaeLinks.linkToCozinha(restaurante.getCozinha().getId()));
-
-        if (restauranteModel.getEndereco() != null
-                && restauranteModel.getEndereco().getCidade() != null) {
-            restauranteModel.getEndereco().getCidade().add(
-                    mandaeLinks.linkToCidade(restaurante.getEndereco().getCidade().getId()));
+        if (mandaeSecurity.podeConsultarCozinhas()) {
+            restauranteModel.getCozinha().add(
+                    mandaeLinks.linkToCozinha(restaurante.getCozinha().getId()));
         }
 
+        if (mandaeSecurity.podeConsultarCidades()) {
+            if (restauranteModel.getEndereco() != null
+                    && restauranteModel.getEndereco().getCidade() != null) {
+                restauranteModel.getEndereco().getCidade().add(
+                        mandaeLinks.linkToCidade(restaurante.getEndereco().getCidade().getId()));
+            }
+        }
+
+        if (mandaeSecurity.podeConsultarRestaurantes()){
         restauranteModel.add(mandaeLinks.linkToRestauranteFormasPagamento(restaurante.getId(),
                 "formas-pagamento"));
+        }
 
-        restauranteModel.add(mandaeLinks.linkToResponsaveisRestaurante(restaurante.getId(),
-                "responsaveis"));
+        if (mandaeSecurity.podeGerenciarCadastroRestaurantes()){
+            restauranteModel.add(mandaeLinks.linkToResponsaveisRestaurante(restaurante.getId(),
+                    "responsaveis"));
+        }
 
         return restauranteModel;
     }
@@ -93,8 +116,14 @@ public class RestauranteConverter extends RepresentationModelAssemblerSupport<Re
 
     @Override
     public CollectionModel<RestauranteDTO> toCollectionModel(Iterable<? extends Restaurante> entities) {
-        return super.toCollectionModel(entities)
-                .add(mandaeLinks.linkToRestaurantes());
+        CollectionModel<RestauranteDTO> collectionModel = super.toCollectionModel(entities);
+
+        if (mandaeSecurity.podeConsultarRestaurantes()){
+            toCollectionModel(entities)
+                    .add(mandaeLinks.linkToRestaurantes());
+        }
+
+        return collectionModel;
     }
 
     /**

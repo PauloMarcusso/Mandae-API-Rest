@@ -5,6 +5,7 @@ import com.api.mandae.api.assembler.grupo.GrupoConverter;
 import com.api.mandae.api.model.GrupoDTO;
 import com.api.mandae.api.openapi.controller.UsuarioGrupoControllerOpenApi;
 import com.api.mandae.core.security.CheckSecurity;
+import com.api.mandae.core.security.MandaeSecurity;
 import com.api.mandae.domain.model.Usuario;
 import com.api.mandae.domain.repository.GrupoRepository;
 import com.api.mandae.domain.service.CadastroGrupoService;
@@ -35,22 +36,29 @@ public class UsuarioGrupoController implements UsuarioGrupoControllerOpenApi {
     @Autowired
     private MandaeLinks mandaeLinks;
 
+    @Autowired
+    private MandaeSecurity mandaeSecurity;
+
+
     @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @GetMapping
     public CollectionModel<GrupoDTO> listar(@PathVariable Long usuarioId) {
+
         Usuario usuario = cadastroUsuario.buscarOuFalhar(usuarioId);
 
         CollectionModel<GrupoDTO> gruposModel = grupoConverter.toCollectionModel(usuario.getGrupos())
-                .removeLinks()
-                .add(mandaeLinks.linkToUsuarioGrupoAssociacao(usuarioId, "associar"));
+                .removeLinks();
 
-        gruposModel.getContent().forEach(grupoModel -> {
-            grupoModel.add(mandaeLinks.linkToUsuarioGrupoDesassociacao(
-                    usuarioId, grupoModel.getId(), "desassociar"));
-        });
+        if (mandaeSecurity.podeEditarUsuariosGruposPermissoes()) {
+            gruposModel.add(mandaeLinks.linkToUsuarioGrupoAssociacao(usuarioId, "associar"));
+
+            gruposModel.getContent().forEach(grupoModel -> {
+                grupoModel.add(mandaeLinks.linkToUsuarioGrupoDesassociacao(
+                        usuarioId, grupoModel.getId(), "desassociar"));
+            });
+        }
 
         return gruposModel;
-
     }
 
     @CheckSecurity.UsuariosGruposPermissoes.PodeEditar

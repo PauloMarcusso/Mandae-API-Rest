@@ -31,7 +31,7 @@ public @interface CheckSecurity {
         @PreAuthorize("@mandaeSecurity.podeGerenciarCadastroRestaurantes()")
         @Retention(RUNTIME)
         @Target(METHOD)
-        public @interface PodeEditarCadastro {
+        public @interface PodeGerenciarCadastro {
         }
 
         @PreAuthorize("@mandaeSecurity.podeConsultarRestaurantes()")

@@ -31,7 +31,9 @@ public class PedidoConverter extends RepresentationModelAssemblerSupport<Pedido,
         PedidoDTO pedidoDTO = createModelWithId(pedido.getCodigo(), pedido);
         modelMapper.map(pedido, pedidoDTO);
 
+        if (mandaeSecurity.podePesquisarPedidos()){
         pedidoDTO.add(mandaeLinks.linkToPedidos("pedidos"));
+        }
 
         if(mandaeSecurity.podeGerenciarPedidos(pedido.getCodigo())){
             if (pedido.podeSerConfirmado()) {
@@ -47,23 +49,34 @@ public class PedidoConverter extends RepresentationModelAssemblerSupport<Pedido,
             }
         }
 
+        if (mandaeSecurity.podeConsultarRestaurantes()){
 
         pedidoDTO.getRestaurante().add(
                 mandaeLinks.linkToRestaurante(pedido.getRestaurante().getId()));
+        }
+
+        if (mandaeSecurity.podeConsultarUsuariosGruposPermissoes()){
 
         pedidoDTO.getCliente().add(
                 mandaeLinks.linkToUsuario(pedido.getCliente().getId()));
+        }
 
+        if (mandaeSecurity.podeConsultarFormasPagamento()){
         pedidoDTO.getFormaPagamento().add(
                 mandaeLinks.linkToFormaPagamento(pedido.getFormaPagamento().getId()));
+        }
 
+        if (mandaeSecurity.podeConsultarCidades()){
         pedidoDTO.getEnderecoEntrega().getCidade().add(
                 mandaeLinks.linkToCidade(pedido.getEnderecoEntrega().getCidade().getId()));
+        }
 
-        pedidoDTO.getItens().forEach(item -> {
-            item.add(mandaeLinks.linkToProduto(
-                    pedidoDTO.getRestaurante().getId(), item.getProdutoId(), "produto"));
-        });
+        if (mandaeSecurity.podeConsultarRestaurantes()){
+            pedidoDTO.getItens().forEach(item -> {
+                item.add(mandaeLinks.linkToProduto(
+                        pedidoDTO.getRestaurante().getId(), item.getProdutoId(), "produto"));
+            });
+        }
         return pedidoDTO;
     }
 

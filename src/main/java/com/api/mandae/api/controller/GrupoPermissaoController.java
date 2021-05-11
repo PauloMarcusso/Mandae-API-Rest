@@ -1,9 +1,11 @@
 package com.api.mandae.api.controller;
 
+import com.api.mandae.api.MandaeLinks;
 import com.api.mandae.api.assembler.permissao.PermissaoConverter;
 import com.api.mandae.api.model.PermissaoDTO;
 import com.api.mandae.api.openapi.controller.GrupoPermissaoControllerOpenApi;
 import com.api.mandae.core.security.CheckSecurity;
+import com.api.mandae.core.security.MandaeSecurity;
 import com.api.mandae.domain.model.Grupo;
 import com.api.mandae.domain.service.CadastroGrupoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +25,34 @@ public class GrupoPermissaoController implements GrupoPermissaoControllerOpenApi
     @Autowired
     private CadastroGrupoService cadastroGrupo;
 
+    @Autowired
+    private MandaeLinks mandaeLinks;
+
+    @Autowired
+    private MandaeSecurity mandaeSecurity;
+
     @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @GetMapping
     public CollectionModel<PermissaoDTO> listar(@PathVariable Long grupoId) {
 
         Grupo grupo = cadastroGrupo.buscarOuFalhar(grupoId);
 
-        return permissaoConverter.toCollectionModel(grupo.getPermissoes());
+         CollectionModel<PermissaoDTO> permissoesModel
+                = permissaoConverter.toCollectionModel(grupo.getPermissoes())
+                .removeLinks();
+
+        permissoesModel.add(mandaeLinks.linkToGrupoPermissoes(grupoId));
+
+        if (mandaeSecurity.podeEditarUsuariosGruposPermissoes()) {
+            permissoesModel.add(mandaeLinks.linkToGrupoPermissaoAssociacao(grupoId, "associar"));
+
+            permissoesModel.getContent().forEach(permissaoModel -> {
+                permissaoModel.add(mandaeLinks.linkToGrupoPermissaoDesassociacao(
+                        grupoId, permissaoModel.getId(), "desassociar"));
+            });
+        }
+
+        return permissoesModel;
     }
 
     @CheckSecurity.UsuariosGruposPermissoes.PodeEditar

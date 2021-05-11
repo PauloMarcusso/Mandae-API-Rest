@@ -2,17 +2,13 @@ package com.api.mandae.api.assembler.permissao;
 
 import com.api.mandae.api.MandaeLinks;
 import com.api.mandae.api.model.PermissaoDTO;
+import com.api.mandae.core.security.MandaeSecurity;
 import com.api.mandae.domain.model.Permissao;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.Model;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class PermissaoConverter implements RepresentationModelAssembler<Permissao, PermissaoDTO> {
@@ -23,6 +19,9 @@ public class PermissaoConverter implements RepresentationModelAssembler<Permissa
     @Autowired
     private MandaeLinks algaLinks;
 
+    @Autowired
+    private MandaeSecurity mandaeSecurity;
+
     @Override
     public PermissaoDTO toModel(Permissao permissao) {
         return modelMapper.map(permissao, PermissaoDTO.class);
@@ -30,7 +29,13 @@ public class PermissaoConverter implements RepresentationModelAssembler<Permissa
 
     @Override
     public CollectionModel<PermissaoDTO> toCollectionModel(Iterable<? extends Permissao> entities) {
-        return RepresentationModelAssembler.super.toCollectionModel(entities)
-                .add(algaLinks.linkToPermissoes());
+        CollectionModel<PermissaoDTO> collectionModel
+                = RepresentationModelAssembler.super.toCollectionModel(entities);
+
+        if (mandaeSecurity.podeConsultarUsuariosGruposPermissoes()) {
+            collectionModel.add(algaLinks.linkToPermissoes());
+        }
+
+        return collectionModel;
     }
 }

@@ -4,14 +4,13 @@ import com.api.mandae.api.MandaeLinks;
 import com.api.mandae.api.controller.UsuarioController;
 import com.api.mandae.api.model.UsuarioDTO;
 import com.api.mandae.api.model.input.UsuarioInput;
+import com.api.mandae.core.security.MandaeSecurity;
 import com.api.mandae.domain.model.Usuario;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @Component
 public class UsuarioConverter extends RepresentationModelAssemblerSupport<Usuario, UsuarioDTO> {
@@ -22,6 +21,9 @@ public class UsuarioConverter extends RepresentationModelAssemblerSupport<Usuari
     @Autowired
     private MandaeLinks mandaeLinks;
 
+    @Autowired
+    private MandaeSecurity mandaeSecurity;
+
     public UsuarioConverter() {
         super(UsuarioController.class, UsuarioDTO.class);
     }
@@ -31,8 +33,10 @@ public class UsuarioConverter extends RepresentationModelAssemblerSupport<Usuari
     public UsuarioDTO toModel(Usuario usuario) {
         UsuarioDTO usuarioDTO = modelMapper.map(usuario, UsuarioDTO.class);
 
-        usuarioDTO.add(mandaeLinks.linkToUsuarios("usuarios"));
-        usuarioDTO.add(mandaeLinks.linkToGruposUsuario(usuario.getId(), "grupos-usuario"));
+        if (mandaeSecurity.podeConsultarUsuariosGruposPermissoes()){
+            usuarioDTO.add(mandaeLinks.linkToUsuarios("usuarios"));
+            usuarioDTO.add(mandaeLinks.linkToGruposUsuario(usuario.getId(), "grupos-usuario"));
+        }
 
         return usuarioDTO;
     }

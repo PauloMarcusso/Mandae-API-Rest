@@ -4,13 +4,12 @@ import com.api.mandae.api.MandaeLinks;
 import com.api.mandae.api.controller.CozinhaController;
 import com.api.mandae.api.model.CozinhaDTO;
 import com.api.mandae.api.model.input.CozinhaInput;
+import com.api.mandae.core.security.MandaeSecurity;
 import com.api.mandae.domain.model.Cozinha;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @Component
 public class CozinhaConverter extends RepresentationModelAssemblerSupport<Cozinha, CozinhaDTO> {
@@ -20,6 +19,9 @@ public class CozinhaConverter extends RepresentationModelAssemblerSupport<Cozinh
 
     @Autowired
     private MandaeLinks mandaeLinks;
+
+    @Autowired
+    private MandaeSecurity mandaeSecurity;
 
     public CozinhaConverter() {
         super(CozinhaController.class, CozinhaDTO.class);
@@ -31,7 +33,9 @@ public class CozinhaConverter extends RepresentationModelAssemblerSupport<Cozinh
         CozinhaDTO cozinhaDTO = createModelWithId(cozinha.getId(), cozinha);
         modelMapper.map(cozinha, cozinhaDTO);
 
-        cozinhaDTO.add(mandaeLinks.linkToCozinhas("cozinhas"));
+        if (mandaeSecurity.podeConsultarCozinhas()) {
+            cozinhaDTO.add(mandaeLinks.linkToCozinhas("cozinhas"));
+        }
 
         return cozinhaDTO;
     }

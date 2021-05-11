@@ -1,6 +1,7 @@
 package com.api.mandae.api.controller;
 
 import com.api.mandae.api.MandaeLinks;
+import com.api.mandae.core.security.MandaeSecurity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.MediaType;
@@ -15,20 +16,46 @@ public class RootEntryPointController {
     @Autowired
     private MandaeLinks mandaeLinks;
 
+    @Autowired
+    private MandaeSecurity mandaeSecurity;
+
     @GetMapping
     public RootEntryPointModel root() {
         var rootEntryPointModel = new RootEntryPointModel();
 
-        rootEntryPointModel.add(mandaeLinks.linkToCozinhas("cozinhas"));
-        rootEntryPointModel.add(mandaeLinks.linkToPedidos("pedidos"));
-        rootEntryPointModel.add(mandaeLinks.linkToRestaurantes("restaurantes"));
-        rootEntryPointModel.add(mandaeLinks.linkToGrupos("grupos"));
-        rootEntryPointModel.add(mandaeLinks.linkToUsuarios("usuarios"));
-        rootEntryPointModel.add(mandaeLinks.linkToPermissoes("permissoes"));
-        rootEntryPointModel.add(mandaeLinks.linkToFormasPagamento("formas-pagamento"));
-        rootEntryPointModel.add(mandaeLinks.linkToEstados("estados"));
-        rootEntryPointModel.add(mandaeLinks.linkToCidades("cidades"));
-        rootEntryPointModel.add(mandaeLinks.linkToEstatisticas("estatisticas"));
+        if (mandaeSecurity.podeConsultarCozinhas()) {
+            rootEntryPointModel.add(mandaeLinks.linkToCozinhas("cozinhas"));
+        }
+
+        if (mandaeSecurity.podePesquisarPedidos()) {
+            rootEntryPointModel.add(mandaeLinks.linkToPedidos("pedidos"));
+        }
+
+        if (mandaeSecurity.podeConsultarRestaurantes()) {
+            rootEntryPointModel.add(mandaeLinks.linkToRestaurantes("restaurantes"));
+        }
+
+        if (mandaeSecurity.podeConsultarUsuariosGruposPermissoes()) {
+            rootEntryPointModel.add(mandaeLinks.linkToGrupos("grupos"));
+            rootEntryPointModel.add(mandaeLinks.linkToUsuarios("usuarios"));
+            rootEntryPointModel.add(mandaeLinks.linkToPermissoes("permissoes"));
+        }
+
+        if (mandaeSecurity.podeConsultarFormasPagamento()) {
+            rootEntryPointModel.add(mandaeLinks.linkToFormasPagamento("formas-pagamento"));
+        }
+
+        if (mandaeSecurity.podeConsultarEstados()) {
+            rootEntryPointModel.add(mandaeLinks.linkToEstados("estados"));
+        }
+
+        if (mandaeSecurity.podeConsultarCidades()) {
+            rootEntryPointModel.add(mandaeLinks.linkToCidades("cidades"));
+        }
+
+        if (mandaeSecurity.podeConsultarEstatisticas()) {
+            rootEntryPointModel.add(mandaeLinks.linkToEstatisticas("estatisticas"));
+        }
 
         return rootEntryPointModel;
     }

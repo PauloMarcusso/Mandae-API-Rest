@@ -4,6 +4,7 @@ import com.api.mandae.api.MandaeLinks;
 import com.api.mandae.api.controller.FormaPagamentoController;
 import com.api.mandae.api.model.FormaPagamentoDTO;
 import com.api.mandae.api.model.input.FormaPagamentoInput;
+import com.api.mandae.core.security.MandaeSecurity;
 import com.api.mandae.domain.model.FormaPagamento;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class FormaPagamentoConverter extends RepresentationModelAssemblerSupport
     @Autowired
     private MandaeLinks mandaeLinks;
 
+    @Autowired
+    private MandaeSecurity mandaeSecurity;
+
     public FormaPagamentoConverter() {
         super(FormaPagamentoController.class, FormaPagamentoDTO.class);
     }
@@ -31,14 +35,22 @@ public class FormaPagamentoConverter extends RepresentationModelAssemblerSupport
 
         modelMapper.map(formaPagamento, formaPagamentoDTO);
 
-        formaPagamentoDTO.add(mandaeLinks.linkToFormasPagamento("formasPagamento"));
+        if (mandaeSecurity.podeConsultarFormasPagamento()) {
+            formaPagamentoDTO.add(mandaeLinks.linkToFormasPagamento("formasPagamento"));
+        }
 
         return formaPagamentoDTO;
     }
 
     @Override
     public CollectionModel<FormaPagamentoDTO> toCollectionModel(Iterable<? extends FormaPagamento> entities) {
-        return super.toCollectionModel(entities).add(mandaeLinks.linkToFormasPagamento());
+        CollectionModel<FormaPagamentoDTO> collectionModel = super.toCollectionModel(entities);
+
+        if (mandaeSecurity.podeConsultarFormasPagamento()) {
+            collectionModel.add(mandaeLinks.linkToFormasPagamento());
+        }
+
+        return collectionModel;
     }
 
 

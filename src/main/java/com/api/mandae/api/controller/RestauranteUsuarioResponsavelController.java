@@ -5,6 +5,7 @@ import com.api.mandae.api.assembler.usuario.UsuarioConverter;
 import com.api.mandae.api.model.UsuarioDTO;
 import com.api.mandae.api.openapi.controller.RestauranteUsuarioResponsavelControllerOpenApi;
 import com.api.mandae.core.security.CheckSecurity;
+import com.api.mandae.core.security.MandaeSecurity;
 import com.api.mandae.domain.model.Restaurante;
 import com.api.mandae.domain.service.CadastroRestauranteService;
 import com.api.mandae.domain.service.CadastroUsuarioService;
@@ -31,30 +32,37 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
     @Autowired
     private MandaeLinks mandaeLinks;
 
+    @Autowired
+    private MandaeSecurity mandaeSecurity;
+
     @Override
     @GetMapping
     @CheckSecurity.Restaurantes.PodeConsultar
     public CollectionModel<UsuarioDTO> listar(@PathVariable Long restauranteId) {
         Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
 
-        CollectionModel<UsuarioDTO> usuariosDTO = usuarioConverter.
-                toCollectionModel(restaurante.getResponsaveis())
-                .removeLinks()
-                .add(mandaeLinks.linkToResponsaveisRestaurante(restauranteId))
-                .add(mandaeLinks.linkToRestauranteResponsavelAssociacao(restauranteId, "associar"));
+        CollectionModel<UsuarioDTO> usuariosModel = usuarioConverter
+                .toCollectionModel(restaurante.getResponsaveis())
+                .removeLinks();
 
-        usuariosDTO.getContent().stream().forEach(usuarioModel -> {
-            usuarioModel.add(mandaeLinks.linkToRestauranteResponsavelDesassociacao(
-                    restauranteId, usuarioModel.getId(), "desassociar"));
-        });
+        usuariosModel.add(mandaeLinks.linkToResponsaveisRestaurante(restauranteId));
 
-        return usuariosDTO;
+        if (mandaeSecurity.podeGerenciarCadastroRestaurantes()) {
+            usuariosModel.add(mandaeLinks.linkToRestauranteResponsavelAssociacao(restauranteId, "associar"));
+
+            usuariosModel.getContent().stream().forEach(usuarioModel -> {
+                usuarioModel.add(mandaeLinks.linkToRestauranteResponsavelDesassociacao(
+                        restauranteId, usuarioModel.getId(), "desassociar"));
+            });
+        }
+
+        return usuariosModel;
     }
 
     @Override
     @DeleteMapping("/{usuarioId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CheckSecurity.Restaurantes.PodeEditarCadastro
+    @CheckSecurity.Restaurantes.PodeGerenciarCadastro
     public ResponseEntity<Void> desassociar(@PathVariable Long restauranteId, @PathVariable Long usuarioId) {
         cadastroRestaurante.desassociarUsuarioResponsavel(restauranteId, usuarioId);
 
@@ -64,7 +72,7 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
     @Override
     @PutMapping("/{usuarioId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CheckSecurity.Restaurantes.PodeEditarCadastro
+    @CheckSecurity.Restaurantes.PodeGerenciarCadastro
     public ResponseEntity<Void> associar(@PathVariable Long restauranteId, @PathVariable Long usuarioId) {
         cadastroRestaurante.associarUsuarioResponsavel(restauranteId, usuarioId);
 

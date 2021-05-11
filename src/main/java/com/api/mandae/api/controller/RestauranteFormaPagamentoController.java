@@ -5,6 +5,7 @@ import com.api.mandae.api.assembler.formapagamento.FormaPagamentoConverter;
 import com.api.mandae.api.model.FormaPagamentoDTO;
 import com.api.mandae.api.openapi.controller.RestauranteFormaPagamentoControllerOpenApi;
 import com.api.mandae.core.security.CheckSecurity;
+import com.api.mandae.core.security.MandaeSecurity;
 import com.api.mandae.domain.model.Restaurante;
 import com.api.mandae.domain.service.CadastroRestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,22 +28,31 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
     @Autowired
     private MandaeLinks mandaeLinks;
 
+    @Autowired
+    private MandaeSecurity mandaeSecurity;
+
     @CheckSecurity.Restaurantes.PodeConsultar
     @GetMapping
     public CollectionModel<FormaPagamentoDTO> listar(@PathVariable Long restauranteId) {
 
         Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
 
-        CollectionModel<FormaPagamentoDTO> formasPagamentoDTO =
-                formaPagamentoConverter.toCollectionModel(restaurante.getFormasPagamento())
-                        .removeLinks()
-                        .add(mandaeLinks.linkToRestauranteFormasPagamento(restauranteId))
-                        .add(mandaeLinks.linkToRestauranteFormaPagamentoAssociacao(restauranteId, "associar"));
-        formasPagamentoDTO.getContent().forEach(formaPagamentoDTO -> {
-            formaPagamentoDTO.add(mandaeLinks.linkToRestauranteFormaPagamentoDesassociacao(
-                    restauranteId, formaPagamentoDTO.getId(),"desassociar"));
-        });
-        return formasPagamentoDTO;
+        CollectionModel<FormaPagamentoDTO> formasPagamentoModel
+                = formaPagamentoConverter.toCollectionModel(restaurante.getFormasPagamento())
+                .removeLinks();
+
+        formasPagamentoModel.add(mandaeLinks.linkToRestauranteFormasPagamento(restauranteId));
+
+        if (mandaeSecurity.podeGerenciarFuncionamentoRestaurantes(restauranteId)) {
+            formasPagamentoModel.add(mandaeLinks.linkToRestauranteFormaPagamentoAssociacao(restauranteId, "associar"));
+
+            formasPagamentoModel.getContent().forEach(formaPagamentoModel -> {
+                formaPagamentoModel.add(mandaeLinks.linkToRestauranteFormaPagamentoDesassociacao(
+                        restauranteId, formaPagamentoModel.getId(), "desassociar"));
+            });
+        }
+
+        return formasPagamentoModel;
 
     }
 

@@ -4,15 +4,13 @@ import com.api.mandae.api.MandaeLinks;
 import com.api.mandae.api.controller.EstadoController;
 import com.api.mandae.api.model.EstadoDTO;
 import com.api.mandae.api.model.input.EstadoInput;
+import com.api.mandae.core.security.MandaeSecurity;
 import com.api.mandae.domain.model.Estado;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
 public class EstadoConverter extends RepresentationModelAssemblerSupport<Estado, EstadoDTO> {
@@ -23,6 +21,9 @@ public class EstadoConverter extends RepresentationModelAssemblerSupport<Estado,
     @Autowired
     private MandaeLinks mandaeLinks;
 
+    @Autowired
+    private MandaeSecurity mandaeSecurity;
+
     public EstadoConverter() {
         super(EstadoController.class, EstadoDTO.class);
     }
@@ -32,13 +33,21 @@ public class EstadoConverter extends RepresentationModelAssemblerSupport<Estado,
         EstadoDTO estadoDTO = createModelWithId(estado.getId(), estado);
         modelMapper.map(estado, estadoDTO);
 
-        estadoDTO.add(mandaeLinks.linkToEstados("estados"));
+        if (mandaeSecurity.podeConsultarEstados()) {
+            estadoDTO.add(mandaeLinks.linkToEstados("estados"));
+        }
 
         return estadoDTO;
     }
 
     @Override public CollectionModel<EstadoDTO> toCollectionModel(Iterable<? extends Estado> entities) {
-        return super.toCollectionModel(entities).add(mandaeLinks.linkToEstados());
+        CollectionModel<EstadoDTO> collectionModel = super.toCollectionModel(entities);
+
+        if (mandaeSecurity.podeConsultarEstados()) {
+            collectionModel.add(mandaeLinks.linkToEstados());
+        }
+
+        return collectionModel;
     }
 
     public Estado toDomainObject(EstadoInput estadoInput) {

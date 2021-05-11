@@ -4,6 +4,7 @@ import com.api.mandae.api.MandaeLinks;
 import com.api.mandae.api.controller.RestauranteProdutoController;
 import com.api.mandae.api.model.ProdutoDTO;
 import com.api.mandae.api.model.input.ProdutoInput;
+import com.api.mandae.core.security.MandaeSecurity;
 import com.api.mandae.domain.model.Produto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class ProdutoConverter extends RepresentationModelAssemblerSupport<Produt
     @Autowired
     private MandaeLinks mandaeLinks;
 
+    @Autowired
+    private MandaeSecurity mandaeSecurity;
+
     public ProdutoConverter() {
         super(RestauranteProdutoController.class, ProdutoDTO.class);
     }
@@ -30,10 +34,13 @@ public class ProdutoConverter extends RepresentationModelAssemblerSupport<Produt
 
         modelMapper.map(produto, produtoModel);
 
-        produtoModel.add(mandaeLinks.linkToProdutos(produto.getRestaurante().getId(), "produtos"));
+        if (mandaeSecurity.podeConsultarRestaurantes()){
 
-        produtoModel.add(mandaeLinks.linkToFotoProduto(
-                produto.getRestaurante().getId(), produto.getId(), "foto"));
+            produtoModel.add(mandaeLinks.linkToProdutos(produto.getRestaurante().getId(), "produtos"));
+
+            produtoModel.add(mandaeLinks.linkToFotoProduto(
+                    produto.getRestaurante().getId(), produto.getId(), "foto"));
+        }
 
         return produtoModel;
     }
