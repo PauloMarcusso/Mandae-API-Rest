@@ -1,0 +1,27 @@
+version: "3.9"
+
+networks:
+  mandae-network:
+    driver: bridge
+
+services:
+  mandae-mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+    ports:
+    - "3306:3306"
+    networks:
+      - mandae-network
+
+  mandae-api:
+    image: mandae-api
+    command: ["/wait-for-it.sh", "mandae-mysql:3306", "-t", "30", "--", "java", "-jar", "mandaeapi.jar"]
+    environment:
+      DB_HOST: mandae-mysql
+    ports:
+      - "8080:8080"
+    networks:
+      - mandae-network
+    depends_on:
+      - mandae-mysql
