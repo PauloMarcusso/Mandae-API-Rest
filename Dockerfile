@@ -2,7 +2,9 @@ FROM openjdk:13
 
 WORKDIR /app
 
-COPY target/*.jar /app/mandaeapi.jar
+ARG JAR_FILE
+
+COPY target/${JAR_FILE} /app/mandaeapi.jar
 
 EXPOSE 8080
 
