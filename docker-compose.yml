@@ -19,8 +19,6 @@ services:
     command: ["/wait-for-it.sh", "mandae-mysql:3306", "-t", "30", "--", "java", "-jar", "mandaeapi.jar"]
     environment:
       DB_HOST: mandae-mysql
-    ports:
-      - "8080:8080"
     networks:
       - mandae-network
     depends_on:
