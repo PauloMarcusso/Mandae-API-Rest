@@ -14,11 +14,18 @@ services:
     networks:
       - mandae-network
 
+  mandae-redis:
+    image: redis:6.2.1-alpine
+    networks:
+      - mandae-network
+
   mandae-api:
     image: mandae-api
     command: ["/wait-for-it.sh", "mandae-mysql:3306", "-t", "30", "--", "java", "-jar", "mandaeapi.jar"]
     environment:
       DB_HOST: mandae-mysql
+      SPRING_SESSION_STORE_TYPE: redis
+      SPRING_REDIS_HOST: mandae-redis
     networks:
       - mandae-network
     depends_on:
