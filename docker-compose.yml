@@ -23,3 +23,13 @@ services:
       - mandae-network
     depends_on:
       - mandae-mysql
+
+  mandae-proxy:
+    build: ./nginx
+    image: mandae-proxy
+    ports:
+      - "3000:80"
+    networks:
+      - mandae-network
+    depends_on:
+      - mandae-api
